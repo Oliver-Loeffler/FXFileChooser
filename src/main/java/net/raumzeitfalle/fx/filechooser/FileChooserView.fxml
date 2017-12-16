@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="750.0" prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
+         <children>
+            <SplitMenuButton fx:id="chooser" contentDisplay="TOP" maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" text="Choose Directory" HBox.hgrow="NEVER">
+               <items>
+                  <MenuItem fx:id="usersHomeCommand" mnemonicParsing="false" text="Users Home" />
+               </items></SplitMenuButton>
+            <MenuButton fx:id="fileExtensionFilter" contentDisplay="TOP" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="90.0" mnemonicParsing="false" text="File Type" HBox.hgrow="NEVER">
+              <items>
+                  <MenuItem fx:id="showAllFilesFilter" mnemonicParsing="false" text="all files" />
+              </items>
+            </MenuButton>
+            <Button fx:id="refreshButton" contentDisplay="TOP" maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER" />
+            <Button fx:id="stopButton" contentDisplay="TOP" maxHeight="1.7976931348623157E308" minWidth="50.0" mnemonicParsing="false" text="Stop" HBox.hgrow="SOMETIMES" />
+            <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+               <children>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="(" />
+                  <Label fx:id="filteredPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="filtered" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="/" />
+                  <Label fx:id="allPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="allPaths" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=")" />
+               </children>
+            </FlowPane>
+            <ProgressIndicator fx:id="progress" focusTraversable="false" maxWidth="-Infinity" minHeight="32.0" nodeOrientation="LEFT_TO_RIGHT" visible="false" HBox.hgrow="NEVER">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <HBox.margin>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+         </children>
+      </HBox>
+      <TextField fx:id="fileNameFilter" maxHeight="1.7976931348623157E308" minHeight="36.0" promptText="type here to filter by name" VBox.vgrow="NEVER" />
+      <ListView fx:id="listOfFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <TextField fx:id="selectedFile" editable="false" minHeight="36.0" promptText="(shows the selected file)" VBox.vgrow="NEVER" />
+      <HBox prefHeight="36.0" prefWidth="200.0" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="okButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="OK" HBox.hgrow="ALWAYS" />
+            <Button fx:id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Cancel" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
