@@ -1,10 +1,15 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -25,12 +30,21 @@ public class SwingFileChooser extends JFXPanel implements ClosableStage {
      */
     public static final int APPROVE_OPTION = 0;
 
+    public static SwingFileChooser create() {
+        return create(null,10_000);
+    }
     
-    public static SwingFileChooser create(JFrame frame)  {
-        SwingFileChooser fc = new SwingFileChooser(frame);
+    public static SwingFileChooser create(int expectedNumberOfFiles) {
+        return create(null,expectedNumberOfFiles);
+    }
+    
+    public static SwingFileChooser create(String pathToBrowse, int expectedNumberOfFiles)  {
+        
+        Path startHere = startPath(pathToBrowse);
+        SwingFileChooser fc = new SwingFileChooser();
         Platform.runLater(()->{
             try {
-                FileChooserModel model = new FileChooserModel();
+                FileChooserModel model = new FileChooserModel(startHere,expectedNumberOfFiles);
                 Parent view = FileChooserView.create(model, fc);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
@@ -43,28 +57,39 @@ public class SwingFileChooser extends JFXPanel implements ClosableStage {
         return fc;
     }
 
+    private static Path startPath(String pathToBrowse) {
+        Path startHere = null;
+        if (null != pathToBrowse) {
+            startHere = Paths.get(pathToBrowse);
+        }
+        return startHere;
+    }
+
     private FileChooserModel model;
     
     private JDialog dialog;
     
-    private JFrame parent;
-       
-    private SwingFileChooser(JFrame parent){
-        this.parent = parent;
+    private SwingFileChooser() {
+        
     }
     
     private void setModel(FileChooserModel model) {
         this.model = model;
     }
     
-    public int showOpenDialog() {
+    public int showOpenDialog(Component parent) {
         if (null == this.dialog) {
-            dialog = new JDialog(parent, "Choose File", true);
+            Frame frame = JOptionPane.getFrameForComponent(parent);
+            dialog = new JDialog(frame, "Choose File", true);
             dialog.setContentPane(this);
+            Dimension size = new Dimension(750, 550);
+            this.setPreferredSize(size);
+            this.setMinimumSize(size);
             dialog.pack();
+            dialog.setResizable(true);
+            
         }
         this.dialog.setVisible(true);
-        
         if (this.model.invalidSelectionProperty().getValue()) {
             return CANCEL_OPTION;
         } else {
