@@ -70,23 +70,23 @@ final class FileChooserController implements Initializable {
     
     private final DirectoryChooser dirChooser;
     
-    private final HideableStage stage;
+    private final HideableWindow stage;
     
     private final UsePattern usagePattern;
     
-    public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final Dialog<Path> dialog) {
-        return new FileChooserController(fileChooserModel, ()->dialog.close(), UsePattern.DIALOG);       
+    public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final Dialog<Path> dialogWindow) {
+        return new FileChooserController(fileChooserModel, ()->dialogWindow.close(), UsePattern.DIALOG);       
     }
     
-    public static FileChooserController withStage(final FileChooserModel fileChooserModel, final HideableStage stage) {
-        return new FileChooserController(fileChooserModel, ()->stage.hide(), UsePattern.NORMAL_STAGE);       
+    public static FileChooserController withStage(final FileChooserModel fileChooserModel, final HideableWindow window) {
+        return new FileChooserController(fileChooserModel, ()->window.hide(), UsePattern.NORMAL_STAGE);       
     }
     
     
-    private FileChooserController(final FileChooserModel fileChooserModel, final HideableStage stage, UsePattern useCase) {
+    private FileChooserController(final FileChooserModel fileChooserModel, final HideableWindow window, UsePattern useCase) {
        this.model = fileChooserModel;
        this.dirChooser = new DirectoryChooser();
-       this.stage = stage;
+       this.stage = window;
        this.usagePattern = useCase;
     }
 

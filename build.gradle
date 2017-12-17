@@ -1,0 +1,102 @@
+plugins {
+	id "java-library"
+	id "maven"
+	id "eclipse"
+	id "maven-publish"
+	id "pmd"
+	id "jacoco"
+	id "findbugs"
+}
+
+wrapper.gradleVersion = '4.1'
+
+def getVersionName = { ->
+	def major = 0
+	def minor = 0
+	def patch = 1
+	def semanticVersion =  major + '.' + minor + '.' + patch
+	println "Version to build: " + semanticVersion
+	return semanticVersion
+}
+
+println "Project Details"
+println "=========================================="
+println "Project to build: " + rootProject.name
+version = getVersionName()
+
+group 'net.raumzeitfalle.fx.filechooser'
+
+def artifact = 'fxfilechooser'
+def specificationVersion = '0.0.1'
+def companyName = 'www.raumzeitfalle.net'
+def implementationTitle = 'FXFileChooser'
+
+println "\nArtifact Details:"
+println "=========================================="
+println "groupId:     " + group
+println "artifactId:  " + artifact
+println "verion:      " + version
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {  
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+	archiveName "raumzeitfalle-fxfilechooser-${version}.jar"
+	manifest {
+		attributes(
+			"Built-By" : companyName,
+			"Implementation-Title": implementationTitle,
+			"Implementation-Version": version,
+			"Specification-Version": specificationVersion
+		 )
+	}
+}
+
+tasks.withType(Test) {
+	ignoreFailures = true
+    reports.html.destination = file("${reporting.baseDir}/${name}")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination file("${reporting.baseDir}/${name}")
+    }
+}
+
+tasks.withType(Pmd) {
+  ignoreFailures = true
+}
+
+tasks.withType(FindBugs) {
+  ignoreFailures = true
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+        	groupId group
+        	artifactId artifact
+        	version version
+            from components.java
+        }
+    }
+    repositories {
+	   mavenLocal()
+      }
+   }
+
