@@ -8,7 +8,7 @@ On Microsoft Windows platforms running with Java 8, I've encountered cases where
 
 ## How it works
 
-Instead, the FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request.
+Instead, the FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. Still, in case of many files (> 10.000) the GUI feels sloppy when a stream operation is used to publish the files to the list view. Even when published in chunks of 100 or 200 the ListView update reduces the GUI responsiveness significantly. So currently even in case of 100.000 files the update is performed in one operation, but collecting the files still runs in background.
 
 Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as '"','?','<','>','|',':','*' are removed.
 
