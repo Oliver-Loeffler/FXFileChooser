@@ -12,13 +12,20 @@ import javafx.stage.Stage;
 public class FXFileChooser extends Stage implements ClosableStage {
     
     public static FXFileChooser create() throws IOException {
-        return new FXFileChooser(new FileChooserModel());
+        return create(new PathFilter[0]);
+    }
+    
+    public static FXFileChooser create(PathFilter ...filter) throws IOException {
+        return new FXFileChooser(new FileChooserModel(), filter);
     }
     
     private final FileChooserModel model;
     
-    private FXFileChooser(FileChooserModel model) throws IOException {
+    private FXFileChooser(FileChooserModel model, PathFilter ...filter) throws IOException {
         this.model = model;
+        for (PathFilter f : filter) {
+            this.model.addFilter(f);
+        }
         Parent view = FileChooserView.create(model, this);
         Scene scene = new Scene(view);
         this.setScene(scene);
