@@ -19,8 +19,10 @@ Once the ListView is populated with Path items, those are filtered by the String
 
 ## Features
  
- * The choose directory button provides a menu, where default locations (or a history of locations) can be provided. ![default locations](pages/DefaultLocationsExample.png)
- *  File types can be selected from filters ![default locations](pages/PathFilterExample.png)
+ * The choose directory button provides a menu, where default locations (or a history of locations) can be provided. 
+ ![default locations](pages/DefaultLocationsExample.png)
+ *  File types can be selected from filters 
+ ![default locations](pages/PathFilterExample.png)
 
 Both items are not yet functional as the API does not yet provide functions to customize them. This is the next step (after adding all tests to Github).
 
