@@ -16,7 +16,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-public class SwingFileChooser extends JFXPanel implements ClosableStage {
+public class SwingFileChooser extends JFXPanel implements HideableStage {
 
     private static final long serialVersionUID = -5879082370711306802L;
     
@@ -36,6 +36,10 @@ public class SwingFileChooser extends JFXPanel implements ClosableStage {
     
     public static SwingFileChooser create(int expectedNumberOfFiles) {
         return create(null,expectedNumberOfFiles);
+    }
+    
+    public static SwingFileChooser create(String pathToBrowse) {
+        return create(pathToBrowse,10_000);
     }
     
     public static SwingFileChooser create(String pathToBrowse, int expectedNumberOfFiles)  {

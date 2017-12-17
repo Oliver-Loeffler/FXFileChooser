@@ -8,20 +8,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
-public class FXFileChooser extends Stage implements ClosableStage {
+public class FXFileChooserImpl extends Stage implements HideableStage {
     
-    public static FXFileChooser create() throws IOException {
+    public static FXFileChooserImpl create() throws IOException {
         return create(new PathFilter[0]);
     }
     
-    public static FXFileChooser create(PathFilter ...filter) throws IOException {
-        return new FXFileChooser(new FileChooserModel(), filter);
+    public static FXFileChooserImpl create(PathFilter ...filter) throws IOException {
+        return new FXFileChooserImpl(new FileChooserModel(), filter);
     }
     
     private final FileChooserModel model;
     
-    private FXFileChooser(FileChooserModel model, PathFilter ...filter) throws IOException {
+    private FXFileChooserImpl(FileChooserModel model, PathFilter ...filter) throws IOException {
         this.model = model;
         for (PathFilter f : filter) {
             this.model.addFilter(f);
@@ -32,8 +33,14 @@ public class FXFileChooser extends Stage implements ClosableStage {
         initModality(Modality.APPLICATION_MODAL);
     }
     
-    public Optional<Path> getSelectedPath() {
+    public Optional<Path> showOpenDialog(Window ownerWindow) {
+        this.initOwner(ownerWindow);
         this.showAndWait();
+        return this.getSelectedPath();
+    }
+    
+    private Optional<Path> getSelectedPath() {
         return Optional.ofNullable(this.model.getSelectedFile());
     }    
+    
 }

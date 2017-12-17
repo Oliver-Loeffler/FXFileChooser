@@ -30,7 +30,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
         setHeaderText("Select File from for processing:");
         headerTextProperty().bind(model.currentSearchPath().asString());
         initModality(Modality.APPLICATION_MODAL);
-                
+        
         getDialogPane().setContent(FileChooserView.create(model,this));
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
@@ -52,6 +52,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
     }
     
     public Optional<Path> showOpenDialog(Window window) throws IOException {
+        this.initOwner(window);
         return this.showAndWait();
     }
     
