@@ -17,15 +17,19 @@ Once the ListView is populated with Path items, those are filtered by the String
  * One placed in a JavaFX dialog
  * One placed in a JFXPanel so it can be used in Java Swing applications.
 
-## Features
+## Features & Ideas
  
+ * The FileChooser is based on FXML and CSS and so fully customizable (the ListView might be replaced by a TableView to have more options in terms of sorting - or it will be completely exchangeable - I'll see)
  * The choose directory button provides a menu, where default locations (or a history of locations) can be provided.
  *  File types can be selected from filters
-
-
  ![default locations](pages/DefaultLocationsExample.png) ![default locations](pages/PathFilterExample.png)
 
 Both items are not yet functional as the API does not yet provide functions to customize them. This is the next step (after adding all tests to Github).
+
+**Ideas**
+ * A nice build script.
+ * A great skin (CSS) is desirable (well I just got inspired by https://github.com/angelicalleite/museuid and will see :-).
+
 
 ## Using the FileChooser with Swing
 
