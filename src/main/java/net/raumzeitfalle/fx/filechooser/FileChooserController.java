@@ -98,8 +98,7 @@ final class FileChooserController implements Initializable {
             this.listOfFiles.getSelectionModel().clearSelection();
             this.model.updateFilterCriterion(fileNameFilter.getText());
         });
-        
-        
+                
         listOfFiles.getSelectionModel().selectedItemProperty().addListener(l -> {
             model.setSelectedFile(selectedItem());
          });
@@ -114,10 +113,10 @@ final class FileChooserController implements Initializable {
         stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
         
         ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
+       
         progress.visibleProperty().bind(updateIsRunning);
-        counterPane.visibleProperty().bind(updateIsRunning);
+        //counterPane.visibleProperty().bind(updateIsRunning);
         stopButton.visibleProperty().bind(updateIsRunning);
-        
         filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 

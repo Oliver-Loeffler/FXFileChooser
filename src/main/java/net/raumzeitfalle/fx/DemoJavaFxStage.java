@@ -1,6 +1,7 @@
 package net.raumzeitfalle.fx;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -16,7 +17,7 @@ public class DemoJavaFxStage extends Application {
     public void start(Stage arg0) throws Exception {
         
         PathFilter xmlOnly = PathFilter.create(".xml", p->p.getFileName().endsWith(".xml"));
-        FXFileChooserImpl fc = FXFileChooserImpl.create(xmlOnly);
+        FXFileChooserImpl fc = FXFileChooserImpl.create(); //Paths.get("E:\\Test")
         
         Button button = new Button("Show Dialog");
         button.setOnAction(e -> {

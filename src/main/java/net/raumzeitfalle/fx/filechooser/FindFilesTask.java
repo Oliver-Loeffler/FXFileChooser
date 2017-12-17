@@ -2,8 +2,10 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -22,9 +24,32 @@ final class FindFilesTask extends Task<Void>{
 
     @Override
     protected Void call() throws Exception {
+        
+        
+              
+        List<Path> candidates = Files.list(directory)
+            .filter(Files::isRegularFile)
+            .collect(Collectors.toList());
+        
         clearList();
-        Files.list(directory).filter(Files::isRegularFile).forEach(this::addPathToList);
+        //addPathsToList(paths);
+        uploadInChunks(candidates);
+        
         return null;
+    }
+
+    private void uploadInChunks(List<Path> candidates) {
+        int chunk = 1;
+        if (candidates.size() > 10_000) {
+            chunk = 100;
+        }
+        int start = 0;
+        int end = start+chunk;
+        while (start < candidates.size()) {            
+            addPathsToList(candidates.subList(start, end));
+            start = end;
+            end = (end + chunk) > candidates.size() ? candidates.size() : (end+chunk);                    
+        }
     }
 
     private void clearList() throws InterruptedException, ExecutionException {
@@ -37,9 +62,13 @@ final class FindFilesTask extends Task<Void>{
         task.get();
     }
     
-    private void addPathToList(Path p) {
-      Platform.runLater(()->pathsToUpdate.add(p));
+    private void addPathsToList(List<Path> paths) {
+      Platform.runLater(()->pathsToUpdate.addAll(paths));
     }
+    
+    private void addPathToList(Path path) {
+        Platform.runLater(()->pathsToUpdate.add(path));
+      }
     
 
 
