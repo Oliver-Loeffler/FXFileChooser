@@ -72,7 +72,7 @@ final class FileChooserController implements Initializable {
     
     private final ClosableStage stage;
     
-    private final UsePattern usagePattern = UsePattern.NORMAL_STAGE;
+    private final UsePattern usagePattern;
     
     public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final Dialog<Path> dialog) {
         return new FileChooserController(fileChooserModel, ()->dialog.close(), UsePattern.DIALOG);       
@@ -87,6 +87,7 @@ final class FileChooserController implements Initializable {
        this.model = fileChooserModel;
        this.dirChooser = new DirectoryChooser();
        this.stage = stage;
+       this.usagePattern = useCase;
     }
 
     @Override
@@ -119,9 +120,7 @@ final class FileChooserController implements Initializable {
         
         filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
-        
-        okButton.disableProperty().bind(model.invalidSelectionProperty());
-        
+                
         okButton.setOnAction(e -> {
             this.stage.hide();
         });
@@ -139,6 +138,7 @@ final class FileChooserController implements Initializable {
             }
             
             case NORMAL_STAGE : {
+                okButton.disableProperty().bind(model.invalidSelectionProperty());
                 okButton.visibleProperty().setValue(true);
                 cancelButton.visibleProperty().setValue(true);
                 break;
