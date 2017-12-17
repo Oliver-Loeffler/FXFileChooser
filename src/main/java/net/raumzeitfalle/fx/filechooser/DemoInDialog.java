@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-class DemoInDialog extends Application {
+public class DemoInDialog extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {

@@ -5,9 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-class JavaSwingDemo  {
-    
-    
+public class JavaSwingDemo  {
+  
     public static void main(String[] args) {
         SwingUtilities.invokeLater(()->initAndShowGui());
     }
