@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class JavaFxDemo extends Application {
+public class DemoJavaFxStage extends Application {
 
     @Override
     public void start(Stage arg0) throws Exception {
