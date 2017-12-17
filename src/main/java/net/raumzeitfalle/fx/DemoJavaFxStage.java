@@ -13,21 +13,23 @@ import net.raumzeitfalle.fx.filechooser.PathFilter;
 public class DemoJavaFxStage extends Application {
 
     @Override
-    public void start(Stage arg0) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
         
         PathFilter xmlOnly = PathFilter.create(".xml", p->p.getFileName().endsWith(".xml"));
         FXFileChooserImpl fc = FXFileChooserImpl.create(xmlOnly);
         
-        Button button = new Button("Show Dialog");
+        Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {
-            Optional<Path> selection = fc.showOpenDialog(arg0);
+            Optional<Path> selection = fc.showOpenDialog(primaryStage);
             selection.map(String::valueOf).ifPresent(System.out::println);
             System.out.println("Result is present: " + selection.isPresent());
         });
         
         Scene mainScene = new Scene(button);
-        arg0.setScene(mainScene);
-        arg0.show();
+        primaryStage.setScene(mainScene);
+        primaryStage.setWidth(400);
+        primaryStage.setHeight(400);
+        primaryStage.show();
     }
     
     public static void main(String[] args) {

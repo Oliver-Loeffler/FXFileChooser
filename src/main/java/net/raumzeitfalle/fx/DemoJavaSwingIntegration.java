@@ -17,7 +17,7 @@ public class DemoJavaSwingIntegration  {
         JFrame frame = new JFrame("JavaFX Dialog in Swing");
         JPanel buttonHolder = new JPanel();
         
-    JButton showDialog = new JButton("Show Dialog");
+    JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
     SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
     showDialog.addActionListener(l -> {
         int option = fileChooser.showOpenDialog(frame);
@@ -32,6 +32,7 @@ public class DemoJavaSwingIntegration  {
         buttonHolder.add(showDialog);
         frame.getContentPane().add(buttonHolder);
         frame.pack();
+        frame.setSize(400, 400);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
