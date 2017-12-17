@@ -1,14 +1,13 @@
 # FXFileChooser (0.0.1)
 
-As the standard JavaFX file chooser uses system dialogs, it is hard to test, it is hard to modifiy.
-In some cases eve its browsing performance is poor (depends on operating system and JRE version).
+As the standard JavaFX file chooser uses system dialogs, so it is hard to test and it is not easy to modifiy (e. g. new Skin). In some cases the system controls even show poor performance opening folders with many files (depends on operating system and JRE version).
 
-On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as it did not provide a good way of quick filtering.
+On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser, simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as I required a simplistic way to filter the files by name.
 
 
 ## How it works
 
-Instead, the FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. Still, in case of many files (> 10.000) the GUI feels sloppy when a stream operation is used to publish the files to the list view. Even when published in chunks of 100 or 200 the ListView update reduces the GUI responsiveness significantly. So currently even in case of 100.000 files the update is performed in one operation, but collecting the files still runs in background.
+FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. 
 
 Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as '"','?','<','>','|',':','*' are removed.
 
@@ -24,16 +23,18 @@ Once the ListView is populated with Path items, those are filtered by the String
  
  * FXFileChooser is based on FXML and CSS and so fully customizable (the ListView might be replaced by a TableView to have more options in terms of sorting - or it will be completely exchangeable - I'll see)
  * Icons are realized as SVGPaths based upon FontAwesome Free 5 (no glyphs, no extra dependencies, the SVGPaths are part of the FXML)
- * The choose directory button provides a menu, where default locations (or a history of locations) can be provided.
- *  File types can be selected from filters
+ * The choose directory button provides a menu, where default locations (or a history of locations) can be provided. **(tbd.)**
+ *  File types can be selected from filters **(tbd.)**
  
  ![default locations](pages/DefaultLocationsExample.png) ![default locations](pages/PathFilterExample.png)
 
-Both items are not yet functional as the API does not yet provide functions to customize them. This is the next step (after adding all tests to Github).
 
 **Ideas**
  * A nice build script.
  * A great skin (CSS) is desirable (well I just got inspired by https://github.com/angelicalleite/museuid and will see :-).
+
+
+Tests are missing and currently I'm playing with TestFX - but it's not yet working as I like it.
 
 
 ## Using the FileChooser with Swing
