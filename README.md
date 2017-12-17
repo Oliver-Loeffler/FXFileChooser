@@ -90,6 +90,8 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
     
     Scene mainScene = new Scene(button);
 ```
+On OSX this looks as follows:
+![JavaFX on OSX](pages/OSX_JavaFX_Stage.png)
 
 
 ## Example with running process
