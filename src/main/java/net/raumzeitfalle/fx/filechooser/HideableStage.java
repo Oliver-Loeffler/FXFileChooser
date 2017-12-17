@@ -1,6 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
 @FunctionalInterface
-interface ClosableStage {
+interface HideableStage {
     void hide();
 }

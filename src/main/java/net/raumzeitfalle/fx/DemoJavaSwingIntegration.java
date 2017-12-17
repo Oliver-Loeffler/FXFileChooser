@@ -17,17 +17,17 @@ public class DemoJavaSwingIntegration  {
         JFrame frame = new JFrame("JavaFX Dialog in Swing");
         JPanel buttonHolder = new JPanel();
         
-        JButton showDialog = new JButton("Show Dialog");
-        SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
-        showDialog.addActionListener(l -> {
-            int option = fileChooser.showOpenDialog(frame);
-            System.out.println(option);
-            
-            if (option == SwingFileChooser.APPROVE_OPTION) {
-                System.out.println(fileChooser.getSelectedFile().toString());
-            }
-            
-        });
+    JButton showDialog = new JButton("Show Dialog");
+    SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
+    showDialog.addActionListener(l -> {
+        int option = fileChooser.showOpenDialog(frame);
+        System.out.println(option);
+        
+        if (option == SwingFileChooser.APPROVE_OPTION) {
+            System.out.println(fileChooser.getSelectedFile().toString());
+        }
+        
+    });
         
         buttonHolder.add(showDialog);
         frame.getContentPane().add(buttonHolder);
