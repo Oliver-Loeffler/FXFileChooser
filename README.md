@@ -60,7 +60,7 @@ In cases with many files, the background activity of listing all files is indica
 The activity is implemented as a Service so it can be cancelled.
 
 ```java 
-final class FileUpdateService extends javafx.concurrent.Service<Void>
+final class FileUpdateService extends javafx.concurrent.Service<Void> {
 
     ObservableList<Path> pathsToUpdate
     
@@ -68,6 +68,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void>
     protected Task<Void> createTask() {
         return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
     }
+}
 ```
 
 The FindFilesTask so far only lists files matching the Predicate<Path> `Files::isRegularFile`.
