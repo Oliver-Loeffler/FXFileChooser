@@ -1,9 +1,11 @@
-package net.raumzeitfalle.fx.filechooser;
+package net.raumzeitfalle.fx;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import net.raumzeitfalle.fx.filechooser.FXFileChooser;
+import net.raumzeitfalle.fx.filechooser.PathFilter;
 
 public class DemoJavaFxStage extends Application {
 

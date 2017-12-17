@@ -1,9 +1,11 @@
-package net.raumzeitfalle.fx.filechooser;
+package net.raumzeitfalle.fx;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
 public class DemoJavaSwingIntegration  {
   
@@ -14,6 +16,7 @@ public class DemoJavaSwingIntegration  {
     private static void initAndShowGui() {
         JFrame frame = new JFrame("JavaFX Dialog in Swing");
         JPanel buttonHolder = new JPanel();
+        
         JButton showDialog = new JButton("Show Dialog");
         SwingFileChooser fileChooser = SwingFileChooser.create(frame);
         showDialog.addActionListener(l -> {

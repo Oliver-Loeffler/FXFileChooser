@@ -1,11 +1,14 @@
-package net.raumzeitfalle.fx.filechooser;
+package net.raumzeitfalle.fx;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
 
 public class DemoJavaFxDialog extends Application {
 
@@ -13,18 +16,17 @@ public class DemoJavaFxDialog extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Button showDialog = new Button("Show Dialog");
-        Scene scene = new Scene(showDialog);
-        
         FXFileChooserDialog fc = FXFileChooserDialog.create();
-        
         showDialog.setOnAction(a -> {
             try {
-                System.out.println(fc.showOpenDialog(primaryStage).map(String::valueOf).orElse("Nothing selected"));
+                Optional<Path> path = fc.showOpenDialog(primaryStage);
+                System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
             } catch (IOException e) {
-                e.printStackTrace();
+                // don't mind 
             }
         });
         
+        Scene scene = new Scene(showDialog);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
