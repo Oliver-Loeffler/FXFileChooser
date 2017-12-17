@@ -9,7 +9,8 @@ public class DemoJavaFxStage extends Application {
 
     @Override
     public void start(Stage arg0) throws Exception {
-        FXFileChooser fc = FXFileChooser.create();
+        PathFilter xmlOnly = PathFilter.create(".xml", p->p.getFileName().endsWith(".xml"));
+        FXFileChooser fc = FXFileChooser.create(xmlOnly);
         Button button = new Button("Show Dialog");
         button.setOnAction(e -> System.out.println(fc.getSelectedPath().map(String::valueOf).orElse("Nothing selected")));
         Scene mainScene = new Scene(button);

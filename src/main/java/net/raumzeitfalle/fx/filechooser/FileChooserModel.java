@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,8 @@ final class FileChooserModel {
     private final StringProperty fileSelection = new SimpleStringProperty();
     
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
+    
+    private final Set<PathFilter> pathFilter = new HashSet<>(10);
     
     private Path selectedFile;
     
@@ -146,5 +150,9 @@ final class FileChooserModel {
     
     public void changeToUsersHome() {
         updateFilesIn(getUsersHome());
+    }
+
+    public void addFilter(PathFilter filter) {
+        this.pathFilter.add(filter);
     }
 }
