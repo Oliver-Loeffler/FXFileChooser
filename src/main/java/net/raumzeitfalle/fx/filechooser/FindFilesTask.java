@@ -23,7 +23,7 @@ final class FindFilesTask extends Task<Void>{
     @Override
     protected Void call() throws Exception {
         clearList();
-        Files.list(directory).parallel().filter(Files::isRegularFile).forEach(this::addPathToList);
+        Files.list(directory).filter(Files::isRegularFile).forEach(this::addPathToList);
         return null;
     }
 

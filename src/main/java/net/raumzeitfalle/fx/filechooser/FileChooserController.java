@@ -118,7 +118,7 @@ final class FileChooserController implements Initializable {
         counterPane.visibleProperty().bind(updateIsRunning);
         stopButton.visibleProperty().bind(updateIsRunning);
         
-      //  filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
+        filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
         okButton.setOnAction(e -> {
