@@ -35,7 +35,7 @@ final class FileChooserModel {
     
     private final ListProperty<Path> allPathsProperty;
     
-    private final List<Predicate<? super Path>> baseFilters = new ArrayList<>();
+    private final List<Predicate<Path>> baseFilters = new ArrayList<>();
     
     private final ListProperty<Path> filteredPathsProperty;
     
@@ -111,22 +111,22 @@ final class FileChooserModel {
     }
     
     public void updateFilterCriterion(String criterion) {
-        Predicate<? super Path> customFilter = createManualListFilter(criterion);                           
+        Predicate<Path> customFilter = createManualListFilter(criterion);                           
         this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
     }
 
-    private Predicate<? super Path> createManualListFilter(String criterion) {
+    private Predicate<Path> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
-        Predicate<? super Path> customFilter = p -> {
+        Predicate<Path> customFilter = p -> {
             return null == corrected || corrected.isEmpty() ||
                     p.toString().toLowerCase().contains(corrected.toLowerCase());};
         return customFilter;
     }
 
-    private Predicate<? super Path> combineFilterPredicates(Predicate<? super Path> customFilter) {
-        List<Predicate<? super Path>> effectiveFilter = this.baseFilters.parallelStream().collect(Collectors.toList());
+    private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
+        List<Predicate<Path>> effectiveFilter = this.baseFilters.parallelStream().collect(Collectors.toList());
         effectiveFilter.add(customFilter);
-        Predicate<? super Path> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
+        Predicate<Path> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
         return effectivePredicate;
     }
 

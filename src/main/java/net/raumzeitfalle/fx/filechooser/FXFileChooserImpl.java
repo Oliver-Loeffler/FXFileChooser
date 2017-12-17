@@ -10,7 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class FXFileChooserImpl extends Stage implements HideableStage {
+public class FXFileChooserImpl extends Stage implements HideableWindow {
     
     public static FXFileChooserImpl create() throws IOException {
         return create(null,new PathFilter[0]);
