@@ -20,7 +20,7 @@
    <children>
       <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
          <children>
-            <SplitMenuButton fx:id="chooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Choose Directory" HBox.hgrow="SOMETIMES">
+            <SplitMenuButton fx:id="chooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Choose Directory" HBox.hgrow="ALWAYS">
                <items>
                   <MenuItem fx:id="usersHomeCommand" mnemonicParsing="false" text="Users Home" />
                </items>
@@ -31,7 +31,7 @@
                   <SVGPath content="m 21.885212,9.315891 -2.514723,4.526484 A 2.2221185,2.333224 0 0 1 17.45101,15 H 3.5633684 C 2.9202084,15 2.5194793,14.267443 2.8435418,13.684109 L 5.3582643,9.157625 A 2.2222227,2.3333334 0 0 1 7.2777785,8.0000001 H 21.16542 c 0.64316,0 1.043889,0.732557 0.719792,1.3158909 z M 7.2777785,6.8333329 H 18.66667 V 5.0833328 c 0,-0.9665101 -0.746181,-1.75 -1.666667,-1.75 H 11.444446 L 9.2222235,1 H 3.6666668 C 2.7461809,1 2.0000001,1.783489 2.0000001,2.75 V 12.887094 L 4.3985076,8.5697704 C 4.9935418,7.4986977 6.096841,6.8333329 7.2777785,6.8333329 Z" />
                </graphic>
              </SplitMenuButton>
-            <MenuButton fx:id="fileExtensionFilter" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="File Type" HBox.hgrow="SOMETIMES">
+            <MenuButton fx:id="fileExtensionFilter" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="File Type" HBox.hgrow="ALWAYS">
               <items>
                   <MenuItem fx:id="showAllFilesFilter" mnemonicParsing="false" text="all files" />
               </items>
@@ -59,15 +59,7 @@
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding></Button>
-            <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
-               <children>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="(" />
-                  <Label fx:id="filteredPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="filtered" />
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="/" />
-                  <Label fx:id="allPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="allPaths" />
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=")" />
-               </children>
-            </FlowPane>
+            <Label maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="SOMETIMES" />
             <ProgressIndicator fx:id="progress" focusTraversable="false" maxWidth="-Infinity" minHeight="32.0" nodeOrientation="LEFT_TO_RIGHT" visible="false" HBox.hgrow="NEVER">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
@@ -87,6 +79,21 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </SVGPath>
+                  <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" blendMode="HARD_LIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="SOMETIMES">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="(" />
+                        <Label fx:id="filteredPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="filtered" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="/" />
+                        <Label fx:id="allPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="allPaths" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=")" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </FlowPane>
                </children>
             </HBox>
             <TextField fx:id="fileNameFilter" blendMode="MULTIPLY" maxHeight="1.7976931348623157E308" minHeight="36.0">
