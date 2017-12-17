@@ -4,6 +4,10 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -29,6 +33,8 @@ final class FileChooserModel {
     
     private final ListProperty<Path> allPathsProperty = new SimpleListProperty<>(allPaths);
     
+    private final List<Predicate<? super Path>> baseFilters = new ArrayList<>();
+    
     private final ListProperty<Path> filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
     
     private final StringProperty fileSelection = new SimpleStringProperty();
@@ -36,7 +42,7 @@ final class FileChooserModel {
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     
     private Path selectedFile;
-
+    
     public FileChooserModel() {
         Path startFolder = getUsersHome();
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
@@ -78,11 +84,9 @@ final class FileChooserModel {
             this.fileSelection.setValue("");    
         } else {
             this.fileSelection.setValue(path.toString());
-        }
-        
+        }       
         this.invalidSelection.setValue(path == null);
     }
-    
     
     public Path getSelectedFile() {
         return this.selectedFile;
@@ -93,11 +97,23 @@ final class FileChooserModel {
     }
     
     public void updateFilterCriterion(String criterion) {
+        Predicate<? super Path> customFilter = createManualListFilter(criterion);                           
+        this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
+    }
+
+    private Predicate<? super Path> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
-        this.filteredPaths.setPredicate(p -> {
+        Predicate<? super Path> customFilter = p -> {
             return null == corrected || corrected.isEmpty() ||
-                    p.toString().toLowerCase().contains(corrected.toLowerCase());
-        });
+                    p.toString().toLowerCase().contains(corrected.toLowerCase());};
+        return customFilter;
+    }
+
+    private Predicate<? super Path> combineFilterPredicates(Predicate<? super Path> customFilter) {
+        List<Predicate<? super Path>> effectiveFilter = this.baseFilters.parallelStream().collect(Collectors.toList());
+        effectiveFilter.add(customFilter);
+        Predicate<? super Path> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
+        return effectivePredicate;
     }
 
     private String removeInvalidChars(String criterion) {
