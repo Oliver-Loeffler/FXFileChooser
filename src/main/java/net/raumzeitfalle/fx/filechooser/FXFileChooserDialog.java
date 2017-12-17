@@ -51,8 +51,10 @@ public class FXFileChooserDialog extends Dialog<Path> {
         
     }
     
-    public Optional<Path> showOpenDialog(Window window) throws IOException {
-        this.initOwner(window);
+    public Optional<Path> showOpenDialog(Window ownerWindow) throws IOException {
+        if (null == this.getOwner()) {
+            this.initOwner(ownerWindow);    
+        }
         return this.showAndWait();
     }
     

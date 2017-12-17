@@ -34,7 +34,9 @@ public class FXFileChooserImpl extends Stage implements HideableStage {
     }
     
     public Optional<Path> showOpenDialog(Window ownerWindow) {
-        this.initOwner(ownerWindow);
+        if (null == this.getOwner()) {
+            this.initOwner(ownerWindow);    
+        }
         this.showAndWait();
         return this.getSelectedPath();
     }
