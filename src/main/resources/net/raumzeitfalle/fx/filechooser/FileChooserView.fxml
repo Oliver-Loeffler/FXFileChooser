@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="750.0" prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
+         <children>
+            <SplitMenuButton fx:id="chooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Choose Directory" HBox.hgrow="NEVER">
+               <items>
+                  <MenuItem fx:id="usersHomeCommand" mnemonicParsing="false" text="Users Home" />
+               </items>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <graphic>
+                  <SVGPath content="m 21.885212,9.315891 -2.514723,4.526484 A 2.2221185,2.333224 0 0 1 17.45101,15 H 3.5633684 C 2.9202084,15 2.5194793,14.267443 2.8435418,13.684109 L 5.3582643,9.157625 A 2.2222227,2.3333334 0 0 1 7.2777785,8.0000001 H 21.16542 c 0.64316,0 1.043889,0.732557 0.719792,1.3158909 z M 7.2777785,6.8333329 H 18.66667 V 5.0833328 c 0,-0.9665101 -0.746181,-1.75 -1.666667,-1.75 H 11.444446 L 9.2222235,1 H 3.6666668 C 2.7461809,1 2.0000001,1.783489 2.0000001,2.75 V 12.887094 L 4.3985076,8.5697704 C 4.9935418,7.4986977 6.096841,6.8333329 7.2777785,6.8333329 Z" />
+               </graphic>
+             </SplitMenuButton>
+            <MenuButton fx:id="fileExtensionFilter" maxHeight="1.7976931348623157E308" minHeight="-Infinity" mnemonicParsing="false" text="File Type" HBox.hgrow="NEVER">
+              <items>
+                  <MenuItem fx:id="showAllFilesFilter" mnemonicParsing="false" text="all files" />
+              </items>
+               <graphic>
+                  <SVGPath content="M 6.9166667,4.71875 V 1 H 1.1875 C 0.80651042,1 0.5,1.2925781 0.5,1.65625 v 12.6875 C 0.5,14.707422 0.80651042,15 1.1875,15 h 9.625 C 11.19349,15 11.5,14.707422 11.5,14.34375 V 5.375 H 7.6041667 c -0.378125,0 -0.6875,-0.2953125 -0.6875,-0.65625 z M 8.75,11.171875 C 8.75,11.352344 8.5953125,11.5 8.40625,11.5 H 3.59375 C 3.4046875,11.5 3.25,11.352344 3.25,11.171875 v -0.21875 C 3.25,10.772656 3.4046875,10.625 3.59375,10.625 h 4.8125 c 0.1890625,0 0.34375,0.147656 0.34375,0.328125 z m 0,-1.75 C 8.75,9.602344 8.5953125,9.75 8.40625,9.75 H 3.59375 C 3.4046875,9.75 3.25,9.602344 3.25,9.421875 V 9.203125 C 3.25,9.022656 3.4046875,8.875 3.59375,8.875 h 4.8125 C 8.5953125,8.875 8.75,9.022656 8.75,9.203125 Z m 0,-1.96875 v 0.21875 C 8.75,7.8523437 8.5953125,8 8.40625,8 H 3.59375 C 3.4046875,8 3.25,7.8523437 3.25,7.671875 V 7.453125 C 3.25,7.2726563 3.4046875,7.125 3.59375,7.125 h 4.8125 C 8.5953125,7.125 8.75,7.2726563 8.75,7.453125 Z M 11.5,4.3332031 V 4.5 H 7.8333333 V 1 H 8.0080729 C 8.1914062,1 8.3661458,1.068359 8.4950521,1.1914063 L 11.299479,3.8710937 C 11.428385,3.9941406 11.5,4.1609375 11.5,4.3332031 Z" />
+               </graphic>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </MenuButton>
+            <Button fx:id="refreshButton" maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" text="Refresh" HBox.hgrow="NEVER">
+               <graphic>
+                  <SVGPath content="M 11.238064,4.536129 C 10.35567,3.7099033 9.2105485,3.256992 7.9957099,3.2580645 5.8093955,3.2599808 3.9219356,4.7590564 3.4008023,6.838508 3.3628623,6.989883 3.2280038,7.0967742 3.0719431,7.0967742 H 1.4545201 C 1.242883,7.0967742 1.0821089,6.9046411 1.121258,6.6966451 1.7319798,3.4535 4.5793992,1 8,1 9.8755485,1 11.578778,1.7377097 12.835504,2.9386896 L 13.843589,1.9306049 C 14.270335,1.5038589 15,1.8061008 15,2.409625 v 3.7839234 c 0,0.374133 -0.303286,0.6774193 -0.67742,0.6774193 h -3.783922 c -0.6035246,0 -0.9057671,-0.7296653 -0.479021,-1.1564394 z M 1.6774193,9.129032 h 3.7839231 c 0.6035242,0 0.9057667,0.729666 0.4790205,1.15644 l -1.1784273,1.178427 c 0.8823947,0.826254 2.0276008,1.279165 3.2424674,1.278065 2.185186,-0.002 4.073408,-1.500033 4.594795,-3.580416 0.03793,-0.151375 0.172798,-0.2582657 0.328859,-0.2582657 h 1.617451 c 0.211637,0 0.372412,0.1921327 0.333263,0.4001287 C 14.26802,12.5465 11.420601,15 8,15 6.1244515,15 4.421222,14.26229 3.1644963,13.061311 l -1.008085,1.008084 C 1.7296653,14.496141 1,14.193899 1,13.590375 V 9.806452 C 1,9.432319 1.3032863,9.129032 1.6774193,9.129032 Z" />
+               </graphic>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding></Button>
+            <Button fx:id="stopButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Stop" HBox.hgrow="SOMETIMES">
+               <graphic>
+                  <SVGPath content="M 13.5,1 H 2.5 C 1.671875,1 1,1.671875 1,2.5 v 11 C 1,14.328125 1.671875,15 2.5,15 h 11 C 14.328125,15 15,14.328125 15,13.5 V 2.5 C 15,1.671875 14.328125,1 13.5,1 Z" />
+               </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding></Button>
+            <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+               <children>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="(" />
+                  <Label fx:id="filteredPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="filtered" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="/" />
+                  <Label fx:id="allPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="allPaths" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=")" />
+               </children>
+            </FlowPane>
+            <ProgressIndicator fx:id="progress" focusTraversable="false" maxWidth="-Infinity" minHeight="32.0" nodeOrientation="LEFT_TO_RIGHT" visible="false" HBox.hgrow="NEVER">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <HBox.margin>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+         </children>
+      </HBox>
+      <StackPane VBox.vgrow="NEVER">
+         <children>
+            <HBox alignment="CENTER_LEFT" StackPane.alignment="TOP_LEFT">
+               <children>
+                  <SVGPath content="M 14.343089,0.99999546 H 1.6570127 c -0.582914,0 -0.87705065,0.70727004 -0.4640234,1.12030004 l 5.0570069,5.05777 v 5.6344295 c 0,0.21412 0.1044805,0.4148 0.2799179,0.53763 l 2.1874996,1.5307 c 0.4315663,0.30209 1.0325818,-0.004 1.0325818,-0.53763 V 7.1780655 l 5.0571435,-5.05777 c 0.41218,-0.41221 0.120067,-1.12030004 -0.46405,-1.12030004 z" fill="#0000003e" stroke="#ffffff00" HBox.hgrow="NEVER">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </SVGPath>
+               </children>
+            </HBox>
+            <TextField fx:id="fileNameFilter" blendMode="MULTIPLY" maxHeight="1.7976931348623157E308" minHeight="36.0">
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </TextField>
+         </children>
+      </StackPane>
+      <ListView fx:id="listOfFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <TextField fx:id="selectedFile" editable="false" minHeight="36.0" promptText="(shows the selected file)" VBox.vgrow="NEVER" />
+      <HBox prefHeight="36.0" prefWidth="200.0" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="okButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="OK" HBox.hgrow="ALWAYS" />
+            <Button fx:id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Cancel" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
