@@ -4,6 +4,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,6 +18,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
 final class FileChooserController implements Initializable {
@@ -65,6 +67,9 @@ final class FileChooserController implements Initializable {
     
     @FXML
     private Button cancelButton;
+    
+    @FXML
+    private VBox fileChooserForm;
       
     private final FileChooserModel model;
     
@@ -107,7 +112,14 @@ final class FileChooserController implements Initializable {
         usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
         showAllFilesFilter.setOnAction(e -> fileNameFilter.setText(""));
         
-        chooser.setOnAction(e -> model.updateFilesIn(dirChooser.showDialog(null)));    
+        // TODO: Ensure the proper owner window is passed into dirChooser
+        chooser.setOnAction(e -> {
+            Platform.runLater(()->{
+                fileChooserForm.setDisable(true);
+                model.updateFilesIn(dirChooser.showDialog(null));
+                fileChooserForm.setDisable(false);
+            });
+        });    
         
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
