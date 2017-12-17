@@ -16,6 +16,10 @@ public class FXFileChooserImpl extends Stage implements HideableStage {
         return create(null,new PathFilter[0]);
     }
     
+    public static FXFileChooserImpl create(PathFilter ...filter) throws IOException {
+        return new FXFileChooserImpl(new FileChooserModel(), filter);
+    }
+    
     public static FXFileChooserImpl create(Path at, PathFilter ...filter) throws IOException {
         return new FXFileChooserImpl(new FileChooserModel(at), filter);
     }
