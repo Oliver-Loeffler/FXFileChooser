@@ -48,7 +48,7 @@ public class SwingFileChooser extends JFXPanel implements HideableStage {
         SwingFileChooser fc = new SwingFileChooser();
         Platform.runLater(()->{
             try {
-                FileChooserModel model = new FileChooserModel(startHere,expectedNumberOfFiles);
+                FileChooserModel model = new FileChooserModel(startHere);
                 Parent view = FileChooserView.create(model, fc);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);

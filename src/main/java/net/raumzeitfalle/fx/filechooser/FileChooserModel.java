@@ -48,14 +48,14 @@ final class FileChooserModel {
     private Path selectedFile;
     
     public FileChooserModel() {
-        this(getUsersHome(),10_000);
+        this(getUsersHome());
     }
     
-    public FileChooserModel(Path startFolder, int initialCapacity) {
+    public FileChooserModel(Path startFolder) {
         if (null == startFolder) {
             startFolder = getUsersHome();
         }
-        this.allPaths = FXCollections.observableArrayList(new ArrayList<Path>(initialCapacity));
+        this.allPaths = FXCollections.observableArrayList();
         this.filteredPaths = new FilteredList<>(allPaths);
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
