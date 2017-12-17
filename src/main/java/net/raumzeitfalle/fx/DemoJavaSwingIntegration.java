@@ -18,9 +18,9 @@ public class DemoJavaSwingIntegration  {
         JPanel buttonHolder = new JPanel();
         
         JButton showDialog = new JButton("Show Dialog");
-        SwingFileChooser fileChooser = SwingFileChooser.create(frame);
+        SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
         showDialog.addActionListener(l -> {
-            int option = fileChooser.showOpenDialog();
+            int option = fileChooser.showOpenDialog(frame);
             System.out.println(option);
             
             if (option == SwingFileChooser.APPROVE_OPTION) {

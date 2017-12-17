@@ -26,18 +26,18 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
 final class FileChooserModel {
-       
-    private final ObservableList<Path> allPaths = FXCollections.observableArrayList();
     
-    private final FilteredList<Path> filteredPaths = new FilteredList<>(allPaths);
+    private final ObservableList<Path> allPaths;
+    
+    private final FilteredList<Path> filteredPaths;
     
     private final FileUpdateService fileUpdateService;
     
-    private final ListProperty<Path> allPathsProperty = new SimpleListProperty<>(allPaths);
+    private final ListProperty<Path> allPathsProperty;
     
     private final List<Predicate<? super Path>> baseFilters = new ArrayList<>();
     
-    private final ListProperty<Path> filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
+  //  private final ListProperty<Path> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
     
@@ -48,13 +48,23 @@ final class FileChooserModel {
     private Path selectedFile;
     
     public FileChooserModel() {
-        Path startFolder = getUsersHome();
+        this(getUsersHome(),1_000);
+    }
+    
+    public FileChooserModel(Path startFolder, int initialCapacity) {
+        if (null == startFolder) {
+            startFolder = getUsersHome();
+        }
+        this.allPaths = FXCollections.observableArrayList(new ArrayList<Path>(initialCapacity));
+        this.filteredPaths = new FilteredList<>(allPaths);
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
+        this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
+     //   this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
         updateFilterCriterion("");
         this.fileUpdateService.start();
     }
 
-    private Path getUsersHome() {
+    private static Path getUsersHome() {
         return Paths.get(System.getProperty("user.home"));
     }
     
@@ -70,9 +80,9 @@ final class FileChooserModel {
         return filteredPaths;
     }
     
-    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
-        return this.filteredPathsProperty.sizeProperty();
-    }
+//    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
+//        return this.filteredPathsProperty.sizeProperty();
+//    }
     
     ReadOnlyIntegerProperty allPathsSizeProperty() {
         return this.allPathsProperty.sizeProperty();
