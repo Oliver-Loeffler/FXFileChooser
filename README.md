@@ -20,6 +20,7 @@ Once the ListView is populated with Path items, those are filtered by the String
 ## Features & Ideas
  
  * The FileChooser is based on FXML and CSS and so fully customizable (the ListView might be replaced by a TableView to have more options in terms of sorting - or it will be completely exchangeable - I'll see)
+ * Icons are realized as SVGPaths based upon FontAwesome Free 5 (no glyphs, no extra dependencies, the SVGPaths are part of the FXML)
  * The choose directory button provides a menu, where default locations (or a history of locations) can be provided.
  *  File types can be selected from filters
  ![default locations](pages/DefaultLocationsExample.png) ![default locations](pages/PathFilterExample.png)
