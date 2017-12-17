@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.Region;
@@ -36,6 +37,9 @@ public class FXFileChooserDialog extends Dialog<Path> {
         
         ButtonType okay = ButtonType.OK;
         getDialogPane().getButtonTypes().addAll(okay, ButtonType.CANCEL);
+        
+        Node okayButton = getDialogPane().lookupButton(okay);
+        okayButton.disableProperty().bind(model.invalidSelectionProperty().not());
         
         setResultConverter(dialogButton -> {
             if (dialogButton  == okay) {
