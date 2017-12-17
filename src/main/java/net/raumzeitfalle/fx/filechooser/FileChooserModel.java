@@ -37,7 +37,7 @@ final class FileChooserModel {
     
     private final List<Predicate<? super Path>> baseFilters = new ArrayList<>();
     
-  //  private final ListProperty<Path> filteredPathsProperty;
+    private final ListProperty<Path> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
     
@@ -48,7 +48,7 @@ final class FileChooserModel {
     private Path selectedFile;
     
     public FileChooserModel() {
-        this(getUsersHome(),1_000);
+        this(getUsersHome(),10_000);
     }
     
     public FileChooserModel(Path startFolder, int initialCapacity) {
@@ -59,7 +59,7 @@ final class FileChooserModel {
         this.filteredPaths = new FilteredList<>(allPaths);
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
-     //   this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
+        this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
         updateFilterCriterion("");
         this.fileUpdateService.start();
     }
@@ -80,9 +80,9 @@ final class FileChooserModel {
         return filteredPaths;
     }
     
-//    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
-//        return this.filteredPathsProperty.sizeProperty();
-//    }
+    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
+        return this.filteredPathsProperty.sizeProperty();
+    }
     
     ReadOnlyIntegerProperty allPathsSizeProperty() {
         return this.allPathsProperty.sizeProperty();
