@@ -5,11 +5,13 @@ In some cases eve its browsing performance is poor (depends on operating system 
 
 On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as it did not provide a good way of quick filtering.
 
+
 ## How it works
 
 Instead, the SearchableFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request.
 
 Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as '"','?','<','>','|',':','*' are removed.
+
 
 ## Available versions
 
@@ -17,12 +19,14 @@ Once the ListView is populated with Path items, those are filtered by the String
  * One placed in a JavaFX dialog
  * One placed in a JFXPanel so it can be used in Java Swing applications.
 
+
 ## Features & Ideas
  
  * The FileChooser is based on FXML and CSS and so fully customizable (the ListView might be replaced by a TableView to have more options in terms of sorting - or it will be completely exchangeable - I'll see)
  * Icons are realized as SVGPaths based upon FontAwesome Free 5 (no glyphs, no extra dependencies, the SVGPaths are part of the FXML)
  * The choose directory button provides a menu, where default locations (or a history of locations) can be provided.
  *  File types can be selected from filters
+ 
  ![default locations](pages/DefaultLocationsExample.png) ![default locations](pages/PathFilterExample.png)
 
 Both items are not yet functional as the API does not yet provide functions to customize them. This is the next step (after adding all tests to Github).
