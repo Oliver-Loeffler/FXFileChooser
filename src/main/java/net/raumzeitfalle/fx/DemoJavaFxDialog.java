@@ -17,7 +17,7 @@ public class DemoJavaFxDialog extends Application {
 
     FXFileChooserDialog fc = FXFileChooserDialog.create();
     
-    Button showDialog = new Button("Show Dialog");
+    Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
     showDialog.setOnAction(a -> {
         try {
             Optional<Path> path = fc.showOpenDialog(primaryStage);
@@ -30,6 +30,8 @@ public class DemoJavaFxDialog extends Application {
         
         Scene scene = new Scene(showDialog);
         primaryStage.setScene(scene);
+        primaryStage.setWidth(400);
+        primaryStage.setHeight(400);
         primaryStage.show();
     }
     
