@@ -39,7 +39,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
         getDialogPane().getButtonTypes().addAll(okay, ButtonType.CANCEL);
         
         Node okayButton = getDialogPane().lookupButton(okay);
-        okayButton.disableProperty().bind(model.invalidSelectionProperty().not());
+        okayButton.disableProperty().bind(model.invalidSelectionProperty());
         
         setResultConverter(dialogButton -> {
             if (dialogButton  == okay) {
