@@ -10,7 +10,7 @@ import javafx.concurrent.Task;
 
 final class FileUpdateService extends javafx.concurrent.Service<Void>{
      
-    private ObjectProperty<Path> root = new SimpleObjectProperty<>();
+    private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
     
     private ObservableList<Path> pathsToUpdate;
    
@@ -22,15 +22,15 @@ final class FileUpdateService extends javafx.concurrent.Service<Void>{
 
     private void setSearchLocation(Path folderToStart) {
         if (Files.isDirectory(folderToStart)) {
-            this.root.setValue(folderToStart);
+            this.rootFolder.setValue(folderToStart);
         } else {
-            this.root.setValue(folderToStart.getParent());
+            this.rootFolder.setValue(folderToStart.getParent());
         }
     }
 
     @Override
     protected Task<Void> createTask() {
-        return new FindFilesTask(root.getValue(), pathsToUpdate);
+        return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
     }
     
     public void restartIn(Path location) {
@@ -39,7 +39,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void>{
     }
     
     ObjectProperty<Path> searchPathProperty() {
-        return this.root;
+        return this.rootFolder;
     }
     
     

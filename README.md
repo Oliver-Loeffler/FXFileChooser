@@ -3,9 +3,16 @@
 As the standard JavaFX file chooser uses system dialogs, it is hard to test, it is hard to modifiy.
 In some cases eve its browsing performance is poor (depends on operating system and JRE version).
 
+On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as it did not provide a good way of quick filtering.
 
+## How it works
 
-**There are 3 different versions available:**
+Instead, the SearchableFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request.
+
+Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as '"','?','<','>','|',':','*' are removed.
+
+## Available versions
+
  * FileChooser placed in a customized JavaFX stage
  * One placed in a JavaFX dialog
  * One placed in a JFXPanel so it can be used in Java Swing applications.
@@ -45,3 +52,24 @@ In some cases eve its browsing performance is poor (depends on operating system 
 
 ![Swing version with Filter](pages/Windows81_JavaFX_DialogStage.png)
 
+
+## Example with running process
+
+In cases with many files, the background activity of listing all files is indicated. Aside a label shows the number of currently filtered files and total available files.
+
+The activity is implemented as a Service so it can be cancelled.
+
+```java 
+final class FileUpdateService extends javafx.concurrent.Service<Void>
+
+    ObservableList<Path> pathsToUpdate
+    
+    @Override
+    protected Task<Void> createTask() {
+        return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
+    }
+```
+
+The FindFilesTask so far only lists files matching the Predicate<Path> `Files::isRegularFile`.
+
+![Swing version with Filter](pages/Windows81_Swing_Dialog_ProcessRunning.png)
