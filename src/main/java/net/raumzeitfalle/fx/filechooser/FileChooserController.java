@@ -97,11 +97,7 @@ final class FileChooserController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    		//.getFilteredPaths()
-    		/*
-    		 * Consider to limit # of visible items but update "the viewables" on scrolling.
-    		 */
-        this.listOfFiles.setItems(this.model.getViewablePaths()); 
+        this.listOfFiles.setItems(this.model.getFilteredPaths()); 
         
         fileNameFilter.textProperty().addListener( l -> {
             this.listOfFiles.getSelectionModel().clearSelection();
@@ -133,7 +129,7 @@ final class FileChooserController implements Initializable {
         progress.visibleProperty().bind(updateIsRunning);
         //counterPane.visibleProperty().bind(updateIsRunning);
         stopButton.visibleProperty().bind(updateIsRunning);
-        //filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
+        filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
         okButton.setOnAction(e -> {
