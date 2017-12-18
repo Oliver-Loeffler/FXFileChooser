@@ -97,7 +97,11 @@ final class FileChooserController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.listOfFiles.setItems(this.model.getFilteredPaths()); 
+    		//.getFilteredPaths()
+    		/*
+    		 * Consider to limit # of visible items but update "the viewables" on scrolling.
+    		 */
+        this.listOfFiles.setItems(this.model.getViewablePaths()); 
         
         fileNameFilter.textProperty().addListener( l -> {
             this.listOfFiles.getSelectionModel().clearSelection();

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -21,7 +22,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
@@ -30,6 +33,8 @@ final class FileChooserModel {
     private final ObservableList<Path> allPaths;
     
     private final FilteredList<Path> filteredPaths;
+        
+    private final ObservableList<Path> viewablePaths;
     
     private final FileUpdateService fileUpdateService;
     
@@ -60,7 +65,14 @@ final class FileChooserModel {
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
+        this.viewablePaths = FXCollections.observableArrayList();
+        
         updateFilterCriterion("");
+        InvalidationListener l = observable->{
+        		this.viewablePaths.clear();
+        		this.filteredPaths.stream().limit(200).forEach(this.viewablePaths::add);
+        };
+        this.filteredPaths.addListener(l);
         this.fileUpdateService.start();
     }
 
@@ -78,6 +90,10 @@ final class FileChooserModel {
 
     public ObservableList<Path> getFilteredPaths() {
         return filteredPaths;
+    }
+    
+    public ObservableList<Path> getViewablePaths() {
+    		return viewablePaths;
     }
     
     ReadOnlyIntegerProperty filteredPathsSizeProperty() {
