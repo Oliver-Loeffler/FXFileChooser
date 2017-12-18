@@ -126,11 +126,19 @@ final class FileChooserController implements Initializable {
         
         ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
        
+        /*
+         *  TODO: replace progress indicator by progress bar which is updated in intervals only
+         *  OR use indicator for small sets and bar for large data sets 
+         */
         progress.visibleProperty().bind(updateIsRunning);
+        
         //counterPane.visibleProperty().bind(updateIsRunning);
+        counterPane.setVisible(false);
         stopButton.visibleProperty().bind(updateIsRunning);
-        filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
-        allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
+        
+        // TODO: update counts after refresh
+        //filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
+        //allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
         okButton.setOnAction(e -> {
             this.stage.hide();
