@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
-public class FXFileChooserDialog extends Dialog<Path> {
+public final class FXFileChooserDialog extends Dialog<Path> {
     
     public static FXFileChooserDialog create() throws IOException {
         return new FXFileChooserDialog(new FileChooserModel());

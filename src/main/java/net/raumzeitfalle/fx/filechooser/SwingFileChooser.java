@@ -16,7 +16,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-public class SwingFileChooser extends JFXPanel implements HideableWindow {
+public final class SwingFileChooser extends JFXPanel implements HideableWindow {
 
     private static final long serialVersionUID = -5879082370711306802L;
     
