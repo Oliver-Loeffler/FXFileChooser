@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -32,8 +35,8 @@ final class FileChooserModel {
     
     private final ObservableList<Path> allPaths;
     
-    private final FilteredList<Path> filteredPaths;
-        
+    //private final FilteredList<Path> filteredPaths;
+            
     private final ObservableList<Path> viewablePaths;
     
     private final FileUpdateService fileUpdateService;
@@ -42,13 +45,15 @@ final class FileChooserModel {
     
     private final List<Predicate<Path>> baseFilters = new ArrayList<>();
     
-    private final ListProperty<Path> filteredPathsProperty;
+   // private final ListProperty<Path> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
     
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     
     private final Set<PathFilter> pathFilter = new HashSet<>(10);
+    
+    private String viewFilter = "";
     
     private Path selectedFile;
     
@@ -61,18 +66,30 @@ final class FileChooserModel {
             startFolder = getUsersHome();
         }
         this.allPaths = FXCollections.observableArrayList();
-        this.filteredPaths = new FilteredList<>(allPaths);
+      //  this.filteredPaths = new FilteredList<>(allPaths);
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
-        this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
+      //  this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
         this.viewablePaths = FXCollections.observableArrayList();
         
         updateFilterCriterion("");
-        InvalidationListener l = observable->{
-        		this.viewablePaths.clear();
-        		this.filteredPaths.stream().limit(200).forEach(this.viewablePaths::add);
+        ListChangeListener<Path> l = observable->{
+            		System.out.println("Update: " + this.viewablePaths.size());
+            		System.out.println("Filter: " + this.viewFilter);
+            		Platform.runLater(()->{
+            	    this.viewablePaths.clear();
+            	    this.allPaths
+            	    		.stream()
+            	    		.filter(createManualListFilter(viewFilter))
+            	    		.limit(200)
+	            		.forEach(p->this.viewablePaths.add(p));
+	            		});
+            		
+            		System.out.println("Viewables: " + this.viewablePaths.size());
         };
-        this.filteredPaths.addListener(l);
+       
+        this.allPaths.addListener(l);
+     //   this.filteredPaths.addListener(l);
         this.fileUpdateService.start();
     }
 
@@ -88,17 +105,17 @@ final class FileChooserModel {
         return this.fileUpdateService.searchPathProperty();
     }
 
-    public ObservableList<Path> getFilteredPaths() {
-        return filteredPaths;
-    }
+//    public ObservableList<Path> getFilteredPaths() {
+//        return filteredPaths;
+//    }
     
     public ObservableList<Path> getViewablePaths() {
     		return viewablePaths;
     }
     
-    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
-        return this.filteredPathsProperty.sizeProperty();
-    }
+//    ReadOnlyIntegerProperty filteredPathsSizeProperty() {
+//        return this.filteredPathsProperty.sizeProperty();
+//    }
     
     ReadOnlyIntegerProperty allPathsSizeProperty() {
         return this.allPathsProperty.sizeProperty();
@@ -127,8 +144,9 @@ final class FileChooserModel {
     }
     
     public void updateFilterCriterion(String criterion) {
-        Predicate<Path> customFilter = createManualListFilter(criterion);                           
-        this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
+    		this.viewFilter = criterion;
+       // Predicate<Path> customFilter = createManualListFilter(criterion);                           
+       // this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
     }
 
     private Predicate<Path> createManualListFilter(String criterion) {
