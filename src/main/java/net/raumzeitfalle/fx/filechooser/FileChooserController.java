@@ -97,7 +97,7 @@ final class FileChooserController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.listOfFiles.setItems(this.model.getFilteredPaths()); 
+        this.listOfFiles.setItems(this.model.getSortedPaths()); 
         
         fileNameFilter.textProperty().addListener( l -> {
             this.listOfFiles.getSelectionModel().clearSelection();
