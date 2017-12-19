@@ -9,7 +9,15 @@ On Microsoft Windows platforms running with Java 8, I've encountered cases where
 
 FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. 
 
-Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as '"','?','<','>','|',':','*' are removed.
+Once the ListView is populated with Path items, those are filtered by the String entered in the filter TextField. The filter condition is "contains" whereas special characters such as ` '"','?','<','>','|',':','*'` are removed.
+
+It turned out that with slow network connections the experience is great when using a single stream and updating the ListView in the streams forEach method. However, this can still take some seconds.
+
+**Ideas**
+ 1. Provide some kind of directory content pre fetching for large network shares. 
+ 2. Indicate update progress and update ListView with one operation (one single update works fine, in case of using pre fetching that would be okay). Otherwise one would see an empty List and would have to wait.
+ 3. In the above case, ensure that files which are selected but do not exist are removed from view on selection or hover OR dont accept the OK action in case the file does no longer exist and trigger update then.  
+ 3. Replace the `ObservableList` with an `ObservableSet` and update the view in one step (one single update works fine, in case of using pre fetching that would be okay). But then also update only what has changed. Never clear the list, only remove items which do no longer exist and add items which are not in the view. Problem: there are no filtered sets...
 
 
 ## Available versions

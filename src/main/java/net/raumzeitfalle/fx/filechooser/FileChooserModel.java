@@ -24,12 +24,15 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 final class FileChooserModel {
     
     private final ObservableList<Path> allPaths;
     
     private final FilteredList<Path> filteredPaths;
+    
+    private final SortedList<Path> sortedPaths;
     
     private final FileUpdateService fileUpdateService;
     
@@ -57,6 +60,7 @@ final class FileChooserModel {
         }
         this.allPaths = FXCollections.observableArrayList();
         this.filteredPaths = new FilteredList<>(allPaths);
+        this.sortedPaths = new SortedList<>(this.filteredPaths);
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
@@ -78,6 +82,10 @@ final class FileChooserModel {
 
     public ObservableList<Path> getFilteredPaths() {
         return filteredPaths;
+    }
+    
+    public ObservableList<Path> getSortedPaths() {
+        return sortedPaths;
     }
     
     ReadOnlyIntegerProperty filteredPathsSizeProperty() {
