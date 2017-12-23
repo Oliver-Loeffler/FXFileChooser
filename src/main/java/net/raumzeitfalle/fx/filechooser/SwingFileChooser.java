@@ -31,16 +31,23 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     public static final int APPROVE_OPTION = 0;
 
     public static SwingFileChooser create() {
-        return create(null);
+        return create("");
     }
     
-    public static SwingFileChooser create(String pathToBrowse)  {
+    public static SwingFileChooser create(PathFilter ...filter) {
+    		return create("", filter);
+    }
+    
+    public static SwingFileChooser create(String pathToBrowse, PathFilter ...filter)  {
         
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser();
         Platform.runLater(()->{
             try {
                 FileChooserModel model = new FileChooserModel(startHere);
+                for (PathFilter f : filter) {
+                		model.addFilter(f);
+                }
                 Parent view = FileChooserView.create(model, fc);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
@@ -55,7 +62,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
 
     private static Path startPath(String pathToBrowse) {
         Path startHere = null;
-        if (null != pathToBrowse) {
+        if (null != pathToBrowse && !pathToBrowse.isEmpty()) {
             startHere = Paths.get(pathToBrowse);
         }
         return startHere;

@@ -47,6 +47,9 @@ final class FileChooserModel {
     
     private Path selectedFile;
     
+    /*
+     * TODO: add possibility to construct model with list or array of filters
+     */
     public FileChooserModel() {
         this(getUsersHome());
     }
