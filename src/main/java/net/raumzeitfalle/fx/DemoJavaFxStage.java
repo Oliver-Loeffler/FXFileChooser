@@ -15,8 +15,15 @@ public class DemoJavaFxStage extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        PathFilter xmlOnly = PathFilter.create(".xml", p->p.getFileName().endsWith(".xml"));
-        FXFileChooserImpl fc = FXFileChooserImpl.create(xmlOnly);
+        PathFilter xml = PathFilter.create(".xml", p->p.getFileName().toString().toLowerCase().endsWith(".xml"));
+        PathFilter txt = PathFilter.create(".txt", p->p.getFileName().toString().toLowerCase().endsWith(".txt"));
+        
+        PathFilter xlsx = PathFilter.create(".xls or .xlsx", p-> p.getFileName().toString().toLowerCase().endsWith(".xls") 
+        		|| p.getFileName().toString().toLowerCase().endsWith(".xlsx"));
+        
+        PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
+        
+        FXFileChooserImpl fc = FXFileChooserImpl.create(xml, xlsx, na0, txt);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {

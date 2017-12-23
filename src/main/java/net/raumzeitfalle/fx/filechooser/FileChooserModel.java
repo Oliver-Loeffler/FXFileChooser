@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,9 +36,7 @@ final class FileChooserModel {
     private final FileUpdateService fileUpdateService;
     
     private final ListProperty<Path> allPathsProperty;
-    
-    private final List<Predicate<Path>> baseFilters = new ArrayList<>();
-    
+        
     private final ListProperty<Path> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
@@ -132,8 +129,9 @@ final class FileChooserModel {
     }
 
     private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
-        List<Predicate<Path>> effectiveFilter = this.baseFilters.parallelStream().collect(Collectors.toList());
+        List<Predicate<Path>> effectiveFilter = this.pathFilter.parallelStream().map(PathFilter::getCriterion).collect(Collectors.toList());
         effectiveFilter.add(customFilter);
+     
         Predicate<Path> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
         return effectivePredicate;
     }
@@ -173,4 +171,17 @@ final class FileChooserModel {
     public void addFilter(PathFilter filter) {
         this.pathFilter.add(filter);
     }
+    
+    public Set<PathFilter> getPathFilter() {
+    		return this.pathFilter;
+    }
+
+    public void replacePathFilter(PathFilter filter) {
+    		this.pathFilter.clear();
+        this.pathFilter.add(filter);
+    }
+    
+	public void clearBaseFilter() {
+		this.pathFilter.clear();
+	}
 }
