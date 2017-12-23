@@ -18,7 +18,7 @@ public class DemoJavaSwingIntegration  {
         JPanel buttonHolder = new JPanel();
         
     JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
-    SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
+    SwingFileChooser fileChooser = SwingFileChooser.create();
     showDialog.addActionListener(l -> {
         int option = fileChooser.showOpenDialog(frame);
         System.out.println(option);

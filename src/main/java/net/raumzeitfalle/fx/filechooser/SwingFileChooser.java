@@ -31,18 +31,10 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     public static final int APPROVE_OPTION = 0;
 
     public static SwingFileChooser create() {
-        return create(null,10_000);
+        return create(null);
     }
     
-    public static SwingFileChooser create(int expectedNumberOfFiles) {
-        return create(null,expectedNumberOfFiles);
-    }
-    
-    public static SwingFileChooser create(String pathToBrowse) {
-        return create(pathToBrowse,10_000);
-    }
-    
-    public static SwingFileChooser create(String pathToBrowse, int expectedNumberOfFiles)  {
+    public static SwingFileChooser create(String pathToBrowse)  {
         
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser();

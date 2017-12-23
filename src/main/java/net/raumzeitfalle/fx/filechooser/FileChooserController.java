@@ -110,7 +110,20 @@ final class FileChooserController implements Initializable {
         
         selectedFile.textProperty().bind(model.selectedFileProperty());
         usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
-        showAllFilesFilter.setOnAction(e -> fileNameFilter.setText(""));
+        showAllFilesFilter.setOnAction(e -> {
+        		model.clearBaseFilter();
+        		fileNameFilter.setText("");
+        });
+        
+        this.model.getPathFilter().forEach(p -> {
+        		MenuItem item = new MenuItem(p.getName());
+        		this.fileExtensionFilter.getItems().add(item);
+        		item.setOnAction(e->{
+        			this.model.replacePathFilter(p);
+        			this.model.updateFilterCriterion(fileNameFilter.getText());
+        		});
+        		
+        });
         
         // TODO: Ensure the proper owner window is passed into dirChooser
         chooser.setOnAction(e -> {
