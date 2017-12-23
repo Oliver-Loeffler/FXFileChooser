@@ -17,7 +17,8 @@ It turned out that with slow network connections the experience is great when us
  1. Provide some kind of directory content pre fetching for large network shares. 
  2. Indicate update progress and update ListView with one operation (one single update works fine, in case of using pre fetching that would be okay). Otherwise one would see an empty List and would have to wait.
  3. In the above case, ensure that files which are selected but do not exist are removed from view on selection or hover OR dont accept the OK action in case the file does no longer exist and trigger update then.  
- 3. Replace the `ObservableList` with an `ObservableSet` and update the view in one step (one single update works fine, in case of using pre fetching that would be okay). But then also update only what has changed. Never clear the list, only remove items which do no longer exist and add items which are not in the view. Problem: there are no filtered sets...
+ 3. Update the view in one step (one single update works fine, in case of using pre fetching that would be okay). But then also update only what has changed. Never clear the list, only remove items which do no longer exist and add items which are not in the view.
+ 4. Keep the selection (if file still exists after update)
 
 
 ## Available versions
