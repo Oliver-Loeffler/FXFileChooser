@@ -10,23 +10,23 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-public class FXFileChooserImpl extends Stage implements HideableWindow {
+public class FXFileChooserStage extends Stage implements HideableWindow {
     
-    public static FXFileChooserImpl create() throws IOException {
+    public static FXFileChooserStage create() throws IOException {
         return create(null,new PathFilter[0]);
     }
     
-    public static FXFileChooserImpl create(PathFilter ...filter) throws IOException {
-        return new FXFileChooserImpl(new FileChooserModel(), filter);
+    public static FXFileChooserStage create(PathFilter ...filter) throws IOException {
+        return new FXFileChooserStage(new FileChooserModel(), filter);
     }
     
-    public static FXFileChooserImpl create(Path at, PathFilter ...filter) throws IOException {
-        return new FXFileChooserImpl(new FileChooserModel(at), filter);
+    public static FXFileChooserStage create(Path at, PathFilter ...filter) throws IOException {
+        return new FXFileChooserStage(new FileChooserModel(at), filter);
     }
     
     private final FileChooserModel model;
     
-    private FXFileChooserImpl(FileChooserModel model, PathFilter ...filter) throws IOException {
+    private FXFileChooserStage(FileChooserModel model, PathFilter ...filter) throws IOException {
         this.model = model;
         for (PathFilter f : filter) {
             this.model.addFilter(f);

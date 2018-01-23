@@ -1,0 +1,14 @@
+.button {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #000000;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.label {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #000000;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+

@@ -163,7 +163,10 @@ final class FileChooserModel {
             this.fileUpdateService.restartIn(directory);
 
         } else if (Files.isRegularFile(directory)) {
-            this.fileUpdateService.restartIn(directory.getParent());
+        		Path parent = directory.getParent();
+        		if (parent != null) {
+        			this.fileUpdateService.restartIn(parent);	
+        		}
         }
     }
     

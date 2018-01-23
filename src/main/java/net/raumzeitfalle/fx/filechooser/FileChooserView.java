@@ -32,6 +32,9 @@ final class FileChooserView {
     private static Parent create(FileChooserController controller) throws IOException {
         FXMLLoader loader = new FXMLLoader(FileChooserView.class.getResource("FileChooserView.fxml"));
         loader.setController(controller);
-        return loader.load();
+        Parent parent = loader.load();
+        String css = FileChooserView.class.getResource("FileChooserView.css").toExternalForm();
+        parent.getStylesheets().add(css);
+        return parent;
     }
 }
