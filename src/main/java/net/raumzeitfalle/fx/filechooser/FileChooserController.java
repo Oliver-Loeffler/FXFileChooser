@@ -19,6 +19,7 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+
 import javafx.stage.DirectoryChooser;
 
 final class FileChooserController implements Initializable {
@@ -103,7 +104,8 @@ final class FileChooserController implements Initializable {
             this.listOfFiles.getSelectionModel().clearSelection();
             this.model.updateFilterCriterion(fileNameFilter.getText());
         });
-                
+        
+        listOfFiles.setCellFactory(c -> new FilesListCell());
         listOfFiles.getSelectionModel().selectedItemProperty().addListener(l -> {
             model.setSelectedFile(selectedItem());
          });
@@ -129,6 +131,7 @@ final class FileChooserController implements Initializable {
         chooser.setOnAction(e -> {
             Platform.runLater(()->{
                 fileChooserForm.setDisable(true);
+                
                 model.updateFilesIn(dirChooser.showDialog(null));
                 fileChooserForm.setDisable(false);
             });

@@ -1,22 +1,29 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.com.github.spotbugs:gradlePlugin:1.6.0"
+  }
+}
+
 plugins {
 	id "java-library"
 	id "maven"
 	id "eclipse"
 	id "maven-publish"
-	id "pmd"
 	id "jacoco"
-	id "findbugs"
+	id "com.github.spotbugs" version "1.6.0"
 }
 
-wrapper.gradleVersion = '4.1'
+wrapper.gradleVersion = '4.4.1'
 
 def getVersionName = { ->
-	def major = 0
-	def minor = 0
-	def patch = 1
-	def semanticVersion =  major + '.' + minor + '.' + patch
-	println "Version to build: " + semanticVersion
-	return semanticVersion
+	def version =  "0.0.2"
+	println "Version to build: " + version
+	return version
 }
 
 println "Project Details"
@@ -27,7 +34,6 @@ version = getVersionName()
 group 'net.raumzeitfalle.fx.filechooser'
 
 def artifact = 'fxfilechooser'
-def specificationVersion = '0.0.1'
 def companyName = 'www.raumzeitfalle.net'
 def implementationTitle = 'FXFileChooser'
 
@@ -56,7 +62,7 @@ jar {
 			"Built-By" : companyName,
 			"Implementation-Title": implementationTitle,
 			"Implementation-Version": version,
-			"Specification-Version": specificationVersion
+			"Specification-Version": version
 		 )
 	}
 }
@@ -74,11 +80,8 @@ jacocoTestReport {
     }
 }
 
-tasks.withType(Pmd) {
-  ignoreFailures = true
-}
 
-tasks.withType(FindBugs) {
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
   ignoreFailures = true
   reports {
     xml.enabled = false
