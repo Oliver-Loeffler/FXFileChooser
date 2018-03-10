@@ -1,6 +1,7 @@
 package net.raumzeitfalle.fx;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -15,6 +16,7 @@ public class DemoJavaFxStage extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
+        PathFilter exe = PathFilter.create(".exe", p->p.getFileName().toString().toLowerCase().endsWith(".exe"));
         PathFilter xml = PathFilter.create(".xml", p->p.getFileName().toString().toLowerCase().endsWith(".xml"));
         PathFilter txt = PathFilter.create(".txt", p->p.getFileName().toString().toLowerCase().endsWith(".txt"));
         
@@ -23,7 +25,9 @@ public class DemoJavaFxStage extends Application {
         
         PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
-        FXFileChooserStage fc = FXFileChooserStage.create(xml, xlsx, na0, txt);
+        Path remote = Paths.get("\\\\SEDNA\\Temp\\TEST");
+        Path local = Paths.get("C:\\Users\\Oliver\\Downloads");
+        FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {

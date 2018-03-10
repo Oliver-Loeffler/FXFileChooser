@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="fileChooserForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="fileChooserForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
          <children>
@@ -60,13 +60,16 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding></Button>
             <Label maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="SOMETIMES" />
-            <ProgressIndicator fx:id="progress" focusTraversable="false" maxWidth="-Infinity" minHeight="32.0" nodeOrientation="LEFT_TO_RIGHT" visible="false">
+            <ProgressIndicator fx:id="progress" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" visible="false">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <HBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </HBox.margin>
             </ProgressIndicator>
          </children>
       </HBox>

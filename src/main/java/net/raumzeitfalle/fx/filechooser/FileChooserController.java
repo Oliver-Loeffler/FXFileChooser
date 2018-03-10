@@ -21,6 +21,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 final class FileChooserController implements Initializable {
     
@@ -79,7 +81,7 @@ final class FileChooserController implements Initializable {
     private final HideableWindow stage;
     
     private final UsePattern usagePattern;
-    
+        
     public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final Dialog<Path> dialogWindow) {
         return new FileChooserController(fileChooserModel, ()->dialogWindow.close(), UsePattern.DIALOG);       
     }
@@ -132,6 +134,7 @@ final class FileChooserController implements Initializable {
             Platform.runLater(()->{
                 fileChooserForm.setDisable(true);
                 
+                // TODO: make dirChooser exchangeable and assign owner outside the controller.
                 model.updateFilesIn(dirChooser.showDialog(null));
                 fileChooserForm.setDisable(false);
             });
