@@ -89,8 +89,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
             this.setPreferredSize(size);
             this.setMinimumSize(size);
             dialog.pack();
-            dialog.setResizable(true);
-            
+            dialog.setResizable(true);            
         }
         this.dialog.setVisible(true);
         if (this.model.invalidSelectionProperty().getValue()) {

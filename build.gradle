@@ -21,7 +21,7 @@ plugins {
 wrapper.gradleVersion = '4.4.1'
 
 def getVersionName = { ->
-	def version =  "0.0.2"
+	def version =  "0.0.3-SNAPSHOT"
 	println "Version to build: " + version
 	return version
 }
@@ -91,7 +91,7 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+		mavenJava(MavenPublication) {
         	groupId group
         	artifactId artifact
         	version version
@@ -100,6 +100,11 @@ publishing {
     }
     repositories {
 	   mavenLocal()
-      }
-   }
-
+       maven {
+       	url "http://drartifactory.amtc-dresden.com:9081/artifactory/metro-libs"
+       	credentials { 
+      		username 'metro' 
+      		password 'metr0' }
+      		}
+    }
+}

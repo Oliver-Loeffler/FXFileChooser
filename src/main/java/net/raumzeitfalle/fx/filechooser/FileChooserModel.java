@@ -60,7 +60,7 @@ final class FileChooserModel {
         }
         this.allPaths = FXCollections.observableArrayList();
         this.filteredPaths = new FilteredList<>(allPaths);
-        this.sortedPaths = new SortedList<>(this.filteredPaths);
+        this.sortedPaths = new SortedList<>(this.filteredPaths,(a,b)->a.getFileName().compareTo(b.getFileName()));
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);

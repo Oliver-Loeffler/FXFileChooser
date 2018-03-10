@@ -2,12 +2,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.stream.Collectors;
-
-import javafx.application.Platform;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
@@ -24,37 +19,31 @@ final class FindFilesTask extends Task<Void>{
 
     @Override
     protected Void call() throws Exception {
-        boolean oneUpdateOnly = false;
-        if (oneUpdateOnly) {
-            List<Path> candidates = Files.list(directory)
-                    .parallel()
-                    .filter(p->!p.toFile().isDirectory())
-                    .collect(Collectors.toList());
-                clearAndUpdate(candidates);    
-        } else {
-            invokeAndWait(()-> pathsToUpdate.clear());
-            Files.list(directory)
+            Invoke.andWait(()-> pathsToUpdate.clear());
+            AtomicReference<RefreshBuffer> buffer = new AtomicReference<RefreshBuffer>(RefreshBuffer.get(pathsToUpdate));
+            
+            try {
+                Files.list(directory)
+                .peek(f -> {if (isCancelled()) throw new Break();})
                 .parallel()
                 .filter(p->!p.toFile().isDirectory())
-                .forEach(this::addPathToList);
-        }
+                .forEach(p -> {
+                    buffer.get().update(p);
+                });    
+            } catch (Break b) {
+                // this was an intended abort by task cancellation
+                System.out.println("FindFilesTask aborted.");
+            }
+            buffer.get().flush();
         return null;
     }
+       
 
     
-    private void clearAndUpdate(List<Path> paths) {
-      Platform.runLater(
-              ()->{ pathsToUpdate.clear(); 
-                    pathsToUpdate.addAll(paths);});
-    }
-        
-    private void invokeAndWait(Runnable r) throws InterruptedException, ExecutionException {
-        FutureTask<?> task = new FutureTask<>(r, null);
-        Platform.runLater(task);
-        task.get();
-    }
-    
-    private void addPathToList(Path p) {
-      Platform.runLater(()->pathsToUpdate.add(p));
+    private static class Break extends RuntimeException {
+
+        private static final long serialVersionUID = 5799667198172681610L;
+
+        private Break() { }
     }
 }
