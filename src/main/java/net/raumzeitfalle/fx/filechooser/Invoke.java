@@ -15,6 +15,17 @@ class Invoke {
         Platform.runLater(r);    
     }
     
+    static void laterWithDelay(long millis, Runnable r) {
+        Platform.runLater(()->{
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                // dont care 
+            }
+            r.run();
+        });
+    }
+    
     static void andWaitWithoutException(Runnable r) {
         try {
             andWait(r);

@@ -3,6 +3,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
@@ -14,19 +15,31 @@ final class FileChooserView {
     
     static Parent create(Stage stage) throws IOException {
         FileChooserModel model = new FileChooserModel();
-        return create(model, stage);
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(Paths.get(""), stage.getOwner());
+        
+        return create(model, pathSupplier , stage);
     }
     
-    static Parent create(FileChooserModel model, JFXPanel panel) throws IOException {
-        return create(FileChooserController.withStage(model, ()->panel.setVisible(false)));
+    static Parent create(FileChooserModel model, PathSupplier pathSupplier, JFXPanel panel) throws IOException {
+        return create(FileChooserController.withStage(model, pathSupplier, ()->panel.setVisible(false)));
     }
     
     static Parent create(FileChooserModel model, Dialog<Path> dialog) throws IOException {
-        return create(FileChooserController.withDialog(model, dialog));
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), dialog.getOwner());
+        return create(model, pathSupplier, dialog);
     }
     
+    static Parent create(FileChooserModel model, PathSupplier pathSupplier, Dialog<Path> dialog) throws IOException {
+        return create(FileChooserController.withDialog(model, pathSupplier, dialog));
+    }
+        
     static Parent create(FileChooserModel model, Stage stage) throws IOException {
-        return create(FileChooserController.withStage(model, ()->stage.hide()));
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), stage.getOwner());
+        return create(model, pathSupplier, stage);
+    }
+    
+    static Parent create(FileChooserModel model, PathSupplier pathSupplier, Stage stage) throws IOException {
+        return create(FileChooserController.withStage(model,pathSupplier, ()->stage.hide()));
     }
     
     private static Parent create(FileChooserController controller) throws IOException {

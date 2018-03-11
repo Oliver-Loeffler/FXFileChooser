@@ -35,8 +35,7 @@ It turned out that with slow network connections the experience is great when us
  * The choose directory button provides a menu, where default locations (or a history of locations) can be provided. **(tbd.)**
  *  File types can be selected from filters **(tbd.)**
  
- ![default locations](pages/DefaultLocationsExample.png) ![default locations](pages/PathFilterExample.png)
-
+ ![default locations](pages/DefaultLocationsExample.png) ![path filter](pages/PathFilterExample.png) ![search option](pages/SortingMenuExample.png)
 
 **Ideas**
  * A nice build script.
@@ -120,7 +119,3 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> {
     }
 }
 ```
-
-The FindFilesTask so far only lists files matching the Predicate<Path> `Files::isRegularFile`.
-
-![Swing version with Filter](pages/Windows81_Swing_Dialog_ProcessRunning.png)

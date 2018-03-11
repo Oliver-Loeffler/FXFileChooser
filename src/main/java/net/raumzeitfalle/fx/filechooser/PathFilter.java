@@ -1,16 +1,16 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.function.Predicate;
 
 public class PathFilter {
-    public static PathFilter create(String label, Predicate<Path> p) {
+    public static PathFilter create(String label, Predicate<File> p) {
         return new PathFilter(label, p);
     }
     
     public static PathFilter forFileExtension(String label, String regex) {
     		return new PathFilter(label, p->{
-        		String name = p.getFileName().toString();
+        		String name = p.getName().toString();
         		if (null != name) {
         			int lastDot = name.lastIndexOf('.');
         			if (lastDot > 0) {
@@ -26,9 +26,9 @@ public class PathFilter {
     
     private final String name;
     
-    private final Predicate<Path> criterion;
+    private final Predicate<File> criterion;
     
-    private PathFilter(String label, Predicate<Path> criterion) {
+    private PathFilter(String label, Predicate<File> criterion) {
         this.name = label;
         this.criterion = criterion;
     }
@@ -37,7 +37,7 @@ public class PathFilter {
     		return this.name;
     }
     
-    public Predicate<Path> getCriterion() {
+    public Predicate<File> getCriterion() {
     		return this.criterion;
     }
 }

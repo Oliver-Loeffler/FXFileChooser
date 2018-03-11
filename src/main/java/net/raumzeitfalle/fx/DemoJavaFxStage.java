@@ -16,16 +16,15 @@ public class DemoJavaFxStage extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        PathFilter exe = PathFilter.create(".exe", p->p.getFileName().toString().toLowerCase().endsWith(".exe"));
-        PathFilter xml = PathFilter.create(".xml", p->p.getFileName().toString().toLowerCase().endsWith(".xml"));
-        PathFilter txt = PathFilter.create(".txt", p->p.getFileName().toString().toLowerCase().endsWith(".txt"));
+        PathFilter exe = PathFilter.create(".exe", p->p.getName().toString().toLowerCase().endsWith(".exe"));
+        PathFilter xml = PathFilter.create(".xml", p->p.getName().toString().toLowerCase().endsWith(".xml"));
+        PathFilter txt = PathFilter.create(".txt", p->p.getName().toString().toLowerCase().endsWith(".txt"));
         
-        PathFilter xlsx = PathFilter.create(".xls or .xlsx", p-> p.getFileName().toString().toLowerCase().endsWith(".xls") 
-        		|| p.getFileName().toString().toLowerCase().endsWith(".xlsx"));
+        PathFilter xlsx = PathFilter.create(".xls or .xlsx", p-> p.getName().toString().toLowerCase().endsWith(".xls") 
+        		|| p.getName().toString().toLowerCase().endsWith(".xlsx"));
         
         PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
-        Path remote = Paths.get("\\\\SEDNA\\Temp\\TEST");
         Path local = Paths.get("C:\\Users\\Oliver\\Downloads");
         FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe);
         

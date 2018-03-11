@@ -4,6 +4,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,29 +25,25 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 
 final class FileChooserModel {
     
-    private final ObservableList<Path> allPaths;
+    private final ObservableList<File> allPaths;
     
-    private final FilteredList<Path> filteredPaths;
-    
-    private final SortedList<Path> sortedPaths;
-    
+    private final FilteredList<File> filteredPaths;
+
     private final FileUpdateService fileUpdateService;
     
-    private final ListProperty<Path> allPathsProperty;
+    private final ListProperty<File> allPathsProperty;
         
-    private final ListProperty<Path> filteredPathsProperty;
+    private final ListProperty<File> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
     
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     
     private final Set<PathFilter> pathFilter = new HashSet<>(10);
-    
-    private Path selectedFile;
+
     
     /*
      * TODO: add possibility to construct model with list or array of filters
@@ -58,9 +56,9 @@ final class FileChooserModel {
         if (null == startFolder) {
             startFolder = getUsersHome();
         }
-        this.allPaths = FXCollections.observableArrayList();
+        this.allPaths = FXCollections.observableArrayList(new ArrayList<>(300_000));
         this.filteredPaths = new FilteredList<>(allPaths);
-        this.sortedPaths = new SortedList<>(this.filteredPaths,(a,b)->a.getFileName().compareTo(b.getFileName()));
+       // this.sortedPaths = new SortedList<>(this.filteredPaths,(a,b)->a.getName().compareTo(b.getName()));
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
@@ -80,13 +78,13 @@ final class FileChooserModel {
         return this.fileUpdateService.searchPathProperty();
     }
 
-    public ObservableList<Path> getFilteredPaths() {
+    public ObservableList<File> getFilteredPaths() {
         return filteredPaths;
     }
     
-    public ObservableList<Path> getSortedPaths() {
-        return sortedPaths;
-    }
+//    public ObservableList<File> getSortedPaths() {
+//        return sortedPaths;
+//    }
     
     ReadOnlyIntegerProperty filteredPathsSizeProperty() {
         return this.filteredPathsProperty.sizeProperty();
@@ -100,18 +98,23 @@ final class FileChooserModel {
         return this.invalidSelection;
     }
     
-    public void setSelectedFile(Path path) {
-        this.selectedFile = path;
-        if (null == path) {
-            this.fileSelection.setValue("");    
+    public void setSelectedFile(File file) {
+        if (null == file) {
+            this.fileSelection.setValue("");
         } else {
-            this.fileSelection.setValue(path.toString());
+            this.fileSelection.setValue(file.toPath().toAbsolutePath().toString());
         }       
-        this.invalidSelection.setValue(path == null);
+        this.invalidSelection.setValue(null == file);
     }
     
     public Path getSelectedFile() {
-        return this.selectedFile;
+        String selection = this.fileSelection.getValue();
+        if (null != selection) {
+            File selected = new File(selection);
+            return selected.toPath();
+        } else {
+            return null;
+        }
     }
     
     public ReadOnlyStringProperty selectedFileProperty() {
@@ -119,23 +122,23 @@ final class FileChooserModel {
     }
     
     public void updateFilterCriterion(String criterion) {
-        Predicate<Path> customFilter = createManualListFilter(criterion);                           
+        Predicate<File> customFilter = createManualListFilter(criterion);                           
         this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
     }
 
-    private Predicate<Path> createManualListFilter(String criterion) {
+    private Predicate<File> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
-        Predicate<Path> customFilter = p -> {
+        Predicate<File> customFilter = p -> {
             return null == corrected || corrected.isEmpty() ||
                     p.toString().toLowerCase().contains(corrected.toLowerCase());};
         return customFilter;
     }
 
-    private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
-        List<Predicate<Path>> effectiveFilter = this.pathFilter.parallelStream().map(PathFilter::getCriterion).collect(Collectors.toList());
+    private Predicate<File> combineFilterPredicates(Predicate<File> customFilter) {
+        List<Predicate<File>> effectiveFilter = this.pathFilter.parallelStream().map(PathFilter::getCriterion).collect(Collectors.toList());
         effectiveFilter.add(customFilter);
      
-        Predicate<Path> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
+        Predicate<File> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
         return effectivePredicate;
     }
 
@@ -189,5 +192,9 @@ final class FileChooserModel {
     
 	public void clearBaseFilter() {
 		this.pathFilter.clear();
+	}
+	
+	public void sort(Comparator<File> comparator) {
+	    this.allPaths.sort(comparator);
 	}
 }

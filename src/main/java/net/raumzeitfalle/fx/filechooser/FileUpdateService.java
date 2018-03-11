@@ -1,5 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -12,10 +13,10 @@ final class FileUpdateService extends javafx.concurrent.Service<Void>{
      
     private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
     
-    private ObservableList<Path> pathsToUpdate;
+    private ObservableList<File> pathsToUpdate;
    
             
-    public FileUpdateService(Path folderToStart, ObservableList<Path> paths) {
+    public FileUpdateService(Path folderToStart, ObservableList<File> paths) {
         setSearchLocation(folderToStart);        
         this.pathsToUpdate = paths;
     }
