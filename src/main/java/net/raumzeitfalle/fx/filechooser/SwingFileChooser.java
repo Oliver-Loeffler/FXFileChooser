@@ -29,26 +29,23 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
      * Return value if approve (yes, ok) is chosen.
      */
     public static final int APPROVE_OPTION = 0;
-
-    public static SwingFileChooser create() {
-        return create("");
-    }
     
     public static SwingFileChooser create(PathFilter ...filter) {
-    		return create("", filter);
+    	return create("", filter);
     }
-    
+       
     public static SwingFileChooser create(String pathToBrowse, PathFilter ...filter)  {
         
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser();
+        PathSupplier pathSupplier = SwingDirectoryChooser.createIn(startHere, fc);
         Platform.runLater(()->{
             try {
                 FileChooserModel model = new FileChooserModel(startHere);
                 for (PathFilter f : filter) {
                 		model.addFilter(f);
                 }
-                Parent view = FileChooserView.create(model, fc);
+                Parent view = FileChooserView.create(model, pathSupplier, fc);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
                 fc.setModel(model);
@@ -68,12 +65,14 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
         return startHere;
     }
 
+ 
+    
     private FileChooserModel model;
     
-    private JDialog dialog;
+    private JDialog dialog;   
     
     private SwingFileChooser() {
-        
+  
     }
     
     private void setModel(FileChooserModel model) {
@@ -100,7 +99,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     }
 
     public File getSelectedFile() {
-        if (this.model.getSelectedFile() != null) {
+        if (null != this.model.getSelectedFile()) {
             return this.model.getSelectedFile().toFile();    
         } else {
             return null;

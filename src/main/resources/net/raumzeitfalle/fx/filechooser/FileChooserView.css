@@ -1,1 +1,67 @@
+.button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
 
+.progress-indicator {
+   -fx-text-fill: white;
+}
+
+.menu-button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
+
+
+.text-field {
+   -fx-blend-mode: screen;
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-prompt-text-fill: black;
+}
+
+.counter-label {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-text-fill: black;
+}
+
+.split-menu-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.filter-icon {
+    -fx-fill: rgba(255,167,0,0.53);
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.file-icon {
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.8), 4, 0.0, 1, 1);
+    -fx-padding: 10px;
+}
+
+.file-icon-pane {
+    -fx-background-color: transparent;
+}
+
+.file-icon-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.root {
+    -fx-base: rgb(50, 50, 50);
+    -fx-background: rgb(50, 50, 50);
+    -fx-control-inner-background:  rgb(50, 50, 50);
+
+    -fx-accent: #ffa700;
+    -fx-focus-color: #ffa700;
+}
+
+.tool-bar-icon {
+    -fx-fill: #ffa700;
+    -fx-highlight-text-fill: #000000;
+}

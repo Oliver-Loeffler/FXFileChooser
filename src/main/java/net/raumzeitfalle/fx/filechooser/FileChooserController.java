@@ -1,5 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
@@ -14,15 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.scene.shape.SVGPath;
 
 final class FileChooserController implements Initializable {
     
@@ -46,15 +44,16 @@ final class FileChooserController implements Initializable {
 
     @FXML
     private Label allPathsCount;
-
+    
+    
     @FXML
-    private ProgressIndicator progress;
+    private ProgressBar progressBar;
 
     @FXML
     private TextField fileNameFilter;
 
     @FXML
-    private ListView<Path> listOfFiles;
+    private ListView<File> listOfFiles;
 
     @FXML
     private TextField selectedFile;
@@ -64,6 +63,15 @@ final class FileChooserController implements Initializable {
     
     @FXML
     private Button stopButton;
+    
+    @FXML
+    private MenuButton sortMenu;
+    
+    @FXML
+    private MenuItem buttonSortAz;
+
+    @FXML
+    private MenuItem buttonSortZa;
     
     @FXML
     private Button okButton;
@@ -76,37 +84,38 @@ final class FileChooserController implements Initializable {
       
     private final FileChooserModel model;
     
-    private final DirectoryChooser dirChooser;
-    
     private final HideableWindow stage;
     
     private final UsePattern usagePattern;
+    
+    private final PathSupplier pathSupplier;
         
-    public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final Dialog<Path> dialogWindow) {
-        return new FileChooserController(fileChooserModel, ()->dialogWindow.close(), UsePattern.DIALOG);       
+    public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final Dialog<Path> dialogWindow) {
+        return new FileChooserController(fileChooserModel, pathSupplier, ()->dialogWindow.close(), UsePattern.DIALOG);       
     }
     
-    public static FileChooserController withStage(final FileChooserModel fileChooserModel, final HideableWindow window) {
-        return new FileChooserController(fileChooserModel, ()->window.hide(), UsePattern.NORMAL_STAGE);       
+    public static FileChooserController withStage(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window) {
+        return new FileChooserController(fileChooserModel, pathSupplier, ()->window.hide(), UsePattern.NORMAL_STAGE);       
     }
     
     
-    private FileChooserController(final FileChooserModel fileChooserModel, final HideableWindow window, UsePattern useCase) {
+    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window, UsePattern useCase) {
        this.model = fileChooserModel;
-       this.dirChooser = new DirectoryChooser();
        this.stage = window;
        this.usagePattern = useCase;
+       this.pathSupplier = pathSupplier;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.listOfFiles.setItems(this.model.getSortedPaths()); 
+        this.listOfFiles.setItems(this.model.getFilteredPaths());  // .getSortedPaths()  => consider sorting in a table model 
         
         fileNameFilter.textProperty().addListener( l -> {
             this.listOfFiles.getSelectionModel().clearSelection();
             this.model.updateFilterCriterion(fileNameFilter.getText());
         });
         
+
         listOfFiles.setCellFactory(c -> new FilesListCell());
         listOfFiles.getSelectionModel().selectedItemProperty().addListener(l -> {
             model.setSelectedFile(selectedItem());
@@ -129,19 +138,39 @@ final class FileChooserController implements Initializable {
         		
         });
         
-        // TODO: Ensure the proper owner window is passed into dirChooser
         chooser.setOnAction(e -> {
             Platform.runLater(()->{
                 fileChooserForm.setDisable(true);
-                
-                // TODO: make dirChooser exchangeable and assign owner outside the controller.
-                model.updateFilesIn(dirChooser.showDialog(null));
+                pathSupplier.get().ifPresent(model::updateFilesIn);
                 fileChooserForm.setDisable(false);
             });
         });    
         
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
+        buttonSortAz.setOnAction(e -> {
+            Invoke.later(()->{
+                model.sort((a,b)->a.getName().compareTo(b.getName()));
+                SVGPath svgPath = new SVGPath();
+                svgPath.getStyleClass().add("tool-bar-icon");
+                svgPath.setContent(((SVGPath)buttonSortAz.getGraphic()).getContent());
+                sortMenu.setGraphic(svgPath);
+            });
+        });
+        
+        buttonSortZa.setOnAction(e -> {
+            Invoke.later(()->{
+                model.sort((a,b)->b.getName().compareTo(a.getName()));
+                
+                
+                SVGPath svgPath = new SVGPath();
+                svgPath.getStyleClass().add("tool-bar-icon");
+                svgPath.setContent(((SVGPath)buttonSortZa.getGraphic()).getContent());
+                sortMenu.setGraphic(svgPath);
+                sortMenu.getGraphic().getStyleClass().add("tool-bar-icon");
+            });
+            
+        });
         
         ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
        
@@ -149,15 +178,15 @@ final class FileChooserController implements Initializable {
          *  TODO: replace progress indicator by progress bar which is updated in intervals only
          *  OR use indicator for small sets and bar for large data sets 
          */
-        progress.visibleProperty().bind(updateIsRunning);
+        progressBar.progressProperty().bind(model.getFileUpdateService().progressProperty());
         
         //counterPane.visibleProperty().bind(updateIsRunning);
-        counterPane.setVisible(false);
+        counterPane.setVisible(true);
         stopButton.visibleProperty().bind(updateIsRunning);
         
         // TODO: update counts after refresh
-        //filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
-        //allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
+        filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
+        allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
         okButton.setOnAction(e -> {
             this.stage.hide();
@@ -187,7 +216,7 @@ final class FileChooserController implements Initializable {
         }
     }
 
-    private Path selectedItem() {
+    private File selectedItem() {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
     

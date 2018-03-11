@@ -1,50 +1,60 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import java.nio.file.Path;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
-
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 
-class FilesListCell extends ListCell<Path> {
+class FilesListCell extends ListCell<File> {
 
 	@Override
-	protected void updateItem(Path item, boolean empty) {
+	protected void updateItem(File item, boolean empty) {
 		super.updateItem(item, empty);
 		updateView();
 	}
 	
 	private void updateView() {
         if (getItem() != null) {
-            setText(String.valueOf(getItem().getFileName()));
             
-            if (getItem().getFileName().toString().toLowerCase().endsWith(".xls")) {
-                String img = FilesListCell.class.getResource("005-technology.png").toExternalForm();
-                ImageView icon = new ImageView(img);
-                icon.setFitHeight(24);
-                icon.setFitWidth(24);
-                setGraphic(icon);
-            }
+            GridPane gridPane = new GridPane();
+            gridPane.getStyleClass().add("file-icon-label");      
+                        
+            Pane icon = FileIcons.fromFile(getItem(), 32);
+            gridPane.addColumn(0, icon);
+            GridPane.setHgrow(icon, Priority.SOMETIMES);
             
-            if (getItem().getFileName().toString().toLowerCase().endsWith(".xlsx")) {
-                String image = FilesListCell.class.getResource("011-excel.png").toExternalForm();
-                ImageView img = new ImageView(image);
-                img.setFitHeight(24);
-                img.setFitWidth(24);
-                setGraphic(img);
-            }
+            Label fileName = new Label(String.valueOf(getItem().getName()));
+            fileName.getStyleClass().add("file-icon-label");
+            gridPane.addColumn(1, fileName);
+            GridPane.setHgrow(fileName, Priority.ALWAYS);
             
-            if (getItem().getFileName().toString().toLowerCase().endsWith(".xml")) {
-                
-                String image = FilesListCell.class.getResource("010-xml.png").toExternalForm();
-                ImageView img = new ImageView(image);
-                img.setFitHeight(24);
-                img.setFitWidth(24);
-                setGraphic(img);
+            Label date = new Label("");
+            
+            try {
+                File item = getItem();
+                FileTime time = Files.getLastModifiedTime(item.toPath());
+                LocalDateTime timestamp = LocalDateTime.from(time.toInstant().atZone(ZoneId.systemDefault()));
+                date.setText(DateTimeFormatter.ofPattern("yyyy-MM-dd  -  HH:mm:ss").format(timestamp));
+            } catch (IOException e) {
+                date.setText("...");
             }
+            date.getStyleClass().add("file-icon-label");
+            gridPane.addColumn(2, date);
+            GridPane.setHgrow(date, Priority.NEVER);
+            
+            setGraphic(gridPane);
             
         } else {
-            setText("");
+            setText(null);
             setGraphic(null);
         }
         
