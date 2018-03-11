@@ -88,23 +88,3 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     html.enabled = true
   }
 }
-
-publishing {
-    publications {
-		mavenJava(MavenPublication) {
-        	groupId group
-        	artifactId artifact
-        	version version
-            from components.java
-        }
-    }
-    repositories {
-	   mavenLocal()
-       maven {
-       	url "http://drartifactory.amtc-dresden.com:9081/artifactory/metro-libs"
-       	credentials { 
-      		username 'metro' 
-      		password 'metr0' }
-      		}
-    }
-}
