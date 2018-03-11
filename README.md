@@ -82,6 +82,8 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
     });
 ```
 
+Surprisingly does the new CSS file not work when used inside a dialog. In order to get FXFileChooser working with a dialog, FileChooserViewDefault.css must be used instead of FileChooserView.css.
+
 ![Swing version with Filter](pages/Windows81_JavaFX_DialogStage.png)
 
 
