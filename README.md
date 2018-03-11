@@ -1,4 +1,4 @@
-# FXFileChooser (0.0.1)
+# FXFileChooser
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
