@@ -2,7 +2,6 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.awt.Component;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;

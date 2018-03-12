@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class FXDirectoryChooser implements PathSupplier {
@@ -17,17 +16,21 @@ public class FXDirectoryChooser implements PathSupplier {
     public static FXDirectoryChooser createIn(ObjectProperty<Path> startLocation, Window owner) {
         
         Path location = startLocation.get();
-        
         if (null == location) {
-            location = Paths.get("");
+            location = Paths.get("./");
         }
         
         return new FXDirectoryChooser(location, owner);
     }
     
     public static FXDirectoryChooser createIn(Path startLocation, Window owner) {
-        Objects.requireNonNull(startLocation,"startLocation for file search must not be null.");
-        return new FXDirectoryChooser(startLocation, owner);
+        
+    		Path location = Objects.requireNonNull(startLocation,"startLocation for file search must not be null.");
+        if (String.valueOf(startLocation).equals("")){
+        		location = Paths.get("./");
+        }
+        
+        return new FXDirectoryChooser(location, owner);
     }
     
     private final DirectoryChooser dc;
@@ -39,14 +42,13 @@ public class FXDirectoryChooser implements PathSupplier {
         this.dc.setInitialDirectory(startLocation.toFile());
         this.owner = owner;
     }
-
     
     public void getUpdate(Consumer<Path> update) {
 	    	Invoke.later(()->{
-	    		Optional<File> selection = Optional.ofNullable(this.dc.showDialog(this.owner));
+	    		Optional<File> selection = Optional.ofNullable(dc.showDialog(owner));
 	            selection
 	            	.map(File::toPath)
-	            	.ifPresent(update::accept);
+	            	.ifPresent(p -> Invoke.later(()->update.accept(p)));
 	    	});
     }
     

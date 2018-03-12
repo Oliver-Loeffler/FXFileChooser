@@ -25,7 +25,7 @@ public class DemoJavaFxStage extends Application {
         
         PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
-        Path local = Paths.get("");
+        Path local = Paths.get("./");
         FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
