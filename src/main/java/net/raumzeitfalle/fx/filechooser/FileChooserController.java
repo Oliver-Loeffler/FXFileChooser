@@ -141,7 +141,7 @@ final class FileChooserController implements Initializable {
         chooser.setOnAction(e -> {
             Platform.runLater(()->{
                 fileChooserForm.setDisable(true);
-                pathSupplier.get().ifPresent(model::updateFilesIn);
+                pathSupplier.getUpdate(model::updateFilesIn);
                 fileChooserForm.setDisable(false);
             });
         });    
