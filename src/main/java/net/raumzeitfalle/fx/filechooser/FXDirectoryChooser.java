@@ -5,9 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class FXDirectoryChooser implements PathSupplier {
@@ -38,14 +40,14 @@ public class FXDirectoryChooser implements PathSupplier {
         this.owner = owner;
     }
 
-    @Override
-    public Optional<Path> get() {
-        File selection = this.dc.showDialog(owner);
-
-        if (null != selection) 
-            return Optional.of(selection.toPath());
-        
-        return Optional.empty();
+    
+    public void getUpdate(Consumer<Path> update) {
+	    	Invoke.later(()->{
+	    		Optional<File> selection = Optional.ofNullable(this.dc.showDialog(this.owner));
+	            selection
+	            	.map(File::toPath)
+	            	.ifPresent(update::accept);
+	    	});
     }
     
 }
