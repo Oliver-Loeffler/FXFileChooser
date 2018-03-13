@@ -38,6 +38,9 @@ It turned out that with slow network connections the experience is great when us
  *  File types can be selected from filters **(tbd.)**
  
  ![default locations](pages/DefaultLocationsExample.png) ![path filter](pages/PathFilterExample.png) ![search option](pages/SortingMenuExample.png)
+ * add sorting by name or time
+ * consider using a TableView instead a plain list
+ * consider regular expression support for filtering
 
 **Ideas**
  * A nice build script.
@@ -62,7 +65,7 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
     });
 ```
 
-![Swing version with Filter](pages/Windows81_Swing_Dialog_Filtered.png)
+![Swing version with Filter](pages/OSX_Swing_JFXPanel.png)
 
 
 ## Using the JavaFX Dialog version
@@ -82,9 +85,8 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
     });
 ```
 
-Surprisingly does the new CSS file not work when used inside a dialog. In order to get FXFileChooser working with a dialog, FileChooserViewDefault.css must be used instead of FileChooserView.css.
 
-![Swing version with Filter](pages/Windows81_JavaFX_DialogStage.png)
+![Swing version with Filter](pages/OSX_JavaFX_Dialog.png)
 
 
 ## A version with a completely customizable stage
@@ -102,8 +104,6 @@ Surprisingly does the new CSS file not work when used inside a dialog. In order 
     
     Scene mainScene = new Scene(button);
 ```
-On OSX this looks as follows:
-![JavaFX on OSX](pages/OSX_JavaFX_Stage.png)
 
 
 ## Example with running process

@@ -31,7 +31,9 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
         for (PathFilter f : filter) {
             this.model.addFilter(f);
         }
-        Parent view = FileChooserView.create(model, this);
+        
+        FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), this.getOwner());
+        Parent view = FileChooserView.create(model,dirChooser,this);
         Scene scene = new Scene(view);
         this.setScene(scene);
         initModality(Modality.APPLICATION_MODAL);

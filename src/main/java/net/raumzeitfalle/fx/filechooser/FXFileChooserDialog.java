@@ -22,9 +22,14 @@ public class FXFileChooserDialog extends Dialog<Path> {
     }
     
     private final FileChooserModel model;
-           
+    
+    // TODO: Make CSS file externally configurable
     private FXFileChooserDialog(FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;
+        
+        String css = FXFileChooserDialog.class.getResource("FileChooserView.css").toExternalForm();
+        getDialogPane().getStylesheets().add(css);
+        getDialogPane().applyCss();
         
         setTitle("File Selection");
         setHeaderText("Select File from for processing:");
@@ -34,6 +39,8 @@ public class FXFileChooserDialog extends Dialog<Path> {
         getDialogPane().setContent(FileChooserView.create(model,this));
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+        
+        
         
         ButtonType okay = ButtonType.OK;
         getDialogPane().getButtonTypes().addAll(okay, ButtonType.CANCEL);
