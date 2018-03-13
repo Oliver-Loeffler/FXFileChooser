@@ -9,13 +9,16 @@
 
 
 .progress-bar .track{
-    -fx-background-color: #ffa700;
+    -fx-accent: #ffa700;
+    -fx-background-color: black;
     -fx-background-insets: 1;
     -fx-background-radius: 0, 0, 0, 0;
 }
 
-.progress-bar .bar { 
-    -fx-background-insets: 2, 1, 2, 1; 
+.progress-bar .bar {
+    -fx-accent: #ffa700;  
+    -fc-background-color: #ffa700;
+    -fx-background-insets: 1, 0, 1, 0; 
     -fx-background-radius: 0, 0, 0, 0;
 }
 
@@ -101,6 +104,8 @@
 }
 
 .menu-item {
+    /* -fx-accent: #ffa700; */
+    -fx-accent: rgba(255,167,0,0.8); 
     -fx-fill: #ffa700;
 }
 
