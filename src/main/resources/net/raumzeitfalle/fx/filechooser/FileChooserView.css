@@ -7,17 +7,47 @@
    -fx-text-fill: white;
 }
 
+
+.progress-bar .track{
+    -fx-background-color: #ffa700;
+    -fx-background-insets: 1;
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.progress-bar .bar { 
+    -fx-background-insets: 2, 1, 2, 1; 
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
 .menu-button {
    -fx-font-size: 13px;
    -fx-font-weight: bold;
 }
 
+.list-view {
+   -fx-blend-mode: screen;
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: #ffa700;
+    /* -fx-text-fill: black; */
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #212121;
+    -fx-text-fill: black;
+}
 
 .text-field {
    -fx-blend-mode: screen;
    -fx-font-size: 13px;
    -fx-font-weight: bold;
    -fx-prompt-text-fill: black;
+
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
 }
 
 .counter-label {
@@ -57,11 +87,23 @@
     -fx-background: rgb(50, 50, 50);
     -fx-control-inner-background:  rgb(50, 50, 50);
 
-    -fx-accent: #ffa700;
-    -fx-focus-color: #ffa700;
+    -fx-accent: transparent;
+/*  -fx-focus-color: #ffa700;
+    -fx-faint-focus-color: #ffa70066;  */
+
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
 }
 
 .tool-bar-icon {
     -fx-fill: #ffa700;
     -fx-highlight-text-fill: #000000;
+}
+
+.menu-item {
+    -fx-fill: #ffa700;
+}
+
+.menu-item-icon {
+    -fx-fill: #ffa700;
 }
