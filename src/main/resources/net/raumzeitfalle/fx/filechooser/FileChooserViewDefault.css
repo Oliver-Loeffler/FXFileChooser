@@ -1,9 +1,0 @@
-.text-field {
-    -fx-blend-mode: multiply;
-}
-
-.filter-icon {
-    -fx-fill: rgba(0,0,0,0.53);
-    -fx-stroke-width: 1px;
-    -fx-stroke: black;
-}
