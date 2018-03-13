@@ -1,11 +1,14 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.awt.Component;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 
 public class SwingDirectoryChooser implements PathSupplier {
     
@@ -24,14 +27,27 @@ public class SwingDirectoryChooser implements PathSupplier {
         this.owner = owner;
     }
 
-    @Override
-    public Optional<Path> get() {
-        int response = this.fc.showOpenDialog(this.owner);
-        Path selection = null;
-        if (response == JFileChooser.APPROVE_OPTION) {
-            selection = this.fc.getSelectedFile().toPath();
-        }
-        return Optional.ofNullable(selection);
+    public void getUpdate(Consumer<Path> update) {
+    	
+    	
+		SwingUtilities.invokeLater(()->{
+			Optional<File> selection = askForSelection();
+	        
+	        Invoke.later(()->{
+	        		selection.map(File::toPath).ifPresent(update::accept);
+	        });
+		});
+		
+		
     }
+
+	private Optional<File> askForSelection() {
+		int response = this.fc.showOpenDialog(this.owner);
+		File selection = null;
+		if (response == JFileChooser.APPROVE_OPTION) {
+		    selection = this.fc.getSelectedFile();
+		}
+		return Optional.ofNullable(selection);
+	}
     
 }

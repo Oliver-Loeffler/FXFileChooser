@@ -1,9 +1,9 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Path;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 @FunctionalInterface
 public interface PathSupplier {
-    Optional<Path> get();
+    void getUpdate(Consumer<Path> update);
 }
