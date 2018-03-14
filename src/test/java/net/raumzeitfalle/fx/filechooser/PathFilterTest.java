@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class PathFilterTest {
 	
-	private SimplePathFilter classUnderTest;
+	private PathFilter classUnderTest;
 
 	@Test
 	public void criterion() {
@@ -50,7 +50,7 @@ public class PathFilterTest {
 
 	@Test
 	public void acceptAll() {
-		classUnderTest = SimplePathFilter.acceptAll();
+		classUnderTest = SimplePathFilter.acceptAll("all files");
 		Predicate<Path> criterion = classUnderTest.getPredicate();
 
 		assertTrue(criterion.test(Paths.get("")));

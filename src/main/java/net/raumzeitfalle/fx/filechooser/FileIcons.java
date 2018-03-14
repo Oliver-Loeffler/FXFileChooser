@@ -1,6 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -34,9 +34,9 @@ enum FileIcons {
         return image;
     }
 
-    static StackPane fromFile(File path, double fitSize) {
+    static StackPane fromFile(Path path, double fitSize) {
        StackPane pane = new StackPane();
-       String file = path.getName();
+       Path file = path.getFileName();
        ImageView image = null;
        if (null != file) {
            String fileName = file.toString().toLowerCase();

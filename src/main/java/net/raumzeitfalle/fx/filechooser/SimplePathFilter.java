@@ -6,15 +6,33 @@ import java.util.function.Predicate;
 /**
  * SimplePathfilter is a default implementation of the {@link PathFilter} interface. {@link SimplePathFilter} provides convenient static factory methods to create simple filters for {@link java.nio.file.Path} objects. 
  */
-public class SimplePathFilter implements PathFilter {
-    public static SimplePathFilter create(String label, Predicate<Path> p) {
+public final class SimplePathFilter implements PathFilter {
+    
+	/**
+	 * Creates a new {@link PathFilter} with a label text and a {@link Path} {@link Predicate}.
+	 * @param label GUI label text
+	 * @param p {@link Predicate}
+	 * @return {@link PathFilter}
+	 */
+	public static SimplePathFilter create(String label, Predicate<Path> p) {
         return new SimplePathFilter(label, p);
     }
     
-    protected static SimplePathFilter acceptAll() {
-    		return new SimplePathFilter("", p->true);
+	/**
+	 * Creates a new {@link PathFilter} which generally matches with all files.
+	 * @param name {@link String} GUI label text
+	 * @return {@link PathFilter}
+	 */
+    public static SimplePathFilter acceptAll(String name) {
+    		return new SimplePathFilter(name, p->true);
     }
     
+    /**
+     * Creates a new {@link PathFilter} for file name extensions such as (.html, .xls, .xml or .pdf). 
+     * @param label GUI label text
+     * @param extension {@link String} the file name extension
+     * @return new {@link PathFilter}
+     */
     public static SimplePathFilter forFileExtension(String label, String extension) {
     		return new SimplePathFilter(label, p->{
     			Path filename = p.getFileName();
@@ -51,9 +69,9 @@ public class SimplePathFilter implements PathFilter {
      * @param other {@link SimplePathFilter}
      * @return {@link SimplePathFilter} new PathFilter with both predicates combined.
      */
-    public SimplePathFilter combine(SimplePathFilter other) {
-    		String label = this.name + ", " + other.name;
-    		return new SimplePathFilter(label, this.criterion.or(other.criterion));
+    public PathFilter combine(PathFilter other) {
+    		String label = this.name + ", " + other.getName();
+    		return new SimplePathFilter(label, this.criterion.or(other.getPredicate()));
     }
     
     public boolean matches(Path path) {

@@ -9,11 +9,11 @@ import javafx.concurrent.Task;
 
 final class FindFilesTask extends Task<Void>{
     
-    private final ObservableList<File> pathsToUpdate;
+    private final ObservableList<Path> pathsToUpdate;
     
     private final Path directory;
     
-    public FindFilesTask(Path searchFolder, ObservableList<File> listOfPaths) {
+    public FindFilesTask(Path searchFolder, ObservableList<Path> listOfPaths) {
         this.pathsToUpdate = listOfPaths;
         this.directory = searchFolder;
     }
@@ -27,7 +27,6 @@ final class FindFilesTask extends Task<Void>{
             File dir = new File(directory.toAbsolutePath().toString());
             File[] files = dir.listFiles();
             updateProgress(0, files.length);
-            System.out.println("So many files: " + dir.list().length);
             
             int cacheSize = determineCacheSize(files);
             
@@ -39,7 +38,7 @@ final class FindFilesTask extends Task<Void>{
                 }
                 updateProgress(f+1, files.length);
                 if (!files[f].isDirectory() && files[f].exists()) {
-                    buffer.update(files[f]);
+                    buffer.update(files[f].toPath());
                 }
             }
             buffer.flush();

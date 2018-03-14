@@ -10,23 +10,24 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
+import net.raumzeitfalle.fx.filechooser.SimplePathFilter;
 
 public class DemoJavaFxStage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        PathFilter exe = PathFilter.create(".exe", p->p.getName().toString().toLowerCase().endsWith(".exe"));
-        PathFilter xml = PathFilter.create(".xml", p->p.getName().toString().toLowerCase().endsWith(".xml"));
-        PathFilter txt = PathFilter.create(".txt", p->p.getName().toString().toLowerCase().endsWith(".txt"));
+        PathFilter exe = SimplePathFilter.forFileExtension("Program", "exe");
+        PathFilter xml = SimplePathFilter.forFileExtension("XML", "xml");
+        PathFilter txt = SimplePathFilter.forFileExtension("Text", "txt");
+        PathFilter xlsx = SimplePathFilter.forFileExtension("Excel 2007", "xlsx");
         
-        PathFilter xlsx = PathFilter.create(".xls or .xlsx", p-> p.getName().toString().toLowerCase().endsWith(".xls") 
-        		|| p.getName().toString().toLowerCase().endsWith(".xlsx"));
+        PathFilter combined = xlsx.combine(txt).combine(xml).combine(exe); 
         
-        PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
+        SimplePathFilter na0 = SimplePathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
         Path local = Paths.get("./");
-        FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe);
+        FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe,combined);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {

@@ -6,9 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,21 +26,21 @@ import javafx.collections.transformation.FilteredList;
 
 final class FileChooserModel {
     
-    private final ObservableList<File> allPaths;
+    private final ObservableList<Path> allPaths;
     
-    private final FilteredList<File> filteredPaths;
+    private final FilteredList<Path> filteredPaths;
 
     private final FileUpdateService fileUpdateService;
     
-    private final ListProperty<File> allPathsProperty;
+    private final ListProperty<Path> allPathsProperty;
         
-    private final ListProperty<File> filteredPathsProperty;
+    private final ListProperty<Path> filteredPathsProperty;
     
     private final StringProperty fileSelection = new SimpleStringProperty();
     
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     
-    private final Set<PathFilter> pathFilter = new HashSet<>(10);
+    private final List<PathFilter> pathFilter = new ArrayList<>(10);
 
     
     /*
@@ -77,7 +75,7 @@ final class FileChooserModel {
         return this.fileUpdateService.searchPathProperty();
     }
 
-    public ObservableList<File> getFilteredPaths() {
+    public ObservableList<Path> getFilteredPaths() {
         return filteredPaths;
     }
     
@@ -93,11 +91,11 @@ final class FileChooserModel {
         return this.invalidSelection;
     }
     
-    public void setSelectedFile(File file) {
+    public void setSelectedFile(Path file) {
         if (null == file) {
             this.fileSelection.setValue("");
         } else {
-            this.fileSelection.setValue(file.toPath().toAbsolutePath().toString());
+            this.fileSelection.setValue(file.toAbsolutePath().toString());
         }       
         this.invalidSelection.setValue(null == file);
     }
@@ -117,28 +115,32 @@ final class FileChooserModel {
     }
     
     public void updateFilterCriterion(String criterion) {
-        Predicate<File> customFilter = createManualListFilter(criterion);                           
+        Predicate<Path> customFilter = createManualListFilter(criterion);                           
         this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
     }
 
-    private Predicate<File> createManualListFilter(String criterion) {
+    private Predicate<Path> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
-        Predicate<File> customFilter = p -> {
+        
+        Predicate<Path> customFilter = p -> {
             return null == corrected || corrected.isEmpty() ||
-                    p.toString().toLowerCase().contains(corrected.toLowerCase());};
+                    p.toString().toLowerCase().contains(corrected.toLowerCase());
+            };
         return customFilter;
     }
 
-    private Predicate<File> combineFilterPredicates(Predicate<File> customFilter) {
-        List<Predicate<File>> effectiveFilter = this.pathFilter
+    private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
+        List<Predicate<Path>> effectiveFilter = this.pathFilter
         		.stream()
-        		.map(PathFilter::getCriterion)
+        		.map(PathFilter::getPredicate)
         		.collect(Collectors.toList());
         
         effectiveFilter.add(customFilter);
      
-        Predicate<File> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
-        return effectivePredicate;
+        return effectiveFilter
+        				.stream()
+        				.reduce(x -> true, Predicate::and);
+        
     }
     
     
@@ -192,7 +194,7 @@ final class FileChooserModel {
         this.pathFilter.add(filter);
     }
     
-    public Set<PathFilter> getPathFilter() {
+    public List<PathFilter> getPathFilter() {
     		return this.pathFilter;
     }
 
@@ -205,7 +207,7 @@ final class FileChooserModel {
 		this.pathFilter.clear();
 	}
 	
-	public void sort(Comparator<File> comparator) {
+	public void sort(Comparator<Path> comparator) {
 	    this.allPaths.sort(comparator);
 	}
 }

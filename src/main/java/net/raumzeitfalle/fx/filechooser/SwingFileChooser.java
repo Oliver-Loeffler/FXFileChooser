@@ -110,11 +110,14 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
         } else {
             return null;
         }
-        
     }
 
     @Override
     public void hide() {
         this.dialog.setVisible(false);
+    }
+    
+    public void shutdown() {
+        model.getFileUpdateService().cancel();
     }
 }

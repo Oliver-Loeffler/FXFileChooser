@@ -1,6 +1,5 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ final class FileChooserController implements Initializable {
     private TextField fileNameFilter;
 
     @FXML
-    private ListView<File> listOfFiles;
+    private ListView<Path> listOfFiles;
 
     @FXML
     private TextField selectedFile;
@@ -139,10 +138,7 @@ final class FileChooserController implements Initializable {
         
         selectedFile.textProperty().bind(model.selectedFileProperty());
         usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
-        showAllFilesFilter.setOnAction(e -> {
-        		model.clearBaseFilter();
-        		fileNameFilter.setText("");
-        });
+        showAllFilesFilter.setVisible(false);
         
         // TODO: Rework setup of PathFilter elements and move initialization into model
         List<PathFilter> filterList = new ArrayList<>();
@@ -168,10 +164,10 @@ final class FileChooserController implements Initializable {
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
  
-        assignSortAction(buttonSortAz, (a,b)->a.getName().compareTo(b.getName()));
-        assignSortAction(buttonSortZa, (a,b)->b.getName().compareTo(a.getName()));
-        assignSortAction(buttonSortOldestFirst, (a,b)->Long.valueOf(a.lastModified()).compareTo(b.lastModified()));
-        assignSortAction(buttonSortRecentFirst, (a,b)->Long.valueOf(b.lastModified()).compareTo(a.lastModified()));
+        assignSortAction(buttonSortAz, PathComparator.ascendingByName());
+        assignSortAction(buttonSortZa, PathComparator.descendingByName());
+        assignSortAction(buttonSortOldestFirst, PathComparator.ascendingLastModified());
+        assignSortAction(buttonSortRecentFirst, PathComparator.descendingByName());
                 
         buttonSortRecentFirst.setVisible(false);
         buttonSortOldestFirst.setVisible(false);
@@ -220,7 +216,7 @@ final class FileChooserController implements Initializable {
         }
     }
 
-    private void assignSortAction(MenuItem menuItem, Comparator<File> comparator) {
+    private void assignSortAction(MenuItem menuItem, Comparator<Path> comparator) {
         menuItem.setOnAction(e -> {
             Invoke.later(()->{
                 model.sort(comparator);
@@ -235,7 +231,7 @@ final class FileChooserController implements Initializable {
         });
     }
 
-    private File selectedItem() {
+    private Path selectedItem() {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
     
