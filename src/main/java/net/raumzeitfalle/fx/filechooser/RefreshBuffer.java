@@ -39,22 +39,21 @@ class RefreshBuffer {
         void update(Path file) {
             cache.add(file);
             if (!task.isCancelled() && cache.size() > cacheSize) {
-                try {
-                    flush();    
-                } catch (InterruptedException e) {
-                    this.lock.unlock();
-                }
+            		flush();    
             }    
         }
         
-        void flush() throws InterruptedException {
+        void flush()  {
             this.lock.lock();
-            Path[] update = this.atomicCache.get().toArray(new Path[0]);
-            Invoke.later(()->{
-                target.addAll(update);
-            });
-            this.atomicCache.get().clear();
-            this.lock.unlock();
+            try {
+            		Path[] update = this.atomicCache.get().toArray(new Path[0]);
+                Invoke.later(()->{
+                    target.addAll(update);
+                });
+                this.atomicCache.get().clear();	
+            } finally {
+            		this.lock.unlock();	
+            }
         }
         
     }
