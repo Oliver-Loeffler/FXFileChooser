@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -41,6 +40,8 @@ final class FileChooserModel {
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     
     private final List<PathFilter> pathFilter = new ArrayList<>(10);
+    
+    private PathFilter effectiveFilter = SimplePathFilter.acceptAll("");
 
     
     /*
@@ -59,8 +60,8 @@ final class FileChooserModel {
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
-        updateFilterCriterion("");
         this.fileUpdateService.start();
+        this.initializeFilter("");
     }
 
     private static Path getUsersHome() {
@@ -114,11 +115,25 @@ final class FileChooserModel {
         return this.fileSelection;
     }
     
+    /**
+     * Updates only the live filter criterion, not the effective path filter.
+     * @param criterion {@link String} A search text such as &quot;index&quot; for &quot;index.html&quot; or &quot;index.txt&quot;.
+     */
     public void updateFilterCriterion(String criterion) {
         Predicate<Path> customFilter = createManualListFilter(criterion);                           
         this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
     }
 
+    /**
+     * Updates the effective {@link PathFilter} and the the live filter criterion.
+     * @param pathFilter {@link PathFilter} Usually a specific file filter such as *.txt or *.html.
+     * @param criterion {@link String} A search text such as &quot;index&quot; for &quot;index.html&quot; or &quot;index.txt&quot;.
+     */
+    public void updateFilterCriterion(PathFilter pathFilter, String criterion) {
+    		this.effectiveFilter = pathFilter;
+    		updateFilterCriterion(criterion);
+    }
+    
     private Predicate<Path> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
         
@@ -130,27 +145,30 @@ final class FileChooserModel {
     }
 
     private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
-        List<Predicate<Path>> effectiveFilter = this.pathFilter
-        		.stream()
-        		.map(PathFilter::getPredicate)
-        		.collect(Collectors.toList());
+    		List<Predicate<Path>> predicates = new ArrayList<>();
+    		predicates.add(this.effectiveFilter.getPredicate());
+    		predicates.add(customFilter);
+//        List<Predicate<Path>> effectiveFilter = this.pathFilter
+//        		.stream()
+//        		.map(PathFilter::getPredicate)
+//        		.collect(Collectors.toList());
         
-        effectiveFilter.add(customFilter);
+        // effectiveFilter.add(customFilter);
      
-        return effectiveFilter
+        return predicates
         				.stream()
         				.reduce(x -> true, Predicate::and);
         
     }
     
     
-    public void initializeFilter(String text, List<PathFilter> filter) {
-    		if (!filter.isEmpty()) {
-    			PathFilter combined = filter.get(0);
-    			for (int i = 1; i<filter.size(); i++) {
-    				combined = combined.combine(filter.get(i));
+    public void initializeFilter(String text) {
+    		if (!this.pathFilter.isEmpty()) {
+    			PathFilter combined = this.pathFilter.get(0);
+    			for (PathFilter filter : this.pathFilter) {
+    				combined = combined.combine(filter);
     			}
-    			replacePathFilter(combined);
+    			 this.effectiveFilter = combined;
     		}
     		updateFilterCriterion(text);
     }
@@ -197,15 +215,6 @@ final class FileChooserModel {
     public List<PathFilter> getPathFilter() {
     		return this.pathFilter;
     }
-
-    public void replacePathFilter(PathFilter filter) {
-    		this.pathFilter.clear();
-        this.pathFilter.add(filter);
-    }
-    
-	public void clearBaseFilter() {
-		this.pathFilter.clear();
-	}
 	
 	public void sort(Comparator<Path> comparator) {
 	    this.allPaths.sort(comparator);
