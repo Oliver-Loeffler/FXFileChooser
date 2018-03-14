@@ -22,10 +22,11 @@ final class FindFilesTask extends Task<Void>{
     protected Void call() throws Exception {
             Invoke.andWait(()-> pathsToUpdate.clear());
             
-            
-            
             File dir = new File(directory.toAbsolutePath().toString());
             File[] files = dir.listFiles();
+            if (null == files) {
+            		files = new File[0];
+            }
             updateProgress(0, files.length);
             
             int cacheSize = determineCacheSize(files);
@@ -53,16 +54,16 @@ final class FindFilesTask extends Task<Void>{
             return 500;
         }
         if (items > 50_000) {
-            return 100;
+            return 200;
         }
         if (items > 15_000) {
             return 100;
         }
         if (items > 5_000) {
-            return 100;
+            return 50;
         }
         if (items > 1_000) {
-            return 50;
+            return 20;
         }
         return 10;
     }
