@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -76,6 +77,12 @@ final class FileChooserController implements Initializable {
     private MenuItem buttonSortZa;
     
     @FXML
+    private MenuItem buttonSortOldestFirst;
+
+    @FXML
+    private MenuItem buttonSortRecentFirst;
+    
+    @FXML
     private Button okButton;
     
     @FXML
@@ -117,6 +124,13 @@ final class FileChooserController implements Initializable {
             this.model.updateFilterCriterion(fileNameFilter.getText());
         });
         
+        listOfFiles.setOnMouseClicked(event->{
+            if (event.getClickCount() == 2) {
+                model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());
+                event.consume();
+                this.stage.hide();
+            }
+        });
 
         listOfFiles.setCellFactory(c -> new FilesListCell());
         listOfFiles.getSelectionModel().selectedItemProperty().addListener(l -> {
@@ -153,29 +167,14 @@ final class FileChooserController implements Initializable {
         
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
-        buttonSortAz.setOnAction(e -> {
-            Invoke.later(()->{
-                model.sort((a,b)->a.getName().compareTo(b.getName()));
-                SVGPath svgPath = new SVGPath();
-                svgPath.getStyleClass().add("tool-bar-icon");
-                svgPath.setContent(((SVGPath)buttonSortAz.getGraphic()).getContent());
-                sortMenu.setGraphic(svgPath);
-            });
-        });
-        
-        buttonSortZa.setOnAction(e -> {
-            Invoke.later(()->{
-                model.sort((a,b)->b.getName().compareTo(a.getName()));
+ 
+        assignSortAction(buttonSortAz, (a,b)->a.getName().compareTo(b.getName()));
+        assignSortAction(buttonSortZa, (a,b)->b.getName().compareTo(a.getName()));
+        assignSortAction(buttonSortOldestFirst, (a,b)->Long.valueOf(a.lastModified()).compareTo(b.lastModified()));
+        assignSortAction(buttonSortRecentFirst, (a,b)->Long.valueOf(b.lastModified()).compareTo(a.lastModified()));
                 
-                
-                SVGPath svgPath = new SVGPath();
-                svgPath.getStyleClass().add("tool-bar-icon");
-                svgPath.setContent(((SVGPath)buttonSortZa.getGraphic()).getContent());
-                sortMenu.setGraphic(svgPath);
-                sortMenu.getGraphic().getStyleClass().add("tool-bar-icon");
-            });
-            
-        });
+        buttonSortRecentFirst.setVisible(false);
+        buttonSortOldestFirst.setVisible(false);
         
         ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
        
@@ -219,6 +218,21 @@ final class FileChooserController implements Initializable {
                 throw new UnsupportedOperationException("Unknown use case.");
             }
         }
+    }
+
+    private void assignSortAction(MenuItem menuItem, Comparator<File> comparator) {
+        menuItem.setOnAction(e -> {
+            Invoke.later(()->{
+                model.sort(comparator);
+                
+                SVGPath svgPath = new SVGPath();
+                svgPath.getStyleClass().add("tool-bar-icon");
+                svgPath.setContent(((SVGPath)menuItem.getGraphic()).getContent());
+                sortMenu.setGraphic(svgPath);
+                sortMenu.getGraphic().getStyleClass().add("tool-bar-icon");
+            });
+            
+        });
     }
 
     private File selectedItem() {
