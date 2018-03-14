@@ -2,8 +2,6 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
@@ -140,18 +138,14 @@ final class FileChooserController implements Initializable {
         usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
         showAllFilesFilter.setVisible(false);
         
-        // TODO: Rework setup of PathFilter elements and move initialization into model
-        List<PathFilter> filterList = new ArrayList<>();
+        this.model.initializeFilter(fileNameFilter.getText());
         this.model.getPathFilter().forEach(p -> {
-        		filterList.add(p);
         		MenuItem item = new MenuItem(p.getName());
         		this.fileExtensionFilter.getItems().add(item);
         		item.setOnAction(e->{
-        			this.model.replacePathFilter(p);
-        			this.model.updateFilterCriterion(fileNameFilter.getText());
+        			this.model.updateFilterCriterion(p,fileNameFilter.getText());
         		});
         });
-        this.model.initializeFilter(fileNameFilter.getText(), filterList);
         
         chooser.setOnAction(e -> {
             Platform.runLater(()->{
@@ -169,8 +163,8 @@ final class FileChooserController implements Initializable {
         assignSortAction(buttonSortOldestFirst, PathComparator.ascendingLastModified());
         assignSortAction(buttonSortRecentFirst, PathComparator.descendingByName());
                 
-        buttonSortRecentFirst.setVisible(false);
-        buttonSortOldestFirst.setVisible(false);
+        buttonSortRecentFirst.setVisible(true);
+        buttonSortOldestFirst.setVisible(true);
         
         ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
        
