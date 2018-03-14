@@ -42,7 +42,7 @@ class RefreshBuffer {
                 try {
                     flush();    
                 } catch (InterruptedException e) {
-                    System.out.println("Cannot update Paths cache!");
+                    this.lock.unlock();
                 }
             }    
         }
