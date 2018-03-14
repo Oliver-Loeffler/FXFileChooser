@@ -3,6 +3,8 @@ package net.raumzeitfalle.fx.filechooser;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -128,15 +130,18 @@ final class FileChooserController implements Initializable {
         		fileNameFilter.setText("");
         });
         
+        // TODO: Rework setup of PathFilter elements and move initialization into model
+        List<PathFilter> filterList = new ArrayList<>();
         this.model.getPathFilter().forEach(p -> {
+        		filterList.add(p);
         		MenuItem item = new MenuItem(p.getName());
         		this.fileExtensionFilter.getItems().add(item);
         		item.setOnAction(e->{
         			this.model.replacePathFilter(p);
         			this.model.updateFilterCriterion(fileNameFilter.getText());
         		});
-        		
         });
+        this.model.initializeFilter(fileNameFilter.getText(), filterList);
         
         chooser.setOnAction(e -> {
             Platform.runLater(()->{
