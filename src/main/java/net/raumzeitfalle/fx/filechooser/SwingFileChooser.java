@@ -31,13 +31,17 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     public static final int APPROVE_OPTION = 0;
     
     public static SwingFileChooser create(PathFilter ...filter) {
-    	return create("", filter);
+    		return create("Choose file:", "", filter);
+    }
+    
+    public static SwingFileChooser create(String title, PathFilter ...filter) {
+    		return create(title, "", filter);
     }
        
-    public static SwingFileChooser create(String pathToBrowse, PathFilter ...filter)  {
+    public static SwingFileChooser create(String title, String pathToBrowse, PathFilter ...filter)  {
         
         Path startHere = startPath(pathToBrowse);
-        SwingFileChooser fc = new SwingFileChooser();
+        SwingFileChooser fc = new SwingFileChooser(title);
         PathSupplier pathSupplier = SwingDirectoryChooser.createIn(startHere, fc);
         Platform.runLater(()->{
             try {
@@ -71,8 +75,10 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     
     private JDialog dialog;   
     
-    private SwingFileChooser() {
-  
+    private final String title;
+    
+    private SwingFileChooser(String title) {
+    		this.title = (null != title) ? title : "Choose file:";
     }
     
     private void setModel(FileChooserModel model) {
@@ -82,7 +88,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
     public int showOpenDialog(Component parent) {
         if (null == this.dialog) {
             Frame frame = JOptionPane.getFrameForComponent(parent);
-            dialog = new JDialog(frame, "Choose File", true);
+            dialog = new JDialog(frame, this.title, true);
             dialog.setContentPane(this);
             Dimension size = new Dimension(750, 550);
             this.setPreferredSize(size);

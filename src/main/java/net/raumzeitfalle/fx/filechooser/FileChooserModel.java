@@ -58,7 +58,6 @@ final class FileChooserModel {
         }
         this.allPaths = FXCollections.observableArrayList(new ArrayList<>(300_000));
         this.filteredPaths = new FilteredList<>(allPaths);
-       // this.sortedPaths = new SortedList<>(this.filteredPaths,(a,b)->a.getName().compareTo(b.getName()));
         this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
@@ -81,10 +80,6 @@ final class FileChooserModel {
     public ObservableList<File> getFilteredPaths() {
         return filteredPaths;
     }
-    
-//    public ObservableList<File> getSortedPaths() {
-//        return sortedPaths;
-//    }
     
     ReadOnlyIntegerProperty filteredPathsSizeProperty() {
         return this.filteredPathsProperty.sizeProperty();
@@ -135,11 +130,27 @@ final class FileChooserModel {
     }
 
     private Predicate<File> combineFilterPredicates(Predicate<File> customFilter) {
-        List<Predicate<File>> effectiveFilter = this.pathFilter.parallelStream().map(PathFilter::getCriterion).collect(Collectors.toList());
+        List<Predicate<File>> effectiveFilter = this.pathFilter
+        		.stream()
+        		.map(PathFilter::getCriterion)
+        		.collect(Collectors.toList());
+        
         effectiveFilter.add(customFilter);
      
         Predicate<File> effectivePredicate = effectiveFilter.parallelStream().reduce(x -> true, Predicate::and);
         return effectivePredicate;
+    }
+    
+    
+    public void initializeFilter(String text, List<PathFilter> filter) {
+    		if (!filter.isEmpty()) {
+    			PathFilter combined = filter.get(0);
+    			for (int i = 1; i<filter.size(); i++) {
+    				combined = combined.combine(filter.get(i));
+    			}
+    			replacePathFilter(combined);
+    		}
+    		updateFilterCriterion(text);
     }
 
     private String removeInvalidChars(String criterion) {

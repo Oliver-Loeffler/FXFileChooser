@@ -8,6 +8,10 @@ public class PathFilter {
         return new PathFilter(label, p);
     }
     
+    protected static PathFilter acceptAll() {
+    		return new PathFilter("", p->true);
+    }
+    
     public static PathFilter forFileExtension(String label, String regex) {
     		return new PathFilter(label, p->{
         		String name = p.getName().toString();
@@ -39,5 +43,10 @@ public class PathFilter {
     
     public Predicate<File> getCriterion() {
     		return this.criterion;
+    }
+    
+    public PathFilter combine(PathFilter other) {
+    		String label = this.name + " and " + other.name;
+    		return new PathFilter(label, this.criterion.or(other.criterion));
     }
 }
