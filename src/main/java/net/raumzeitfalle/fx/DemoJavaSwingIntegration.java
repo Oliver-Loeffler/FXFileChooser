@@ -1,50 +1,62 @@
 package net.raumzeitfalle.fx;
 
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
+import net.raumzeitfalle.fx.filechooser.SimplePathFilter;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
-public class DemoJavaSwingIntegration  {
+public class DemoJavaSwingIntegration implements WindowListener {
   
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(()->initAndShowGui());
+    		DemoJavaSwingIntegration app = new DemoJavaSwingIntegration();
+        SwingUtilities.invokeLater(()->app.initAndShowGui());
     }
 
-    private static void initAndShowGui() {
+    private final List<PathFilter> filter;
+    private SwingFileChooser fileChooser;
+    
+    DemoJavaSwingIntegration() {
+    		PathFilter all = SimplePathFilter.acceptAll("all files");
+    	 	PathFilter xml = SimplePathFilter.forFileExtension("eXtensible Markup Language (xml)", "xml");
+    	    PathFilter txt = SimplePathFilter.forFileExtension("TXT", "txt");
+    	    PathFilter pdf = SimplePathFilter.forFileExtension("PDF: Portable Document Format", "pdf");
+    	    PathFilter png = SimplePathFilter.forFileExtension("*.png", "png");
+    	    PathFilter svg = SimplePathFilter.forFileExtension("Scalable Vector Graphics (*.svg)", "svg");
+    	    PathFilter html = SimplePathFilter.forFileExtension("*.html", "html").combine(SimplePathFilter.forFileExtension("*.htm", "html"));
+    	    PathFilter xls = SimplePathFilter.forFileExtension("*.xls", "xls").combine(SimplePathFilter.forFileExtension("*.xlsx", "xlsx"));
+    	    
+    	    PathFilter htmlAndExcel = html.combine(xls).combine(png);
+    	    
+    	    filter = Arrays.asList(all,xml,txt,pdf,png,svg,html,xls,htmlAndExcel);
+
+    }
+    
+    private void initAndShowGui() {
         JFrame frame = new JFrame("JavaFX Dialog in Swing");
         JPanel buttonHolder = new JPanel();
         
-    JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
-    
-    PathFilter xml = PathFilter.create(".xml", p->p.getName().toString().toLowerCase().endsWith(".xml"));
-    PathFilter txt = PathFilter.create(".txt", p->p.getName().toString().toLowerCase().endsWith(".txt"));
-    PathFilter pdf = PathFilter.create(".pdf", p->p.getName().toString().toLowerCase().endsWith(".pdf"));
-    PathFilter png = PathFilter.create(".png", p->p.getName().toString().toLowerCase().endsWith(".png"));
-    PathFilter svg = PathFilter.create(".svg", p->p.getName().toString().toLowerCase().endsWith(".svg"));
-    PathFilter html = PathFilter.create(".html", p->{
-    		String name = p.getName().toString().toLowerCase();
-    		return name.endsWith(".html") || name.endsWith(".htm");
-    });
-    
-    PathFilter xlsx = PathFilter.create(".xls or .xlsx", p-> p.getName().toString().toLowerCase().endsWith(".xls") 
-    		|| p.getName().toString().toLowerCase().endsWith(".xlsx"));
-    
-        
-    SwingFileChooser fileChooser = SwingFileChooser.create("Choose any file:", xml, xlsx, txt, pdf, png, svg, html);
-    showDialog.addActionListener(l -> {
-        int option = fileChooser.showOpenDialog(frame);
-        System.out.println(option);
-        
-        if (option == SwingFileChooser.APPROVE_OPTION) {
-            System.out.println(fileChooser.getSelectedFile());
-        }
-        
-    });
+	    JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
+	    this.fileChooser = SwingFileChooser.create("Choose any file:", this.filter.toArray(new PathFilter[0]));
+	    
+	    showDialog.addActionListener(l -> {
+	        int option = fileChooser.showOpenDialog(frame);
+	        System.out.println(option);
+	        
+	        if (option == SwingFileChooser.APPROVE_OPTION) {
+	            System.out.println(fileChooser.getSelectedFile());
+	        }
+	        
+	    });
         
         buttonHolder.add(showDialog);
         frame.getContentPane().add(buttonHolder);
@@ -53,5 +65,29 @@ public class DemoJavaSwingIntegration  {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+	@Override
+	public void windowOpened(WindowEvent e) {}
+
+	@Override
+	public void windowClosing(WindowEvent e) {}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		this.fileChooser.shutdown();
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+
+	@Override
+	public void windowActivated(WindowEvent e) {}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
     
 }

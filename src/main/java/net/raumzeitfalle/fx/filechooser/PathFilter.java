@@ -39,5 +39,5 @@ public interface PathFilter {
 	 * @param other {@link PathFilter} to be combined with this one
 	 * @return {@link PathFilter} where this ones {@link Predicate} and the others {@link PathFilter} {@link Predicate} are combined using a logical OR.
 	 */
-	PathFilter combine(SimplePathFilter other);
+	PathFilter combine(PathFilter other);
 }
