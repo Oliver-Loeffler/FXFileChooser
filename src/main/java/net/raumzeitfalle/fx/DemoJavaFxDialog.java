@@ -14,7 +14,6 @@ public class DemoJavaFxDialog extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
     FXFileChooserDialog fc = FXFileChooserDialog.create();
     
     Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");

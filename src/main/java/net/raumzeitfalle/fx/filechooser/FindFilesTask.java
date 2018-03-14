@@ -32,17 +32,6 @@ final class FindFilesTask extends Task<Void>{
             int cacheSize = determineCacheSize(files);
             
             RefreshBuffer buffer = RefreshBuffer.get(this,cacheSize, pathsToUpdate);
-            // slowest (!) on Windows with SSD and 240000 files
-//            try {
-//            Files.list(directory)
-//                .peek(p->{
-//                    if (isCancelled()) throw new Break();
-//                })
-//                .filter(Files::isRegularFile)
-//                .forEach(p->Invoke.later(()->pathsToUpdate.add(p.toFile())));
-//            } catch (Break b) {
-//                // aborted
-//            }
             
             for (int f = 0; f < files.length; f++) {
                 if (isCancelled()) {
@@ -50,38 +39,12 @@ final class FindFilesTask extends Task<Void>{
                 }
                 updateProgress(f+1, files.length);
                 if (!files[f].isDirectory() && files[f].exists()) {
-                    // File file = files[f];
-                    //Invoke.later(()->pathsToUpdate.add(file));
                     buffer.update(files[f]);
                 }
             }
             buffer.flush();
             updateProgress(files.length, files.length);
           
-          
-           // alternatives: still slow as JavaFX UI updates take most of the time
-//            Arrays.stream(files)
-//                  .parallel()
-//                  .peek(f -> {if (isCancelled()) throw new Break();})
-//                  .filter(File::exists)
-//                  .filter(f->!f.isDirectory())
-//                  .forEach(f -> buffer.update(f));
-//            buffer.flush();
-           
-//            try {
-//                Files.list(directory)
-//                //.parallel()
-//                .peek(f -> {if (isCancelled()) throw new Break();})
-//                .filter(p->!p.toFile().isDirectory())
-//                .forEach(p -> Invoke.later(()->pathsToUpdate.add(p)));
-//                //.forEach(p -> {
-//                //    buffer.update(p);
-//                //});    
-//            } catch (Break b) {
-//                // this was an intended abort by task cancellation
-//                System.out.println("FindFilesTask aborted.");
-//            }
-            //buffer.flush();
         return null;
     }
 
