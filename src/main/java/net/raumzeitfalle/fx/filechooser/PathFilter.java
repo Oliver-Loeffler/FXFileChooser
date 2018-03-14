@@ -1,52 +1,43 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
-public class PathFilter {
-    public static PathFilter create(String label, Predicate<File> p) {
-        return new PathFilter(label, p);
-    }
-    
-    protected static PathFilter acceptAll() {
-    		return new PathFilter("", p->true);
-    }
-    
-    public static PathFilter forFileExtension(String label, String regex) {
-    		return new PathFilter(label, p->{
-        		String name = p.getName().toString();
-        		if (null != name) {
-        			int lastDot = name.lastIndexOf('.');
-        			if (lastDot > 0) {
-        				String ext = name.substring(lastDot);
-        				if (ext != null && !ext.isEmpty()) {
-        					return ext.matches("[.]"+regex+"$");
-        				} 
-        			}
-        		} 
-        		return false;
-        });
-    }
-    
-    private final String name;
-    
-    private final Predicate<File> criterion;
-    
-    private PathFilter(String label, Predicate<File> criterion) {
-        this.name = label;
-        this.criterion = criterion;
-    }
-    
-    public String getName() {
-    		return this.name;
-    }
-    
-    public Predicate<File> getCriterion() {
-    		return this.criterion;
-    }
-    
-    public PathFilter combine(PathFilter other) {
-    		String label = this.name + " and " + other.name;
-    		return new PathFilter(label, this.criterion.or(other.criterion));
-    }
+/**
+ * The PathFilter interface is used by {@link FileChooserModel} to provide filter predicates matching specific file types. Each PathFilter also provides a name to populate e.g. text fields in {@link javafx.scene.control.MenuItem} or plain {@link javafx.scene.control.Label} fields.<br>
+ */
+public interface PathFilter {
+	
+	/**
+	 * @return A name to be used in user interface dialogs.
+	 */
+	String getName();
+	
+	/**
+	 * @return The {@link Predicate} to match a specific file type or a group of file types. 
+	 */
+	Predicate<Path> getPredicate();
+	
+	/**
+	 * @param path {@link Path} to test
+	 * @return true in case the given {@link Path} matches with the {@link Predicate}.
+	 */
+	boolean matches(Path path);
+	
+	/**
+	 * @param file {@link File}
+	 * @return true in case the given {@link File} matches with the {@link Predicate}.
+	 */
+	default boolean matches(File file) {
+		return this.matches(file.toPath());
+	}
+	
+	/**
+	 * In some cases it is beneficial to combine {@link PathFilter} objects.
+	 * 
+	 * @param other {@link PathFilter} to be combined with this one
+	 * @return {@link PathFilter} where this ones {@link Predicate} and the others {@link PathFilter} {@link Predicate} are combined using a logical OR.
+	 */
+	PathFilter combine(SimplePathFilter other);
 }
