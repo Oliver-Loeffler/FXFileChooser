@@ -87,7 +87,9 @@ public class FileChooserModelTest {
 					Files.list(location)
 						.filter(Files::isRegularFile)
 						.forEach(observableList::add);
-				} catch (IOException e) { /* the test will fail then */ } 
+				} catch (IOException e) { throw new RuntimeException(e); 
+					/* its good to see the error but there is no need to handle it here */ 
+				} 
 			}
 			
 			@Override
