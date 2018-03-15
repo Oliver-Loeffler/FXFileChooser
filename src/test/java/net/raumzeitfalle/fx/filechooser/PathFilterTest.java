@@ -15,7 +15,7 @@ public class PathFilterTest {
 	@Test
 	public void criterion() {
 		
-		classUnderTest = SimplePathFilter.create("HTML file", p->p.getFileName().toString().endsWith(".html"));
+		classUnderTest = PathFilter.create("HTML file", p->p.getFileName().toString().endsWith(".html"));
 		Predicate<Path> criterion = classUnderTest.getPredicate();
 		
 		assertTrue(criterion.test(Paths.get("index.html")));
@@ -28,8 +28,9 @@ public class PathFilterTest {
 	@Test
 	public void combine() {
 		
-		classUnderTest = SimplePathFilter.create("HTML file", p->String.valueOf(p.getFileName()).endsWith(".html"))
-						 .combine(SimplePathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
+		classUnderTest = PathFilter
+					.create("HTML file", p->String.valueOf(p.getFileName()).endsWith(".html"))
+					 .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
 		
 		Predicate<Path> criterion = classUnderTest.getPredicate();
 		
@@ -50,7 +51,7 @@ public class PathFilterTest {
 
 	@Test
 	public void acceptAll() {
-		classUnderTest = SimplePathFilter.acceptAll("all files");
+		classUnderTest = PathFilter.acceptAllFiles("all files");
 		Predicate<Path> criterion = classUnderTest.getPredicate();
 
 		assertTrue(criterion.test(Paths.get("")));

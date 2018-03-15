@@ -10,21 +10,20 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
-import net.raumzeitfalle.fx.filechooser.SimplePathFilter;
 
 public class DemoJavaFxStage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        PathFilter exe = SimplePathFilter.forFileExtension("Program", "exe");
-        PathFilter xml = SimplePathFilter.forFileExtension("XML", "xml");
-        PathFilter txt = SimplePathFilter.forFileExtension("Text", "txt");
-        PathFilter xlsx = SimplePathFilter.forFileExtension("Excel 2007", "xlsx");
+        PathFilter exe = PathFilter.forFileExtension("Program", "exe");
+        PathFilter xml = PathFilter.forFileExtension("XML", "xml");
+        PathFilter txt = PathFilter.forFileExtension("Text", "txt");
+        PathFilter xlsx = PathFilter.forFileExtension("Excel 2007", "xlsx");
         
         PathFilter combined = xlsx.combine(txt).combine(xml).combine(exe); 
         
-        SimplePathFilter na0 = SimplePathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
+        PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
         Path local = Paths.get("./");
         FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe,combined);
