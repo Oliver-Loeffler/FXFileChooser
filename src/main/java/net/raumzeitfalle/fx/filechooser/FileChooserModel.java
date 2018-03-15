@@ -22,7 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;;
+import javafx.collections.transformation.FilteredList;
 
 final class FileChooserModel {
     
