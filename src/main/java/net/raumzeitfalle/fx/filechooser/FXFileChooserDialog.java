@@ -14,7 +14,7 @@ import javafx.stage.Window;
 public class FXFileChooserDialog extends Dialog<Path> {
     
     public static FXFileChooserDialog create() throws IOException {
-        return new FXFileChooserDialog(new FileChooserModel());
+        return new FXFileChooserDialog(FileChooserModel.get());
     }
     
     public static FXFileChooserDialog create(FileChooserModel model) throws IOException {

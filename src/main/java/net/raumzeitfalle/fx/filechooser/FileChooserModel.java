@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -21,7 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.FilteredList;;
 
 final class FileChooserModel {
     
@@ -29,7 +30,7 @@ final class FileChooserModel {
     
     private final FilteredList<Path> filteredPaths;
 
-    private final FileUpdateService fileUpdateService;
+    private UpdateService fileUpdateService;
     
     private final ListProperty<Path> allPathsProperty;
         
@@ -42,25 +43,31 @@ final class FileChooserModel {
     private final List<PathFilter> pathFilter = new ArrayList<>(10);
     
     private PathFilter effectiveFilter = SimplePathFilter.acceptAll("");
-
     
     /*
      * TODO: add possibility to construct model with list or array of filters
      */
-    public FileChooserModel() {
-        this(getUsersHome());
+    public static FileChooserModel get() {
+        return startingIn(getUsersHome());
     }
     
-    public FileChooserModel(Path startFolder) {
+    public static FileChooserModel startingIn(Path startFolder) {
+    		ObservableList<Path> paths = FXCollections.observableArrayList(new ArrayList<>(300_000));
+    		Supplier<UpdateService> serviceProvider = ()->new FileUpdateService(startFolder, paths);
+    		return new FileChooserModel(startFolder, paths, serviceProvider);
+    }
+    
+    public FileChooserModel(Path startFolder, ObservableList<Path> paths, Supplier<UpdateService> serviceProvider) {
         if (null == startFolder) {
             startFolder = getUsersHome();
         }
-        this.allPaths = FXCollections.observableArrayList(new ArrayList<>(300_000));
+        this.allPaths = paths;
         this.filteredPaths = new FilteredList<>(allPaths);
-        this.fileUpdateService = new FileUpdateService(startFolder, this.allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
-        this.fileUpdateService.start();
+        this.fileUpdateService = serviceProvider.get();
+        this.fileUpdateService.startUpdate();
+             
         this.initializeFilter("");
     }
 
@@ -68,7 +75,7 @@ final class FileChooserModel {
         return Paths.get(System.getProperty("user.home"));
     }
     
-    public FileUpdateService getFileUpdateService() {
+    public UpdateService getUpdateService() {
         return this.fileUpdateService;
     }
     
@@ -148,13 +155,7 @@ final class FileChooserModel {
     		List<Predicate<Path>> predicates = new ArrayList<>();
     		predicates.add(this.effectiveFilter.getPredicate());
     		predicates.add(customFilter);
-//        List<Predicate<Path>> effectiveFilter = this.pathFilter
-//        		.stream()
-//        		.map(PathFilter::getPredicate)
-//        		.collect(Collectors.toList());
-        
-        // effectiveFilter.add(customFilter);
-     
+
         return predicates
         				.stream()
         				.reduce(x -> true, Predicate::and);
@@ -183,7 +184,7 @@ final class FileChooserModel {
     }
     
     public void refreshFiles() {
-        this.fileUpdateService.restart();
+        this.fileUpdateService.refresh();
     }
     
     public void updateFilesIn(File directory) {

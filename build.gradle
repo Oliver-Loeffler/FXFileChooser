@@ -21,7 +21,7 @@ plugins {
 wrapper.gradleVersion = '4.4.1'
 
 def getVersionName = { ->
-	def version =  "0.0.4-SNAPSHOT"
+	def version =  "0.1.0-SNAPSHOT"
 	println "Version to build: " + version
 	return version
 }

@@ -156,7 +156,7 @@ final class FileChooserController implements Initializable {
         });    
         
         refreshButton.setOnAction(e -> model.refreshFiles());
-        stopButton.setOnAction(e -> model.getFileUpdateService().cancel());
+        stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
  
         assignSortAction(buttonSortAz, PathComparator.ascendingByName());
         assignSortAction(buttonSortZa, PathComparator.descendingByName());
@@ -166,13 +166,13 @@ final class FileChooserController implements Initializable {
         buttonSortRecentFirst.setVisible(true);
         buttonSortOldestFirst.setVisible(true);
         
-        ReadOnlyBooleanProperty updateIsRunning = model.getFileUpdateService().runningProperty();
+        ReadOnlyBooleanProperty updateIsRunning = model.getUpdateService().runningProperty();
        
         /*
          *  TODO: replace progress indicator by progress bar which is updated in intervals only
          *  OR use indicator for small sets and bar for large data sets 
          */
-        progressBar.progressProperty().bind(model.getFileUpdateService().progressProperty());
+        progressBar.progressProperty().bind(model.getUpdateService().progressProperty());
         
         //counterPane.visibleProperty().bind(updateIsRunning);
         counterPane.setVisible(true);
