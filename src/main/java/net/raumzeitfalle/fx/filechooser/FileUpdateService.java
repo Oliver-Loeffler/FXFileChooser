@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-final class FileUpdateService extends javafx.concurrent.Service<Void>{
+final class FileUpdateService extends javafx.concurrent.Service<Void> implements UpdateService {
      
     private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
     
@@ -35,12 +35,26 @@ final class FileUpdateService extends javafx.concurrent.Service<Void>{
     
     public void restartIn(Path location) {
         setSearchLocation(location);
-        this.restart();
+        this.refresh();
     }
     
-    ObjectProperty<Path> searchPathProperty() {
+    public ObjectProperty<Path> searchPathProperty() {
         return this.rootFolder;
     }
-    
+
+	@Override
+	public void refresh() {
+		this.restart();
+	}
+	
+	@Override
+	public void cancelUpdate() {
+		this.cancel();
+	}
+	
+	@Override
+	public void startUpdate() {
+		this.start();
+	}
     
 }

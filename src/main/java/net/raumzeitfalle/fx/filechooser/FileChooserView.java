@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 final class FileChooserView {
     
     static Parent create(Stage stage) throws IOException {
-        FileChooserModel model = new FileChooserModel();
+        FileChooserModel model = FileChooserModel.get();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(Paths.get(""), stage.getOwner());
         
         return create(model, pathSupplier , stage);

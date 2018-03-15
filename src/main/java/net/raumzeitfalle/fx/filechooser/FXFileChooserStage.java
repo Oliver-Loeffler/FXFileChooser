@@ -17,11 +17,11 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
     }
     
     public static FXFileChooserStage create(PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(new FileChooserModel(), filter);
+        return new FXFileChooserStage(FileChooserModel.get(), filter);
     }
     
-    public static FXFileChooserStage create(Path at, PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(new FileChooserModel(at), filter);
+    public static FXFileChooserStage create(Path inLocation, PathFilter ...filter) throws IOException {
+        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation), filter);
     }
     
     private final FileChooserModel model;
