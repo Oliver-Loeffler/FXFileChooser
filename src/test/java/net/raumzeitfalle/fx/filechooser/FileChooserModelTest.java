@@ -20,7 +20,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 
 public class FileChooserModelTest {
 	
@@ -77,14 +76,8 @@ public class FileChooserModelTest {
 		};
 		
 		Supplier<UpdateService> serviceProvider = ()->service;
-		return new FileChooserModel(testRoot, observableList, serviceProvider);
-	}
-	
-	private static class EmptyTask extends Task<Void> {
-
-		@Override
-		protected Void call() throws Exception { return null; }
 		
+		return new FileChooserModel(observableList, serviceProvider);
 	}
 
 }
