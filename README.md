@@ -1,5 +1,7 @@
 # FXFileChooser
 
+[![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser)
+
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
 As the standard JavaFX file chooser uses system dialogs, so it is hard to test and it is not easy to modifiy (e. g. new Skin). In some cases the system controls even show poor performance opening folders with many files (depends on operating system and JRE version).
