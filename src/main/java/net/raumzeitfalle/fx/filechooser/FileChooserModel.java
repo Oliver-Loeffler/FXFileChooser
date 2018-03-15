@@ -54,13 +54,10 @@ final class FileChooserModel {
     public static FileChooserModel startingIn(Path startFolder) {
     		ObservableList<Path> paths = FXCollections.observableArrayList(new ArrayList<>(300_000));
     		Supplier<UpdateService> serviceProvider = ()->new FileUpdateService(startFolder, paths);
-    		return new FileChooserModel(startFolder, paths, serviceProvider);
+    		return new FileChooserModel(paths, serviceProvider);
     }
     
-    public FileChooserModel(Path startFolder, ObservableList<Path> paths, Supplier<UpdateService> serviceProvider) {
-        if (null == startFolder) {
-            startFolder = getUsersHome();
-        }
+    public FileChooserModel(ObservableList<Path> paths, Supplier<UpdateService> serviceProvider) {
         this.allPaths = paths;
         this.filteredPaths = new FilteredList<>(allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
