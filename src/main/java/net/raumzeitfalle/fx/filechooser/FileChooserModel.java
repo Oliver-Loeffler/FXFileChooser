@@ -42,7 +42,7 @@ final class FileChooserModel {
     
     private final List<PathFilter> pathFilter = new ArrayList<>(10);
     
-    private PathFilter effectiveFilter = SimplePathFilter.acceptAll("");
+    private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");
     
     /*
      * TODO: add possibility to construct model with list or array of filters
@@ -158,7 +158,6 @@ final class FileChooserModel {
         				.reduce(x -> true, Predicate::and);
         
     }
-    
     
     public void initializeFilter(String text) {
     		if (!this.pathFilter.isEmpty()) {

@@ -28,16 +28,38 @@ public class FileChooserModelTest {
 	private final FileChooserModel classUnderTest = createTestModel(TEST_ROOT, new ArrayList<>());
 	
 	@Test
-	public void test() {
+	public void listFileContents() {
 		
 		classUnderTest.updateFilesIn(TEST_ROOT);
-		System.out.println(classUnderTest.getFilteredPaths());
+
 		assertTrue(classUnderTest.getFilteredPaths().isEmpty());
+		assertEquals(0, classUnderTest.allPathsSizeProperty().get());
 		
 		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
-		classUnderTest.refreshFiles();
-	
+		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
+		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
+		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
+		
+	}
+	
+	@Test
+	public void applySimpleStringFilter() {
+		
+		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
+		classUnderTest.updateFilterCriterion(".csv");
+		assertEquals(1, classUnderTest.getFilteredPaths().size());
+		
+	}
+	
+	@Test
+	public void usingPathFilter() {
+		
+		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
+		PathFilter filter = PathFilter.create(p->p.getFileName().toString().startsWith("Test"));
+		
+		classUnderTest.updateFilterCriterion(filter, "5");
+		assertEquals(1, classUnderTest.getFilteredPaths().size());
 		
 	}
 

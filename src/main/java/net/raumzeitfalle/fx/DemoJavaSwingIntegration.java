@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
-import net.raumzeitfalle.fx.filechooser.SimplePathFilter;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
 public class DemoJavaSwingIntegration implements WindowListener {
@@ -26,14 +25,14 @@ public class DemoJavaSwingIntegration implements WindowListener {
     private SwingFileChooser fileChooser;
     
     DemoJavaSwingIntegration() {
-    		PathFilter all = SimplePathFilter.acceptAll("all files");
-    	 	PathFilter xml = SimplePathFilter.forFileExtension("eXtensible Markup Language (xml)", "xml");
-    	    PathFilter txt = SimplePathFilter.forFileExtension("TXT", "txt");
-    	    PathFilter pdf = SimplePathFilter.forFileExtension("PDF: Portable Document Format", "pdf");
-    	    PathFilter png = SimplePathFilter.forFileExtension("*.png", "png");
-    	    PathFilter svg = SimplePathFilter.forFileExtension("Scalable Vector Graphics (*.svg)", "svg");
-    	    PathFilter html = SimplePathFilter.forFileExtension("*.html", "html").combine(SimplePathFilter.forFileExtension("*.htm", "html"));
-    	    PathFilter xls = SimplePathFilter.forFileExtension("*.xls", "xls").combine(SimplePathFilter.forFileExtension("*.xlsx", "xlsx"));
+    		PathFilter all = PathFilter.acceptAllFiles("all files");
+    	 	PathFilter xml = PathFilter.forFileExtension("eXtensible Markup Language (xml)", "xml");
+    	    PathFilter txt = PathFilter.forFileExtension("TXT", "txt");
+    	    PathFilter pdf = PathFilter.forFileExtension("PDF: Portable Document Format", "pdf");
+    	    PathFilter png = PathFilter.forFileExtension("*.png", "png");
+    	    PathFilter svg = PathFilter.forFileExtension("Scalable Vector Graphics (*.svg)", "svg");
+    	    PathFilter html = PathFilter.forFileExtension("*.html", "html").combine(PathFilter.forFileExtension("*.htm", "html"));
+    	    PathFilter xls = PathFilter.forFileExtension("*.xls", "xls").combine(PathFilter.forFileExtension("*.xlsx", "xlsx"));
     	    
     	    PathFilter htmlAndExcel = html.combine(xls).combine(png);
     	    
