@@ -2,6 +2,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,20 +28,43 @@ public class FileChooserModelTest {
 	
 	private final FileChooserModel classUnderTest = createTestModel(TEST_ROOT, new ArrayList<>());
 	
+	
 	@Test
 	public void listFileContents() {
 		
+		// update from a directory which only contains directories
 		classUnderTest.updateFilesIn(TEST_ROOT);
-
 		assertTrue(classUnderTest.getFilteredPaths().isEmpty());
 		assertEquals(0, classUnderTest.allPathsSizeProperty().get());
 		
-		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
+		// take a path object
+		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles/"));
+		classUnderTest.updateFilesIn((File) null);
 		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
 		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
 		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
 		
+		// just take a file object pointing to a path
+		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles/").toFile());
+		
+		assertEquals(11, classUnderTest.getFilteredPaths().size());
+		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
+		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
+		
+		// take a Path pointing to a filename
+		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles").resolve("XtremeHorrbibleSpreadSheet.xlsx"));
+		
+		assertEquals(11, classUnderTest.getFilteredPaths().size());
+		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
+		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
+		
+		// take a Path pointing to a filename located in root directory (not a regular file)
+		classUnderTest.updateFilesIn(Paths.get("//filename"));
+		
+		assertEquals(11, classUnderTest.getFilteredPaths().size());
+		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
+		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
 	}
 	
 	@Test
@@ -62,7 +86,19 @@ public class FileChooserModelTest {
 		assertEquals(1, classUnderTest.getFilteredPaths().size());
 		
 	}
-
+	
+	@Test
+	public void lookIntoUsersHome() {
+		// TODO: change users home before test - ?
+		PathFilter filter = PathFilter.acceptAllFiles("all files");
+		classUnderTest.updateFilterCriterion(filter, "");
+		classUnderTest.changeToUsersHome();
+		
+		assertTrue(classUnderTest.getFilteredPaths().size() > 1);
+		
+	}
+	
+	
 	private FileChooserModel createTestModel(Path testRoot, List<Path> paths) {
 		ObservableList<Path> observableList = FXCollections.observableArrayList(paths);
 		
