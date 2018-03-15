@@ -1,6 +1,7 @@
 # FXFileChooser
 
-[![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser)
+[![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser)  [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser)
+
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
