@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <description>A custom file chooser with live filtering JavaFX and Swing</description>
   
   <properties>
