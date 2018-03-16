@@ -6,7 +6,7 @@ jdk:
 
 sudo: false
 
-script: mvn clean verify install
+script: mvn clean verify install -Dgpg.skip
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
