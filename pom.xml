@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <description>A custom file chooser with live filtering JavaFX and Swing</description>
   
   <properties>
@@ -193,12 +193,5 @@
 
   <name>FXFileChooser</name>
   <url>http://fx.raumzeitfalle.net</url>
-  
-    <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
   
 </project>
