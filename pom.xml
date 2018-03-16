@@ -185,10 +185,10 @@
   </issueManagement>
   
   <scm>
-  <connection>scm:git:git://github.com/Oliver-Loeffler/FXFileChooser.git</connection>
-  <developerConnection>scm:git:ssh://github.com/Oliver-Loeffler/FXFileChooser.git</developerConnection>
-  <url>https://github.com/Oliver-Loeffler/FXFileChooser/tree/master</url>
-  <tag>@{project.version}</tag>
+  <connection>scm:git:https://github.com/Oliver-Loeffler/FXFileChooser.git</connection>
+  <developerConnection>scm:git:git@github.com:Oliver-Loeffler/FXFileChooser.git</developerConnection>
+  <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
+  <tag>v@{project.version}</tag>
   </scm>
 
   <name>FXFileChooser</name>
