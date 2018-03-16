@@ -183,13 +183,13 @@
   	<system>Github</system>
   	<url>https://github.com/Oliver-Loeffler/FXFileChooser/issues</url>
   </issueManagement>
-  
-  <scm>
-  <connection>scm:git:https://github.com/Oliver-Loeffler/FXFileChooser.git</connection>
-  <developerConnection>scm:git:git@github.com:Oliver-Loeffler/FXFileChooser.git</developerConnection>
-  <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
-  <tag>v@{project.version}</tag>
-  </scm>
+ 
+    <scm>
+		<url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
+		<connection>scm:git:git://github.com/oliver-loeffler/fxfilechooser.git</connection>
+		<developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
+		<tag>v@{project.version}</tag>
+	</scm>
 
   <name>FXFileChooser</name>
   <url>http://fx.raumzeitfalle.net</url>
