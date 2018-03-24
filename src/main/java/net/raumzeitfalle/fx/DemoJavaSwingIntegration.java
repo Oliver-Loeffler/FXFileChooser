@@ -1,6 +1,7 @@
 package net.raumzeitfalle.fx;
 
 
+import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -28,9 +30,12 @@ public class DemoJavaSwingIntegration implements WindowListener {
     		PathFilter all = PathFilter.acceptAllFiles("all files");
     	 	PathFilter xml = PathFilter.forFileExtension("eXtensible Markup Language (xml)", "xml");
     	    PathFilter txt = PathFilter.forFileExtension("TXT", "txt");
+    	    
     	    PathFilter pdf = PathFilter.forFileExtension("PDF: Portable Document Format", "pdf");
     	    PathFilter png = PathFilter.forFileExtension("*.png", "png");
+    	    
     	    PathFilter svg = PathFilter.forFileExtension("Scalable Vector Graphics (*.svg)", "svg");
+    	    
     	    PathFilter html = PathFilter.forFileExtension("*.html", "html").combine(PathFilter.forFileExtension("*.htm", "html"));
     	    PathFilter xls = PathFilter.forFileExtension("*.xls", "xls").combine(PathFilter.forFileExtension("*.xlsx", "xlsx"));
     	    
@@ -42,22 +47,24 @@ public class DemoJavaSwingIntegration implements WindowListener {
     
     private void initAndShowGui() {
         JFrame frame = new JFrame("JavaFX Dialog in Swing");
-        JPanel buttonHolder = new JPanel();
+        JPanel buttonHolder = new JPanel(new FlowLayout());
         
 	    JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
 	    this.fileChooser = SwingFileChooser.create("Choose any file:", this.filter.toArray(new PathFilter[0]));
+	    JLabel chosenFile = new JLabel("placeholder for filename to be selected.");
 	    
 	    showDialog.addActionListener(l -> {
 	        int option = fileChooser.showOpenDialog(frame);
 	        System.out.println(option);
 	        
 	        if (option == SwingFileChooser.APPROVE_OPTION) {
-	            System.out.println(fileChooser.getSelectedFile());
+	            SwingUtilities.invokeLater(()->chosenFile.setText("Selected file: " + fileChooser.getSelectedFile().toString()));
 	        }
 	        
 	    });
         
         buttonHolder.add(showDialog);
+        buttonHolder.add(chosenFile);
         frame.getContentPane().add(buttonHolder);
         frame.pack();
         frame.setSize(800, 200);
