@@ -18,48 +18,43 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 
-public class FindFilesTaskTest {
-
-    private JFXPanel javaFXPanel;
+class FindFilesTaskTest {
     
-    private ObservableList<Path> listOfPaths;
+    private JFXPanel panel;
+    
+    private ObservableList<Path> listOfPaths = FXCollections.observableArrayList();;
     
     private final Path searchLocation = Paths.get("TestData/SomeFiles");
     
-    private static final Path noFilesHere = Paths.get("TestData/NoFilesHere");
-    
+    private static final Path NO_FILES_IN_HERE = Paths.get("TestData/NoFilesHere");
+        
     @BeforeAll
-    public static void prepare() throws IOException {
-        Files.createDirectories(noFilesHere);
+    static void prepare() throws IOException {
+        Files.createDirectories(NO_FILES_IN_HERE);
     }
     
     @AfterAll
-    public static void cleanup() throws IOException {
-        Files.delete(noFilesHere);
+    static void cleanup() throws IOException {
+        Files.delete(NO_FILES_IN_HERE);
     }
     
     @BeforeEach
-    public void initUiToolkit() {
-        this.javaFXPanel = new JFXPanel();
-        this.listOfPaths = FXCollections.observableArrayList();
-        ListView<Path> listView = new ListView<>(listOfPaths);
-        Scene scene = new Scene(listView);
-        this.javaFXPanel.setScene(scene);
+    void initUiToolkitOnDemand() {
+        if (null == panel) {
+            panel = new JFXPanel();    
+        }
+        listOfPaths.clear();
     }
     
 
     @Test
-    public void test() throws Exception {      
+    void runningTheTask_inPopulatedFolder() throws Exception {      
         
         FindFilesTask task = new FindFilesTask(searchLocation, listOfPaths);
-        Object result = runAndWait(task);
-               
-        assertNull(result);
+        runAndWait(task);
+        
         assertEquals(11, this.listOfPaths.size());
         
         Set<String> fileNames = this.listOfPaths.stream()
@@ -80,9 +75,18 @@ public class FindFilesTaskTest {
         assertTrue(fileNames.contains("XtremeHorrbibleSpreadSheet.xlsx"));
         
     }
+    
+    @Test
+    void runningTheTask_inEmptyFolder() throws Exception {      
+        
+        FindFilesTask task = new FindFilesTask(NO_FILES_IN_HERE, listOfPaths);
+        runAndWait(task);
+               
+        assertEquals(0, this.listOfPaths.size());
+    }
 
-    private <T> Object runAndWait(Task<T> task) throws InterruptedException, ExecutionException {
-        return Executors.newSingleThreadExecutor().submit(task).get();
+    private void runAndWait(FindFilesTask task) throws InterruptedException, ExecutionException {
+        Executors.newSingleThreadExecutor().submit(task).get();
     }
 
 }
