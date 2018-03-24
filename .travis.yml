@@ -1,4 +1,5 @@
 language: java
+
 sudo: false
 
 matrix:
@@ -7,20 +8,7 @@ matrix:
     - os: linux
       dist: trusty
       jdk: oraclejdk8
-    # Headless Linux
-    - os: linux
-      dist: trusty
-      jdk: oraclejdk8
-      env:
-        - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
-    # Headless macOS
-    - os: osx
-      osx_image: xcode9
-      env:
-        - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
-    # Headed macOS is not currently possible on Travis.
-
-
+    
 addons:
   apt:
     packages:
@@ -28,11 +16,6 @@ addons:
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
-
-  
-before_script:
-  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then brew update; brew cask reinstall caskroom/versions/java8; fi
-
 
 install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
 
