@@ -23,14 +23,14 @@ class RefreshBuffer {
         
         private final ObservableList<Path> target;
                 
-        private final int cacheSize;
+        private final int desiredCacheSize;
         
         private final FindFilesTask task;
                                         
         private RefreshBuffer(FindFilesTask task, int cacheSize, ObservableList<Path> target) {
             this.cache = new ArrayList<>(2*cacheSize);
             this.target = target;
-            this.cacheSize = cacheSize;
+            this.desiredCacheSize = cacheSize;
             this.atomicCache = new AtomicReference<List<Path>>(cache);
             this.task = task;
             
@@ -38,9 +38,13 @@ class RefreshBuffer {
         
         void update(Path file) {
             cache.add(file);
-            if (!task.isCancelled() && cache.size() > cacheSize) {
+            if (!task.isCancelled() && currentCacheSize() > desiredCacheSize) {
             		flush();    
             }    
+        }
+
+        private int currentCacheSize() {
+            return cache.size();
         }
         
         void flush()  {

@@ -100,7 +100,7 @@ final class FileChooserModel {
         if (null == file) {
             this.fileSelection.setValue("");
         } else {
-            this.fileSelection.setValue(file.toAbsolutePath().toString());
+            this.fileSelection.setValue(file.toAbsolutePath().normalize().toString());
         }       
         this.invalidSelection.setValue(null == file);
     }

@@ -59,8 +59,8 @@ public class FileChooserModelTest {
 		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
 		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
 		
-		// take a Path pointing to a filename located in root directory (not a regular file)
-		classUnderTest.updateFilesIn(Paths.get("//filename"));
+		// take a Path pointing to a share only
+		classUnderTest.updateFilesIn(Paths.get("//server/share"));
 		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
 		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
