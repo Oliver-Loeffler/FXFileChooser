@@ -1,7 +1,12 @@
 language: java
+install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
 
 jdk:
   - oraclejdk8
+
+sudo: false
+
+script: ./mvnw clean verify install -Dgpg.skip
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
