@@ -1,19 +1,22 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathFilterTest {
+
+class PathFilterTest {
 	
 	private PathFilter classUnderTest;
 
 	@Test
-	public void criterion() {
+	void criterion() {
 		
 		classUnderTest = PathFilter.create("HTML file", p->p.getFileName().toString().endsWith(".html"));
 		Predicate<Path> criterion = classUnderTest.getPredicate();
@@ -26,7 +29,7 @@ public class PathFilterTest {
 	}
 	
 	@Test
-	public void combine() {
+	void combine() {
 		
 		classUnderTest = PathFilter
 					.create("HTML file", p->String.valueOf(p.getFileName()).endsWith(".html"))
@@ -50,7 +53,7 @@ public class PathFilterTest {
 	}
 
 	@Test
-	public void acceptAll() {
+	void acceptAll() {
 		classUnderTest = PathFilter.acceptAllFiles("all files");
 		Predicate<Path> criterion = classUnderTest.getPredicate();
 

@@ -11,10 +11,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,17 +33,17 @@ public class FindFilesTaskTest {
     
     private static final Path noFilesHere = Paths.get("TestData/NoFilesHere");
     
-    @BeforeClass
+    @BeforeAll
     public static void prepare() throws IOException {
         Files.createDirectories(noFilesHere);
     }
     
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws IOException {
         Files.delete(noFilesHere);
     }
     
-    @Before
+    @BeforeEach
     public void initUiToolkit() {
         this.javaFXPanel = new JFXPanel();
         this.listOfPaths = FXCollections.observableArrayList();

@@ -1,6 +1,7 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,11 +15,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import net.raumzeitfalle.fx.filechooser.PathComparator.Option;
 
-public class PathComparatorTest {
+class PathComparatorTest {
 	
 	private final Path b = Paths.get("byFarOldestFile.txt");
 	
@@ -31,7 +32,7 @@ public class PathComparatorTest {
 	private Comparator<Path> comparatorUnderTest;
 
 	@Test
-	public void byName_ascending() {
+	void byName_ascending() {
 		
 		comparatorUnderTest = PathComparator.ascendingByName();
 	
@@ -44,7 +45,7 @@ public class PathComparatorTest {
 	}
 	
 	@Test
-	public void byName_descending() {
+	void byName_descending() {
 		
 		comparatorUnderTest = PathComparator.descendingByName();
 	
@@ -58,7 +59,7 @@ public class PathComparatorTest {
 	
 	
 	@Test
-	public void byLastModified_ascending() throws IOException {
+	void byLastModified_ascending() throws IOException {
 		
 		Function<Path, Instant> testMapping = p -> {
 			if (p.getFileName().toString().toLowerCase().startsWith("A")) {
