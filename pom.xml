@@ -131,6 +131,22 @@
 			<version>${junit.platform.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.testfx</groupId>
+		    <artifactId>testfx-core</artifactId>
+		    <version>4.0.12-alpha</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.testfx</groupId>
+		    <artifactId>testfx-junit</artifactId>
+		    <version>4.0.12-alpha</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.testfx</groupId>
+		    <artifactId>testfx-junit5</artifactId>
+		    <version>4.0.12-alpha</version>
+		</dependency>
 	</dependencies>
   <issueManagement>
   	<system>Github</system>
