@@ -19,13 +19,10 @@ public class DemoJavaFxDialog extends Application {
     
     Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
     showDialog.setOnAction(a -> {
-        try {
+
             Optional<Path> path = fc.showOpenDialog(primaryStage);
             System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
-            
-        } catch (IOException e) {
-            // don't mind 
-        }
+
     });
         
         Scene scene = new Scene(showDialog);
