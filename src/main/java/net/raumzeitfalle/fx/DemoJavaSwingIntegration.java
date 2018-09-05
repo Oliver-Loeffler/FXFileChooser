@@ -14,13 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
+import net.raumzeitfalle.fx.filechooser.Skin;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
 public class DemoJavaSwingIntegration implements WindowListener {
   
     public static void main(String[] args) {
     		DemoJavaSwingIntegration app = new DemoJavaSwingIntegration();
-        SwingUtilities.invokeLater(()->app.initAndShowGui());
+        SwingUtilities.invokeLater(app::initAndShowGui);
     }
 
     private final List<PathFilter> filter;
@@ -50,7 +51,7 @@ public class DemoJavaSwingIntegration implements WindowListener {
         JPanel buttonHolder = new JPanel(new FlowLayout());
         
 	    JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
-	    this.fileChooser = SwingFileChooser.create("Choose any file:", this.filter.toArray(new PathFilter[0]));
+	    this.fileChooser = SwingFileChooser.create(Skin.DEFAULT,"Choose any file:", this.filter.toArray(new PathFilter[0]));
 	    JLabel chosenFile = new JLabel("placeholder for filename to be selected.");
 	    
 	    showDialog.addActionListener(l -> {

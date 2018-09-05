@@ -9,12 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
+import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoJavaFxDialog extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-    FXFileChooserDialog fc = FXFileChooserDialog.create();
+    FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK);
     
     Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
     showDialog.setOnAction(a -> {
