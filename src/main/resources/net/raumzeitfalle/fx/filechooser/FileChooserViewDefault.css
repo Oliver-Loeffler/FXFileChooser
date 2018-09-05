@@ -1,0 +1,29 @@
+.text-field {
+    -fx-blend-mode: multiply;
+}
+
+.filter-icon {
+    -fx-fill: rgba(0,0,0,0.53);
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.progress-bar .track{
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.progress-bar .bar { 
+    -fx-background-insets: 1, 0, 1, 0; 
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+
+.scroll-bar .increment-button,.scroll-bar .decrement-button {
+    -fx-padding: 5;
+}
+
+.scroll-bar .increment-button:hover,.scroll-bar .decrement-button:hover {
+    -fx-padding: 5;
+}

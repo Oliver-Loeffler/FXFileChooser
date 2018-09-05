@@ -1,0 +1,136 @@
+.button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
+
+.progress-indicator {
+   -fx-text-fill: white;
+}
+
+.progress-bar .track{
+    -fx-accent: #ffa700;
+    -fx-background-color: black;
+    -fx-background-insets: 1;
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.progress-bar .bar {
+    -fx-accent: #ffa700;  
+    -fc-background-color: #ffa700;
+    -fx-background-insets: 1, 0, 1, 0; 
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.menu-button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
+
+.list-view {
+   -fx-blend-mode: screen;
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: #ffa700;
+    /* -fx-text-fill: black; */
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #212121;
+    -fx-text-fill: black;
+}
+
+.text-field {
+   -fx-blend-mode: screen;
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-prompt-text-fill: black;
+
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.counter-label {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-text-fill: black;
+}
+
+.split-menu-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.filter-icon {
+    -fx-fill: rgba(255,167,0,0.53);
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.file-icon {
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.8), 4, 0.0, 1, 1);
+    -fx-padding: 10px;
+}
+
+.file-icon-pane {
+    -fx-background-color: transparent;
+}
+
+.file-icon-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.root {
+    -fx-base: rgb(50, 50, 50);
+    -fx-background: rgb(50, 50, 50);
+    -fx-control-inner-background:  rgb(50, 50, 50);
+
+    -fx-accent: transparent;
+/*  -fx-focus-color: #ffa700;
+    -fx-faint-focus-color: #ffa70066;  */
+
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.tool-bar-icon {
+    -fx-fill: #ffa700;
+    -fx-highlight-text-fill: #000000;
+}
+
+.menu-item {
+    /* -fx-accent: #ffa700; */
+    -fx-accent: rgba(255,167,0,0.8); 
+    -fx-fill: #ffa700;
+}
+
+.menu-item-icon {
+    -fx-fill: #ffa700;
+}
+
+.scroll-bar .thumb {
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-color:derive(black, 5%);
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color:derive(black, 10%);
+}
+
+.scroll-bar .increment-button,.scroll-bar .decrement-button {
+    -fx-background-color:derive(black, 5%);
+    -fx-padding: 5;
+}
+
+.scroll-bar .increment-button:hover,.scroll-bar .decrement-button:hover {
+    -fx-background-color:derive(black, 10%);
+    -fx-padding: 5;
+}
+
+.scroll-bar .corner {
+    -fx-background-color:transparent;
+}
