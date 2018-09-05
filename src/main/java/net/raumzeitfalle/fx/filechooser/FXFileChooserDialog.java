@@ -13,30 +13,28 @@ import javafx.stage.Window;
 
 public class FXFileChooserDialog extends Dialog<Path> {
     
-    public static FXFileChooserDialog create() throws IOException {
-        return new FXFileChooserDialog(FileChooserModel.get());
+    public static FXFileChooserDialog create(Skin skin) throws IOException {
+        return new FXFileChooserDialog(skin,FileChooserModel.get());
     }
     
-    public static FXFileChooserDialog create(FileChooserModel model) throws IOException {
-        return new FXFileChooserDialog(model);
+    public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
+        return new FXFileChooserDialog(skin,model);
     }
     
     private final FileChooserModel model;
     
     // TODO: Make CSS file externally configurable
-    private FXFileChooserDialog(FileChooserModel fileChooserModel) throws IOException {
+    private FXFileChooserDialog(Skin skin,FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;
-        
-        String css = FXFileChooserDialog.class.getResource("FileChooserView.css").toExternalForm();
-        getDialogPane().getStylesheets().add(css);
-        getDialogPane().applyCss();
-        
+
+        Skin.applyTo(getDialogPane(),skin);
+
         setTitle("File Selection");
         setHeaderText("Select File from for processing:");
         headerTextProperty().bind(model.currentSearchPath().asString());
         initModality(Modality.APPLICATION_MODAL);
         
-        getDialogPane().setContent(FileChooserView.create(model,this));
+        getDialogPane().setContent(FileChooserView.create(model,this, skin));
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
         
@@ -58,7 +56,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
         
     }
     
-    public Optional<Path> showOpenDialog(Window ownerWindow) throws IOException {
+    public Optional<Path> showOpenDialog(Window ownerWindow) {
         if (null == this.getOwner()) {
             this.initOwner(ownerWindow);    
         }

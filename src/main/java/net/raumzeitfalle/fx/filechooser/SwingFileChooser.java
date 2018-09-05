@@ -30,15 +30,15 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
      */
     public static final int APPROVE_OPTION = 0;
     
-    public static SwingFileChooser create(PathFilter ...filter) {
-    		return create("Choose file:", "", filter);
+    public static SwingFileChooser create(Skin skin,PathFilter ...filter) {
+    		return create(skin,"Choose file:", "", filter);
     }
     
-    public static SwingFileChooser create(String title, PathFilter ...filter) {
-    		return create(title, "", filter);
+    public static SwingFileChooser create(Skin skin,String title, PathFilter ...filter) {
+    		return create(skin,title, "", filter);
     }
        
-    public static SwingFileChooser create(String title, String pathToBrowse, PathFilter ...filter)  {
+    public static SwingFileChooser create(Skin skin,String title, String pathToBrowse, PathFilter ...filter)  {
         
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser(title);
@@ -49,7 +49,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
                 for (PathFilter f : filter) {
                 		model.addFilter(f);
                 }
-                Parent view = FileChooserView.create(model, pathSupplier, fc);
+                Parent view = FileChooserView.create(model, pathSupplier, fc,skin);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
                 fc.setModel(model);
@@ -63,7 +63,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
 
     private static Path startPath(String pathToBrowse) {
         Path startHere = Paths.get(pathToBrowse);
-        if (null == pathToBrowse || pathToBrowse.equals("")) {
+        if (pathToBrowse.equals("")) {
             startHere = Paths.get("./");
         }
         return startHere;

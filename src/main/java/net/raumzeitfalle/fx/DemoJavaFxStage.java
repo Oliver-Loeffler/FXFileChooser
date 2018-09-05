@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
+import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoJavaFxStage extends Application {
 
@@ -26,7 +27,7 @@ public class DemoJavaFxStage extends Application {
         PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
         
         Path local = Paths.get("./");
-        FXFileChooserStage fc = FXFileChooserStage.create(local,xml, xlsx, na0, txt, exe,combined);
+        FXFileChooserStage fc = FXFileChooserStage.create(Skin.DEFAULT, local,xml, xlsx, na0, txt, exe,combined);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {
