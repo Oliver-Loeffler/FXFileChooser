@@ -147,13 +147,12 @@ final class FileChooserController implements Initializable {
         		});
         });
         
-        chooser.setOnAction(e -> {
+        chooser.setOnAction(e ->
             Platform.runLater(()->{
                 fileChooserForm.setDisable(true);
                 pathSupplier.getUpdate(model::updateFilesIn);
                 fileChooserForm.setDisable(false);
-            });
-        });    
+            }));    
         
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
@@ -182,9 +181,7 @@ final class FileChooserController implements Initializable {
         filteredPathsCount.textProperty().bind(model.filteredPathsSizeProperty().asString());
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
-        okButton.setOnAction(e -> {
-            this.stage.hide();
-        });
+        okButton.setOnAction(e -> this.stage.hide());
         
         cancelButton.setOnAction(e -> {
             this.model.setSelectedFile(null);
