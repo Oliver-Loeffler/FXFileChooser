@@ -2,6 +2,8 @@ package net.raumzeitfalle.fx;
 
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,11 +18,13 @@ public class DemoJavaFxDialog extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK);
 
+		Logger logger = Logger.getLogger(DemoJavaFxDialog.class.getSimpleName());
+		
 		Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
 		showDialog.setOnAction(a -> {
 
 			Optional<Path> path = fc.showOpenDialog(primaryStage);
-			System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
+			logger.log(Level.INFO, path.map(String::valueOf).orElse("Nothing selected"));
 
 		});
 
