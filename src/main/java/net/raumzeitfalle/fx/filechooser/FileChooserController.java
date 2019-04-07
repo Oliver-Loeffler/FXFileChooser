@@ -97,11 +97,11 @@ final class FileChooserController implements Initializable {
     private final PathSupplier pathSupplier;
         
     public static FileChooserController withDialog(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final Dialog<Path> dialogWindow) {
-        return new FileChooserController(fileChooserModel, pathSupplier, ()->dialogWindow.close(), UsePattern.DIALOG);       
+        return new FileChooserController(fileChooserModel, pathSupplier, dialogWindow::close, UsePattern.DIALOG);       
     }
     
     public static FileChooserController withStage(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window) {
-        return new FileChooserController(fileChooserModel, pathSupplier, ()->window.hide(), UsePattern.NORMAL_STAGE);       
+        return new FileChooserController(fileChooserModel, pathSupplier, window::hide, UsePattern.NORMAL_STAGE);       
     }
     
     
@@ -130,9 +130,9 @@ final class FileChooserController implements Initializable {
         });
 
         listOfFiles.setCellFactory(c -> new FilesListCell());
-        listOfFiles.getSelectionModel().selectedItemProperty().addListener(l -> {
-            model.setSelectedFile(selectedItem());
-         });
+        listOfFiles.getSelectionModel()
+        	.selectedItemProperty()
+        	.addListener(l -> model.setSelectedFile(selectedItem()));
         
         selectedFile.textProperty().bind(model.selectedFileProperty());
         usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
@@ -142,9 +142,7 @@ final class FileChooserController implements Initializable {
         this.model.getPathFilter().forEach(p -> {
         		MenuItem item = new MenuItem(p.getName());
         		this.fileExtensionFilter.getItems().add(item);
-        		item.setOnAction(e->{
-        			this.model.updateFilterCriterion(p,fileNameFilter.getText());
-        		});
+        		item.setOnAction(e->this.model.updateFilterCriterion(p,fileNameFilter.getText()));
         });
         
         chooser.setOnAction(e ->
