@@ -5,6 +5,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,6 +27,7 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 	private final List<PathFilter> filter;
 	private SwingFileChooser fileChooser;
+	private final Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
 
 	DemoJavaSwingIntegration() {
 		PathFilter all = PathFilter.acceptAllFiles("all files");
@@ -44,7 +47,6 @@ public class DemoJavaSwingIntegration implements WindowListener {
 		PathFilter htmlAndExcel = html.combine(xls).combine(png);
 
 		filter = Arrays.asList(all, xml, txt, pdf, png, svg, html, xls, htmlAndExcel);
-
 	}
 
 	private void initAndShowGui() {
@@ -58,7 +60,7 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 		showDialog.addActionListener(l -> {
 			int option = fileChooser.showOpenDialog(frame);
-			System.out.println(option);
+			logger.log(Level.INFO, "Dialog return value: " + option);
 
 			if (option == SwingFileChooser.APPROVE_OPTION) {
 				SwingUtilities.invokeLater(
