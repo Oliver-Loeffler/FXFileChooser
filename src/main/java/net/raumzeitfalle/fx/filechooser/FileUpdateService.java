@@ -1,6 +1,5 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import javafx.beans.property.ObjectProperty;
@@ -21,7 +20,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
     }
 
     private void setSearchLocation(Path folderToStart) {
-        if (Files.isDirectory(folderToStart)) {
+        if (folderToStart.toFile().isDirectory()) {
             this.rootFolder.setValue(folderToStart);
         } else {
             this.rootFolder.setValue(folderToStart.getParent());
