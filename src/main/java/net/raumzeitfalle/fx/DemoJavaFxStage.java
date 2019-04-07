@@ -3,6 +3,8 @@ package net.raumzeitfalle.fx;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,6 +19,8 @@ public class DemoJavaFxStage extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
+    	Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
+		
         PathFilter exe = PathFilter.forFileExtension("Program", "exe");
         PathFilter xml = PathFilter.forFileExtension("XML", "xml");
         PathFilter txt = PathFilter.forFileExtension("Text", "txt");
@@ -32,8 +36,7 @@ public class DemoJavaFxStage extends Application {
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {
             Optional<Path> selection = fc.showOpenDialog(primaryStage);
-            selection.map(String::valueOf).ifPresent(System.out::println);
-            System.out.println("Result is present: " + selection.isPresent());
+            logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
         
         Scene mainScene = new Scene(button);
