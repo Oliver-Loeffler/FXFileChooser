@@ -29,15 +29,10 @@ public class SwingDirectoryChooser implements PathSupplier {
 
     public void getUpdate(Consumer<Path> update) {
     	
-    	
 		SwingUtilities.invokeLater(()->{
 			Optional<File> selection = askForSelection();
-	        
-	        Invoke.later(()->{
-	        		selection.map(File::toPath).ifPresent(update::accept);
-	        });
+	        Invoke.later(()->selection.map(File::toPath).ifPresent(update::accept));
 		});
-		
 		
     }
 

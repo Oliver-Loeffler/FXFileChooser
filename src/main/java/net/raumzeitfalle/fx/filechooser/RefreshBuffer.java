@@ -33,7 +33,6 @@ class RefreshBuffer {
             this.desiredCacheSize = cacheSize;
             this.atomicCache = new AtomicReference<List<Path>>(cache);
             this.task = task;
-            
         }
         
         void update(Path file) {
@@ -49,12 +48,13 @@ class RefreshBuffer {
         
         void flush()  {
             this.lock.lock();
+            
             try {
-            		Path[] update = this.atomicCache.get().toArray(new Path[0]);
-                Invoke.later(()->{
-                    target.addAll(update);
-                });
-                this.atomicCache.get().clear();	
+            	
+            	Path[] update = this.atomicCache.get().toArray(new Path[0]);
+                Invoke.later(()->target.addAll(update));
+                this.atomicCache.get().clear();
+                
             } finally {
             		this.lock.unlock();	
             }
