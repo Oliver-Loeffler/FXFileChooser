@@ -49,6 +49,8 @@ class FindFilesTaskTest {
     }
     
 
+    // Just for testing of SonarCloud integration
+    @Disabled
     @Test
     void runningTheTask_inPopulatedFolder() throws Exception {      
         
