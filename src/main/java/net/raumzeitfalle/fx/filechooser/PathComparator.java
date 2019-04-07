@@ -53,9 +53,7 @@ class PathComparator {
 		
 	static Comparator<Path> byTime(Function<Path,Instant> mapping, Option option) {
 		int order = option.equals(Option.ASCENDING) ? 1 : -1;
-		return (Path a, Path b)->  {
-				return order * mapping.apply(a).compareTo(mapping.apply(b));	
-		};
+		return (Path a, Path b)-> order * mapping.apply(a).compareTo(mapping.apply(b));
 	}
 					
 	private PathComparator() {
