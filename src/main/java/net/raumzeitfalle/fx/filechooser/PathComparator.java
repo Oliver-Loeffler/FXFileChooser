@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 class PathComparator {
 	
-	static enum Option {
+	enum Option {
 		ASCENDING,
 		DESCENDING;
 	}
