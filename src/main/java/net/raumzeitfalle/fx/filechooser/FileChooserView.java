@@ -12,6 +12,11 @@ import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 
 final class FileChooserView {
+	
+	private FileChooserView() {
+		throw new UnsupportedOperationException(
+				"This is a utility class and not intended  for instantiation.");
+	}
     
     static Parent create(Stage stage, Skin skin) throws IOException {
         FileChooserModel model = FileChooserModel.get();
