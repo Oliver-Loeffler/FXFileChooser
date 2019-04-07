@@ -20,7 +20,7 @@ final class FindFilesTask extends Task<Void>{
 
     @Override
     protected Void call() throws Exception {
-            Invoke.andWait(()-> pathsToUpdate.clear());
+            Invoke.andWait(pathsToUpdate::clear);
             
             File dir = new File(directory.toAbsolutePath().toString());
             File[] files = dir.listFiles();
