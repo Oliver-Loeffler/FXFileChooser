@@ -229,7 +229,7 @@ final class FileChooserController implements Initializable {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
     
-    private static enum UsePattern {
+    private enum UsePattern {
         NORMAL_STAGE, DIALOG;
     }
 }
