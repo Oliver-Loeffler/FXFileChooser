@@ -80,32 +80,42 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 	@Override
 	public void windowOpened(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
+		/*
+		 * Gracefully shutdown the executor service which possibly
+		 * runs indexing threads.
+		 * 
+		 */
 		this.fileChooser.shutdown();
-
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
+		// required by WindowListener but no need toadd something here
 	}
 
 }
