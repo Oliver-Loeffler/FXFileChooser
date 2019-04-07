@@ -31,7 +31,7 @@ class RefreshBuffer {
             this.cache = new ArrayList<>(2*cacheSize);
             this.target = target;
             this.desiredCacheSize = cacheSize;
-            this.atomicCache = new AtomicReference<List<Path>>(cache);
+            this.atomicCache = new AtomicReference<>(cache);
             this.task = task;
         }
         
