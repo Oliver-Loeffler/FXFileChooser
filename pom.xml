@@ -91,6 +91,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/fireworks/</exclude>
+						<exclude>net/raumzeitfalle/fx/Demo*.*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
