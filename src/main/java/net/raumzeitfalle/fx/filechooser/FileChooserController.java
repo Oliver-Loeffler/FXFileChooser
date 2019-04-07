@@ -211,7 +211,7 @@ final class FileChooserController implements Initializable {
     }
 
     private void assignSortAction(MenuItem menuItem, Comparator<Path> comparator) {
-        menuItem.setOnAction(e -> {
+        menuItem.setOnAction(e -> 
             Invoke.later(()->{
                 model.sort(comparator);
                 
@@ -220,9 +220,7 @@ final class FileChooserController implements Initializable {
                 svgPath.setContent(((SVGPath)menuItem.getGraphic()).getContent());
                 sortMenu.setGraphic(svgPath);
                 sortMenu.getGraphic().getStyleClass().add("tool-bar-icon");
-            });
-            
-        });
+            }));
     }
 
     private Path selectedItem() {
