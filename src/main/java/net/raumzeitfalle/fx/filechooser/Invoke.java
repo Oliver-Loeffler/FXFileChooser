@@ -20,7 +20,7 @@ class Invoke {
             try {
                 Thread.sleep(millis);
             } catch (InterruptedException e) {
-                // dont care 
+            	Thread.currentThread().interrupt(); 
             }
             r.run();
         });
@@ -30,7 +30,7 @@ class Invoke {
         try {
             andWait(r);
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("ignoring exception");
+        	Thread.currentThread().interrupt();
         } 
     }
     
