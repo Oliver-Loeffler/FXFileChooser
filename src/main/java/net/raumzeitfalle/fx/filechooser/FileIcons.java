@@ -42,10 +42,8 @@ enum FileIcons {
            String fileName = file.toString().toLowerCase();
            for (FileIcons icon : FileIcons.values()) {
                String suffix = icon.suffix;
-               if (null != suffix) {
-                   if (fileName.endsWith(suffix)) {       
+               if (null != suffix && fileName.endsWith(suffix)) {
                        image = create(icon.iconFileName,fitSize);
-                   }
                }
            }    
        }
