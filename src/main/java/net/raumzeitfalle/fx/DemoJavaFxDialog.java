@@ -12,28 +12,27 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoJavaFxDialog extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-    FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK);
-    
-    Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
-    showDialog.setOnAction(a -> {
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK);
 
-            Optional<Path> path = fc.showOpenDialog(primaryStage);
-            System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
+		Button showDialog = new Button("Show JavaFX Dialog (FXFileChooserDialog.class)");
+		showDialog.setOnAction(a -> {
 
-    });
-        
-        Scene scene = new Scene(showDialog);
-        primaryStage.setScene(scene);
-        primaryStage.setWidth(400);
-        primaryStage.setHeight(400);
-        primaryStage.show();
-    }
-    
-    
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
+			Optional<Path> path = fc.showOpenDialog(primaryStage);
+			System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
+
+		});
+
+		Scene scene = new Scene(showDialog);
+		primaryStage.setScene(scene);
+		primaryStage.setWidth(400);
+		primaryStage.setHeight(400);
+		primaryStage.show();
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 }
