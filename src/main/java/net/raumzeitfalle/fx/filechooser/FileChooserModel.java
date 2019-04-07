@@ -1,7 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -187,10 +186,10 @@ final class FileChooserModel {
     }
     
     public void updateFilesIn(Path directory) {
-        if (Files.isDirectory(directory)) {            
+        if (directory.toFile().isDirectory()) {          
             this.fileUpdateService.restartIn(directory);
 
-        } else if (Files.isRegularFile(directory)) {
+        } else if (directory.toFile().isFile()) {
         		Path parent = directory.getParent();
         		if (parent != null) {
         			this.fileUpdateService.restartIn(parent);	
