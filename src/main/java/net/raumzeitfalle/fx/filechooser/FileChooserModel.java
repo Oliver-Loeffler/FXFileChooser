@@ -140,12 +140,9 @@ final class FileChooserModel {
     
     private Predicate<Path> createManualListFilter(String criterion) {
         String corrected = removeInvalidChars(criterion);
-        
-        Predicate<Path> customFilter = p -> {
-            return null == corrected || corrected.isEmpty() ||
-                    p.toString().toLowerCase().contains(corrected.toLowerCase());
-            };
-        return customFilter;
+        return p -> null == corrected 
+        				|| corrected.isEmpty() 
+        				|| p.toString().toLowerCase().contains(corrected.toLowerCase());
     }
 
     private Predicate<Path> combineFilterPredicates(Predicate<Path> customFilter) {
