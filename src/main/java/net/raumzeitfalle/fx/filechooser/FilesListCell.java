@@ -16,6 +16,9 @@ import javafx.scene.layout.Priority;
 
 class FilesListCell extends ListCell<Path> {
 
+	private static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd  -  HH:mm:ss";
+	private static final String FILE_ICON_LABEL = "file-icon-label";
+
 	@Override
 	protected void updateItem(Path item, boolean empty) {
 		super.updateItem(item, empty);
@@ -26,7 +29,7 @@ class FilesListCell extends ListCell<Path> {
         if (getItem() != null && getItem().getFileName() != null) {
             
             GridPane gridPane = new GridPane();
-            gridPane.getStyleClass().add("file-icon-label");      
+            gridPane.getStyleClass().add(FILE_ICON_LABEL);      
                         
             Pane icon = FileIcons.fromFile(getItem(), 32);
             gridPane.addColumn(0, icon);
@@ -34,7 +37,7 @@ class FilesListCell extends ListCell<Path> {
             
             
             Label fileName = new Label(String.valueOf(getItem().getFileName()));
-            fileName.getStyleClass().add("file-icon-label");
+            fileName.getStyleClass().add(FILE_ICON_LABEL);
             gridPane.addColumn(1, fileName);
             GridPane.setHgrow(fileName, Priority.ALWAYS);
             
@@ -44,11 +47,11 @@ class FilesListCell extends ListCell<Path> {
                 Path item = getItem();
                 FileTime time = Files.getLastModifiedTime(item);
                 LocalDateTime timestamp = LocalDateTime.from(time.toInstant().atZone(ZoneId.systemDefault()));
-                date.setText(DateTimeFormatter.ofPattern("yyyy-MM-dd  -  HH:mm:ss").format(timestamp));
+                date.setText(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN).format(timestamp));
             } catch (IOException e) {
                 date.setText("...");
             }
-            date.getStyleClass().add("file-icon-label");
+            date.getStyleClass().add(FILE_ICON_LABEL);
             gridPane.addColumn(2, date);
             GridPane.setHgrow(date, Priority.NEVER);
             
