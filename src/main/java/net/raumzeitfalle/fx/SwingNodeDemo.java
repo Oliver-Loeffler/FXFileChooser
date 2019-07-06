@@ -67,7 +67,5 @@ public class SwingNodeDemo extends Application {
             }
         });
     }
-    
- 
 
 }
