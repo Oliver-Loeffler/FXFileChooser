@@ -3,6 +3,7 @@ package net.raumzeitfalle.fx;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,6 +17,7 @@ import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
 public class DemoJavaSwingIntegration implements WindowListener {
@@ -27,6 +29,8 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 	private final List<PathFilter> filter;
 	private SwingFileChooser fileChooser;
+	private StandardFileChooser simpleFileChooser;
+	
 	private final Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
 
 	DemoJavaSwingIntegration() {
@@ -50,7 +54,7 @@ public class DemoJavaSwingIntegration implements WindowListener {
 	}
 
 	private void initAndShowGui() {
-		JFrame frame = new JFrame("JavaFX Dialog in Swing");
+		JFrame frame = new JFrame("JavaFX in Swing");
 		JPanel buttonHolder = new JPanel(new FlowLayout());
 
 		JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
@@ -71,6 +75,47 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 		buttonHolder.add(showDialog);
 		buttonHolder.add(chosenFile);
+		
+		JLabel fxFileChooseLabel = new JLabel("attempt the system file chooser:");
+		JButton showSystemFileChooser = new JButton("JavaFX standard file chooser");
+		
+		this.simpleFileChooser = new StandardFileChooser();
+		
+		showSystemFileChooser.addActionListener(l -> {
+			
+			int option = simpleFileChooser.showOpenDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleFileChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   fxFileChooseLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		JButton showSystemFileChooserSave = new JButton("JavaFX standard file chooser - saving");
+		
+		buttonHolder.add(showSystemFileChooserSave);
+		
+		showSystemFileChooserSave.addActionListener(l -> {
+			
+			int option = simpleFileChooser.showSaveDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleFileChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   fxFileChooseLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		buttonHolder.add(showSystemFileChooser);
+		buttonHolder.add(fxFileChooseLabel);
+		
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();
 		frame.setSize(800, 200);
