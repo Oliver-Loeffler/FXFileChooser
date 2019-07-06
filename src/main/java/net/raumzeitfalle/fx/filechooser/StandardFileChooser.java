@@ -4,7 +4,6 @@ import java.awt.Window;
 import java.io.File;
 import java.util.function.Consumer;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import javafx.stage.FileChooser;
@@ -52,11 +51,15 @@ public class StandardFileChooser {
 		return dialog;
 	}
 	
-	public int showOpenDialog(JFrame frame) {
+	public int showDialog(Window window) {
+		return this.adapter.runDialog(window);
+	}
+	
+	public int showOpenDialog(Window frame) {
 		return this.adapter.runDialog(frame);
 	}
 	
-	public int showSaveDialog(JFrame frame) {
+	public int showSaveDialog(Window frame) {
 		return this.adapter.runDialog((FileChooser dialog, Window window)->dialog.showSaveDialog(null), frame);
 	}
 	
