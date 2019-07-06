@@ -1,8 +1,7 @@
 package net.raumzeitfalle.fx;
 
 import java.awt.FlowLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,9 +15,11 @@ import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.StandardDirectoryChooser;
+import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
-public class DemoJavaSwingIntegration implements WindowListener {
+public class DemoJavaSwingIntegration {
 
 	public static void main(String[] args) {
 		DemoJavaSwingIntegration app = new DemoJavaSwingIntegration();
@@ -27,6 +28,9 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 	private final List<PathFilter> filter;
 	private SwingFileChooser fileChooser;
+	private StandardFileChooser simpleFileChooser;
+	private StandardDirectoryChooser simpleDirectoryChooser;
+	
 	private final Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
 
 	DemoJavaSwingIntegration() {
@@ -50,12 +54,11 @@ public class DemoJavaSwingIntegration implements WindowListener {
 	}
 
 	private void initAndShowGui() {
-		JFrame frame = new JFrame("JavaFX Dialog in Swing");
+		JFrame frame = new JFrame("JavaFX in Swing");
 		JPanel buttonHolder = new JPanel(new FlowLayout());
 
 		JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
-		this.fileChooser = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:",
-				this.filter.toArray(new PathFilter[0]));
+		this.fileChooser = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:",this.filter.toArray(new PathFilter[0]));
 		JLabel chosenFile = new JLabel("placeholder for filename to be selected.");
 
 		showDialog.addActionListener(l -> {
@@ -71,51 +74,73 @@ public class DemoJavaSwingIntegration implements WindowListener {
 
 		buttonHolder.add(showDialog);
 		buttonHolder.add(chosenFile);
+		
+		JLabel fxFileChooseLabel = new JLabel("attempt the system file chooser:");
+		JButton showSystemFileChooser = new JButton("JavaFX standard file chooser");
+		
+		this.simpleFileChooser = new StandardFileChooser();
+		
+		showSystemFileChooser.addActionListener(l -> {
+			
+			int option = simpleFileChooser.showOpenDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleFileChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   fxFileChooseLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		JButton showSystemFileChooserSave = new JButton("JavaFX standard file chooser - saving");
+		
+		buttonHolder.add(showSystemFileChooserSave);
+		
+		showSystemFileChooserSave.addActionListener(l -> {
+			
+			int option = simpleFileChooser.showSaveDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleFileChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   fxFileChooseLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		buttonHolder.add(showSystemFileChooser);
+		buttonHolder.add(fxFileChooseLabel);
+		
+		JButton showSystemDirChooser = new JButton("Select Directory");
+		JLabel directoryLabel = new JLabel("no dir selected");
+		this.simpleDirectoryChooser = new StandardDirectoryChooser();
+		
+		showSystemDirChooser.addActionListener(l -> {
+			
+			int option = simpleDirectoryChooser.showDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleDirectoryChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   directoryLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		buttonHolder.add(showSystemDirChooser);
+		buttonHolder.add(directoryLabel);
+		
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();
 		frame.setSize(800, 200);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		/*
-		 * Gracefully shutdown the executor service which possibly
-		 * runs indexing threads.
-		 * 
-		 */
-		this.fileChooser.shutdown();
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
 	}
 
 }
