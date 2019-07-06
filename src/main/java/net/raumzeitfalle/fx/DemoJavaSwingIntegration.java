@@ -1,8 +1,6 @@
 package net.raumzeitfalle.fx;
 
 import java.awt.FlowLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +18,7 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
-public class DemoJavaSwingIntegration implements WindowListener {
+public class DemoJavaSwingIntegration {
 
 	public static void main(String[] args) {
 		DemoJavaSwingIntegration app = new DemoJavaSwingIntegration();
@@ -121,46 +119,6 @@ public class DemoJavaSwingIntegration implements WindowListener {
 		frame.setSize(800, 200);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		/*
-		 * Gracefully shutdown the executor service which possibly
-		 * runs indexing threads.
-		 * 
-		 */
-		this.fileChooser.shutdown();
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// required by WindowListener but no need toadd something here
 	}
 
 }

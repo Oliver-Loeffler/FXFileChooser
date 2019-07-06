@@ -2,6 +2,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Path;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
     public FileUpdateService(Path folderToStart, ObservableList<Path> paths) {
         setSearchLocation(folderToStart);        
         this.pathsToUpdate = paths;
+        registerShutdownHook();
     }
 
     private void setSearchLocation(Path folderToStart) {
@@ -56,4 +58,9 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
 		this.start();
 	}
     
+	private void registerShutdownHook() {
+		Runnable shutDownAction = ()->Platform.runLater(()->this.cancelUpdate());
+        Runtime.getRuntime().addShutdownHook(new Thread(shutDownAction));
+	}
+
 }
