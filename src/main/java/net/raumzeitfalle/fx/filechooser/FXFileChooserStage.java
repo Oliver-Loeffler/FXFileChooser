@@ -17,7 +17,7 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
     }
     
     public static FXFileChooserStage create(Skin skin,PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.get(),skin, filter);
+        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(),skin, filter);
     }
     
     public static FXFileChooserStage create(Skin skin, Path inLocation, PathFilter ...filter) throws IOException {
