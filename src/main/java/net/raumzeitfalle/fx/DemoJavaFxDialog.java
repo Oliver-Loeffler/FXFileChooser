@@ -10,13 +10,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
+import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoJavaFxDialog extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK);
+		
+		PathFilter all = PathFilter.acceptAllFiles("all files");
+    	
+        PathFilter exe = PathFilter.forFileExtension("Program", "exe");
+        PathFilter xml = PathFilter.forFileExtension("XML", "xml");
+        PathFilter txt = PathFilter.forFileExtension("Text", "txt");
+        
+        PathFilter xls = PathFilter.forFileExtension("Excel 2003", "xls");
+        PathFilter xlsx = PathFilter.forFileExtension("Excel 2007+", "xlsx").combine(xls);
+        
+		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DARK,all,exe,xml,txt,xlsx);
 
 		Logger logger = Logger.getLogger(DemoJavaFxDialog.class.getSimpleName());
 		
