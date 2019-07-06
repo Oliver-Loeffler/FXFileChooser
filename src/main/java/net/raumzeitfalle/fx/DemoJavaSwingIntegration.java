@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.StandardDirectoryChooser;
 import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
@@ -28,6 +29,7 @@ public class DemoJavaSwingIntegration {
 	private final List<PathFilter> filter;
 	private SwingFileChooser fileChooser;
 	private StandardFileChooser simpleFileChooser;
+	private StandardDirectoryChooser simpleDirectoryChooser;
 	
 	private final Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
 
@@ -113,6 +115,27 @@ public class DemoJavaSwingIntegration {
 		
 		buttonHolder.add(showSystemFileChooser);
 		buttonHolder.add(fxFileChooseLabel);
+		
+		JButton showSystemDirChooser = new JButton("Select Directory");
+		JLabel directoryLabel = new JLabel("no dir selected");
+		this.simpleDirectoryChooser = new StandardDirectoryChooser();
+		
+		showSystemDirChooser.addActionListener(l -> {
+			
+			int option = simpleDirectoryChooser.showDialog(frame);
+			if (option == SwingFileChooser.APPROVE_OPTION) {
+				SwingUtilities.invokeLater(
+						() -> {
+						   File file = simpleDirectoryChooser.getSelectedFile();
+						   String text = (null == file) ? "" : String.valueOf(file);
+						   directoryLabel.setText("Selected file: " + text);
+						});
+			}
+			
+		});
+		
+		buttonHolder.add(showSystemDirChooser);
+		buttonHolder.add(directoryLabel);
 		
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();
