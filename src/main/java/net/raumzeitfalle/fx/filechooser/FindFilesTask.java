@@ -9,11 +9,11 @@ import javafx.concurrent.Task;
 
 final class FindFilesTask extends Task<Void>{
     
-    private final ObservableList<Path> pathsToUpdate;
+    private final ObservableList<IndexedPath> pathsToUpdate;
     
     private final Path directory;
     
-    public FindFilesTask(Path searchFolder, ObservableList<Path> listOfPaths) {
+    public FindFilesTask(Path searchFolder, ObservableList<IndexedPath> listOfPaths) {
         this.pathsToUpdate = listOfPaths;
         this.directory = searchFolder;
     }

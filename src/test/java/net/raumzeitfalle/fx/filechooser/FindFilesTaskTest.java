@@ -25,7 +25,7 @@ class FindFilesTaskTest {
     
     private JFXPanel panel;
     
-    private ObservableList<Path> listOfPaths = FXCollections.observableArrayList();;
+    private ObservableList<IndexedPath> listOfPaths = FXCollections.observableArrayList();;
     
     private final Path searchLocation = Paths.get("TestData/SomeFiles");
     
@@ -61,6 +61,7 @@ class FindFilesTaskTest {
         assertEquals(11, this.listOfPaths.size());
         
         Set<String> fileNames = this.listOfPaths.stream()
+        		.map(IndexedPath::asPath)
                 .map(Path::getFileName)
                 .map(String::valueOf)
                 .collect(Collectors.toSet());

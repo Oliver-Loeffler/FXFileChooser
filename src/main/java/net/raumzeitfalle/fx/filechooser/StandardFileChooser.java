@@ -1,5 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.awt.Window;
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -17,27 +18,27 @@ public class StandardFileChooser {
      */
 	private final FileChooser dialog;
 
-	private final FileSystemDialogAdapter<FileChooser, JFrame, File> adapter;
+	private final FileSystemDialogAdapter<FileChooser, Window, File> adapter;
 	
-	private final Consumer<JFrame> beforeOpen;
+	private final Consumer<Window> beforeOpen;
 	
-	private final Consumer<JFrame> afterClosing;
+	private final Consumer<Window> afterClosing;
 	
 	public StandardFileChooser() {
 		this.dialog = new FileChooser();
-		this.adapter = new FileSystemDialogAdapter<FileChooser, JFrame, File>(dialog,
-				(FileChooser dialog, JFrame window)->dialog.showOpenDialog(null));
+		this.adapter = new FileSystemDialogAdapter<FileChooser, Window, File>(dialog,
+				(FileChooser dialog, Window window)->dialog.showOpenDialog(null));
 		
-		this.beforeOpen = frame -> { 
-			frame.setFocusableWindowState(false);
-			frame.setEnabled(false);
+		this.beforeOpen = window -> { 
+			window.setFocusableWindowState(false);
+			window.setEnabled(false);	
 		};
 		
-		this.afterClosing = frame -> {
+		this.afterClosing = window -> {
 			SwingUtilities.invokeLater(() -> {
-				frame.setEnabled(true);
-				frame.setFocusableWindowState(true);
-				frame.toFront();
+				window.setEnabled(true);
+				window.setFocusableWindowState(true);
+				window.toFront();
 			});
 		};
 		
@@ -56,7 +57,7 @@ public class StandardFileChooser {
 	}
 	
 	public int showSaveDialog(JFrame frame) {
-		return this.adapter.runDialog((FileChooser dialog, JFrame window)->dialog.showSaveDialog(null), frame);
+		return this.adapter.runDialog((FileChooser dialog, Window window)->dialog.showSaveDialog(null), frame);
 	}
 	
 	public File getSelectedFile() {
