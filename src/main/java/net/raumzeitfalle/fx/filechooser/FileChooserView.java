@@ -19,7 +19,7 @@ final class FileChooserView {
 	}
     
     static Parent create(Stage stage, Skin skin) throws IOException {
-        FileChooserModel model = FileChooserModel.get();
+        FileChooserModel model = FileChooserModel.startingInUsersHome();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(Paths.get(""), ()->stage.getOwner());
         
         return create(model, pathSupplier , stage, skin);
@@ -30,7 +30,7 @@ final class FileChooserView {
     }
     
     static Parent create(FileChooserModel model, Dialog<Path> dialog, Skin skin) throws IOException {
-        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->dialog.getOwner());
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->dialog.getDialogPane().getScene().getWindow());
         return create(model, pathSupplier, dialog, skin);
     }
     

@@ -14,7 +14,7 @@ import javafx.stage.Window;
 public class FXFileChooserDialog extends Dialog<Path> {
     
     public static FXFileChooserDialog create(Skin skin) throws IOException {
-        return new FXFileChooserDialog(skin,FileChooserModel.get());
+        return new FXFileChooserDialog(skin,FileChooserModel.startingInUsersHome());
     }
     
     public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
@@ -34,6 +34,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
         headerTextProperty().bind(model.currentSearchPath().asString());
         initModality(Modality.APPLICATION_MODAL);
         
+       
         getDialogPane().setContent(FileChooserView.create(model,this, skin));
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);

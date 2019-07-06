@@ -46,7 +46,7 @@ final class FileChooserModel {
     /*
      * TODO: add possibility to construct model with list or array of filters
      */
-    public static FileChooserModel get() {
+    public static FileChooserModel startingInUsersHome() {
         return startingIn(getUsersHome());
     }
     
