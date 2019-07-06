@@ -11,23 +11,23 @@ import javafx.collections.ObservableList;
 
 class RefreshBuffer {
     
-        static RefreshBuffer get(FindFilesTask task, int cachSize, ObservableList<Path> target) {
+        static RefreshBuffer get(FindFilesTask task, int cachSize, ObservableList<IndexedPath> target) {
             return new RefreshBuffer(task, cachSize, target);
         }
         
-        private final List<Path> cache;
+        private final List<IndexedPath> cache;
         
-        private final AtomicReference<List<Path>> atomicCache;
+        private final AtomicReference<List<IndexedPath>> atomicCache;
         
         private final ReentrantLock lock = new ReentrantLock();
         
-        private final ObservableList<Path> target;
+        private final ObservableList<IndexedPath> target;
                 
         private final int desiredCacheSize;
         
         private final FindFilesTask task;
                                         
-        private RefreshBuffer(FindFilesTask task, int cacheSize, ObservableList<Path> target) {
+        private RefreshBuffer(FindFilesTask task, int cacheSize, ObservableList<IndexedPath> target) {
             this.cache = new ArrayList<>(2*cacheSize);
             this.target = target;
             this.desiredCacheSize = cacheSize;
@@ -36,7 +36,7 @@ class RefreshBuffer {
         }
         
         void update(Path file) {
-            cache.add(file);
+            cache.add(IndexedPath.valueOf(file));
             if (!task.isCancelled() && currentCacheSize() > desiredCacheSize) {
             		flush();    
             }    
@@ -51,7 +51,7 @@ class RefreshBuffer {
             
             try {
             	
-            	Path[] update = this.atomicCache.get().toArray(new Path[0]);
+            	IndexedPath[] update = this.atomicCache.get().toArray(new IndexedPath[0]);
                 Invoke.later(()->target.addAll(update));
                 this.atomicCache.get().clear();
                 

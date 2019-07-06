@@ -53,7 +53,7 @@ final class FileChooserController implements Initializable {
     private TextField fileNameFilter;
 
     @FXML
-    private ListView<Path> listOfFiles;
+    private ListView<IndexedPath> listOfFiles;
 
     @FXML
     private TextField selectedFile;
@@ -200,16 +200,15 @@ final class FileChooserController implements Initializable {
                 break;
             }
             default : {
-                throw new UnsupportedOperationException("Unknown use case.");
+                throw new UnsupportedOperationException("Unsupported use case.");
             }
         }
     }
 
-    private void assignSortAction(MenuItem menuItem, Comparator<Path> comparator) {
+    private void assignSortAction(MenuItem menuItem, Comparator<IndexedPath> comparator) {
         menuItem.setOnAction(e -> 
             Invoke.later(()->{
                 model.sort(comparator);
-                
                 SVGPath svgPath = new SVGPath();
                 svgPath.getStyleClass().add("tool-bar-icon");
                 svgPath.setContent(((SVGPath)menuItem.getGraphic()).getContent());
@@ -218,7 +217,7 @@ final class FileChooserController implements Initializable {
             }));
     }
 
-    private Path selectedItem() {
+    private IndexedPath selectedItem() {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
     
