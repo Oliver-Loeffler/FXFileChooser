@@ -37,9 +37,7 @@ public class SwingNodeDemo extends Application {
         }
 
     private void createSwingContent(final SwingNode swingNode) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(()->{
             	
             	SwingNodeFileChooser swingNodeFc = new SwingNodeFileChooser();
             	JButton button = new JButton("Click me!");
@@ -64,7 +62,7 @@ public class SwingNodeDemo extends Application {
             	buttonHolder.add(label);
             	
                 swingNode.setContent(buttonHolder);
-            }
+
         });
     }
 
