@@ -1,15 +1,15 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.awt.Window;
 import java.io.File;
 import java.util.function.Consumer;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import javafx.stage.DirectoryChooser;
 
 public class StandardDirectoryChooser {
-    
+	    
     /**
      * 
      * The wrapped system dialog from JavaFX.
@@ -17,26 +17,27 @@ public class StandardDirectoryChooser {
      */
 	private final DirectoryChooser dialog;
 
-	private final FileSystemDialogAdapter<DirectoryChooser, JFrame, File> adapter;
+	private final FileSystemDialogAdapter<DirectoryChooser, Window, File> adapter;
 	
-	private final Consumer<JFrame> beforeOpen;
+	private final Consumer<Window> beforeOpen;
 	
-	private final Consumer<JFrame> afterClosing;
+	private final Consumer<Window> afterClosing;
 	
 	public StandardDirectoryChooser() {
 		this.dialog = new DirectoryChooser();
-		this.adapter = new FileSystemDialogAdapter<DirectoryChooser, JFrame, File>(dialog,
-				(DirectoryChooser dialog, JFrame window)->dialog.showDialog(null));
+		this.adapter = new FileSystemDialogAdapter<DirectoryChooser, Window, File>(dialog,
+				(DirectoryChooser dialog, Window window)->dialog.showDialog(null));
 		
-		this.beforeOpen = frame -> { 
-			frame.setFocusableWindowState(false);
-			frame.setEnabled(false);
+		this.beforeOpen = window -> { 
+			window.setFocusableWindowState(false);
+			window.setEnabled(false);
 		};
 		
-		this.afterClosing = frame -> {
+		this.afterClosing = window -> {		
 			SwingUtilities.invokeLater(() -> {
-				frame.setFocusableWindowState(true);
-				frame.setEnabled(true);
+				window.setEnabled(true);
+				window.setFocusableWindowState(true);
+				window.toFront();
 			});
 		};
 		
@@ -50,8 +51,8 @@ public class StandardDirectoryChooser {
 		return dialog;
 	}
 	
-	public int showDialog(JFrame frame) {
-		return this.adapter.runDialog(frame);
+	public int showDialog(Window window) {
+		return this.adapter.runDialog(window);
 	}
 		
 	public File getSelectedFile() {

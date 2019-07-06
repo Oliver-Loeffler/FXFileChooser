@@ -58,8 +58,7 @@ public class DemoJavaSwingIntegration {
 		JPanel buttonHolder = new JPanel(new FlowLayout());
 
 		JButton showDialog = new JButton("Show JavaFX Stage as Dialog in Swing: SwingFileChooser.class");
-		this.fileChooser = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:",
-				this.filter.toArray(new PathFilter[0]));
+		this.fileChooser = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:",this.filter.toArray(new PathFilter[0]));
 		JLabel chosenFile = new JLabel("placeholder for filename to be selected.");
 
 		showDialog.addActionListener(l -> {

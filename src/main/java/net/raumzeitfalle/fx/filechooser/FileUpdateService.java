@@ -12,10 +12,10 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
      
     private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
     
-    private ObservableList<Path> pathsToUpdate;
+    private ObservableList<IndexedPath> pathsToUpdate;
    
             
-    public FileUpdateService(Path folderToStart, ObservableList<Path> paths) {
+    public FileUpdateService(Path folderToStart, ObservableList<IndexedPath> paths) {
         setSearchLocation(folderToStart);        
         this.pathsToUpdate = paths;
         registerShutdownHook();

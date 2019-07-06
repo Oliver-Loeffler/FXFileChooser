@@ -101,8 +101,8 @@ public class FileChooserModelTest {
 	}
 	
 	
-	private FileChooserModel createTestModel(Path testRoot, List<Path> paths) {
-		ObservableList<Path> observableList = FXCollections.observableArrayList(paths);
+	private FileChooserModel createTestModel(Path testRoot, List<IndexedPath> paths) {
+		ObservableList<IndexedPath> observableList = FXCollections.observableArrayList(paths);
 		
 		UpdateService service = new UpdateService() {
 			
@@ -122,9 +122,12 @@ public class FileChooserModelTest {
 			
 			@Override
 			public void refresh() { observableList.clear(); try {
+					
 					Files.list(location)
 						.filter(Files::isRegularFile)
+						.map(IndexedPath::valueOf)
 						.forEach(observableList::add);
+					
 				} catch (IOException e) { throw new RuntimeException(e); 
 					/* its good to see the error but there is no need to handle it here */ 
 				} 

@@ -6,20 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import net.raumzeitfalle.fx.filechooser.PathComparator.Option;
-
-class PathComparatorTest {
+public class PathComparatorTest {
 	
 	private final Path b = Paths.get("byFarOldestFile.txt");
 	
@@ -27,16 +21,14 @@ class PathComparatorTest {
 	
 	private final Path c = Paths.get("crazyLargeFile.cfg");
 	
-	private List<Path> files = Arrays.asList(b,a,c);
-	
-	private Comparator<Path> comparatorUnderTest;
+	private Comparator<IndexedPath> comparatorUnderTest;
 
 	@Test
 	void byName_ascending() {
 		
 		comparatorUnderTest = PathComparator.ascendingByName();
 	
-		List<Path> sorted = sort(comparatorUnderTest);
+		List<Path> sorted = sortUsing(comparatorUnderTest, a,b,c);
 		
 		assertEquals(a, sorted.get(0));
 		assertEquals(b, sorted.get(1));
@@ -49,7 +41,7 @@ class PathComparatorTest {
 		
 		comparatorUnderTest = PathComparator.descendingByName();
 	
-		List<Path> sorted = sort(comparatorUnderTest);
+		List<Path> sorted = sortUsing(comparatorUnderTest, a,b,c);
 		
 		assertEquals(a, sorted.get(2));
 		assertEquals(b, sorted.get(1));
@@ -61,36 +53,25 @@ class PathComparatorTest {
 	@Test
 	void byLastModified_ascending() throws IOException {
 		
-		Function<Path, Instant> testMapping = p -> {
-			if (p.getFileName().toString().toLowerCase().startsWith("A")) {
-				return LocalDateTime.MIN.atZone(ZoneId.systemDefault()).toInstant();
-			} else {
-				return LocalDateTime.MAX.atZone(ZoneId.systemDefault()).toInstant();
-			}
-		};
 		
-		comparatorUnderTest = PathComparator.byTime(testMapping, Option.DESCENDING);
+		comparatorUnderTest = PathComparator.ascendingLastModified();
 		
 		Path fileA = Paths.get("./TestData/A-oldest.txt");		
 		Path fileB = Paths.get("./TestData/B-latest.txt");
 		
-		List<Path> paths = sortByInstant(testMapping,fileA,fileB);
+		List<Path> paths = sortUsing(PathComparator.ascendingLastModified(),fileA,fileB);
 		
 		assertEquals(fileA, paths.get(0));
 		assertEquals(fileB, paths.get(1));
 		
 	}
 
-
-
-	private List<Path> sortByInstant(Function<Path, Instant> testMapping, Path... file) {
+	private List<Path> sortUsing(Comparator<IndexedPath> comparatorUnderTest, Path... file) {
 		return Arrays.stream(file)
+				.map(IndexedPath::valueOf)
 				.sorted(comparatorUnderTest)
+				.map(IndexedPath::asPath)
 				.collect(Collectors.toList());
-	}
-
-	private List<Path> sort(Comparator<Path> byName) {
-		return files.stream().sorted(byName).collect(Collectors.toList());
 	}
 
 }
