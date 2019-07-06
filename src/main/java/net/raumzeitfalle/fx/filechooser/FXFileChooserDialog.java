@@ -13,8 +13,12 @@ import javafx.stage.Window;
 
 public class FXFileChooserDialog extends Dialog<Path> {
     
-    public static FXFileChooserDialog create(Skin skin) throws IOException {
-        return new FXFileChooserDialog(skin,FileChooserModel.startingInUsersHome());
+    public static FXFileChooserDialog create(Skin skin, PathFilter ...filter) throws IOException {
+    	FileChooserModel model = FileChooserModel.startingInUsersHome();
+    	for (PathFilter f : filter) {
+    		model.addFilter(f);
+    	}
+        return new FXFileChooserDialog(skin,model);
     }
     
     public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
@@ -38,7 +42,9 @@ public class FXFileChooserDialog extends Dialog<Path> {
         getDialogPane().setContent(FileChooserView.create(model,this, skin));
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
-        
+        getDialogPane().minHeightProperty().set(500);
+        getDialogPane().minWidthProperty().set(700);
+        this.resizableProperty().set(true);
         
         
         ButtonType okay = ButtonType.OK;
