@@ -11,7 +11,6 @@ import javafx.stage.DirectoryChooser;
 public class StandardDirectoryChooser {
 	    
     /**
-     * 
      * The wrapped system dialog from JavaFX.
      *  
      */
@@ -25,26 +24,24 @@ public class StandardDirectoryChooser {
 	
 	public StandardDirectoryChooser() {
 		this.dialog = new DirectoryChooser();
-		this.adapter = new FileSystemDialogAdapter<DirectoryChooser, Window, File>(dialog,
-				(DirectoryChooser dialog, Window window)->dialog.showDialog(null));
+		this.adapter = new FileSystemDialogAdapter<>(dialog,
+				(DirectoryChooser chooser, Window window)->chooser.showDialog(null));
 		
 		this.beforeOpen = window -> { 
 			window.setFocusableWindowState(false);
 			window.setEnabled(false);
 		};
 		
-		this.afterClosing = window -> {		
+		this.afterClosing = window -> 		
 			SwingUtilities.invokeLater(() -> {
 				window.setEnabled(true);
 				window.setFocusableWindowState(true);
 				window.toFront();
 			});
-		};
 		
 		this.adapter
 		    .beforeOpenDialog(beforeOpen)
 		    .afterClosingDialog(afterClosing);
-		
 	}
 	
 	public DirectoryChooser getDialog() {

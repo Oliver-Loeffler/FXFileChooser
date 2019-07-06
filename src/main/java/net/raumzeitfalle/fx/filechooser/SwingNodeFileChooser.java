@@ -13,8 +13,8 @@ public class SwingNodeFileChooser {
 	
 	public SwingNodeFileChooser() {
 		this.dialog = new FileChooser();
-		this.wrapper = new FileSystemDialogAdapter<FileChooser, SwingNode, File>(dialog,
-				(FileChooser dialog, SwingNode node)->dialog.showOpenDialog(node.getScene().getWindow()));
+		this.wrapper = new FileSystemDialogAdapter<>(dialog,
+				(FileChooser chooser, SwingNode node)->chooser.showOpenDialog(node.getScene().getWindow()));
 	}
 	
 	public int showOpenDialog(SwingNode node) {
