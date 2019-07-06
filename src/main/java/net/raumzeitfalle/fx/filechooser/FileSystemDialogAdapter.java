@@ -4,33 +4,42 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class FileSystemDialogAdapter<DIALOG,CONTAINER,RESULT> {
+/**
+ * 
+ * @author Oliver
+ *
+ * @param <D> The type of JavaFX dialog used, e.g. FileChooser or DirectoryChooser.
+ * @param <W> The actual parent window type.
+ * @param <R> The result type of a dialog interaction, in case of mentioned examples File.
+ * 
+ */
+public class FileSystemDialogAdapter<D,W,R> {
 
-	private RESULT result;
+	private R result;
 
-	private DIALOG dialog;
+	private D dialog;
 	
-	private Consumer<CONTAINER> beforeOpen;
+	private Consumer<W> beforeOpen;
 	
-	private Consumer<CONTAINER> afterClosing;
+	private Consumer<W> afterClosing;
 
-	private BiFunction<DIALOG,CONTAINER,RESULT> defaultDialogFunction;
+	private BiFunction<D,W,R> defaultDialogFunction;
 	
-	private Function<RESULT,SwingDialogReturnValues> resultFunction;
+	private Function<R,SwingDialogReturnValues> resultFunction;
 	
 	private Function<Throwable,SwingDialogReturnValues> errorFunction;
 
-	public FileSystemDialogAdapter(DIALOG fxSystemDialog,
-			BiFunction<DIALOG,CONTAINER,RESULT> dialogFunction) {
+	public FileSystemDialogAdapter(D fxSystemDialog,
+			BiFunction<D,W,R> dialogFunction) {
 		
 		this(fxSystemDialog, dialogFunction, 
 				actualResult -> (null == actualResult ? SwingDialogReturnValues.CANCEL_OPTION : SwingDialogReturnValues.APPROVE_OPTION),
 				exception -> SwingDialogReturnValues.ERROR_OPTION);
 	}
 	
-	public FileSystemDialogAdapter(DIALOG fxSystemDialog,
-			BiFunction<DIALOG,CONTAINER,RESULT> dialogFunction,
-			Function<RESULT,SwingDialogReturnValues> resultFunction,
+	public FileSystemDialogAdapter(D fxSystemDialog,
+			BiFunction<D,W,R> dialogFunction,
+			Function<R,SwingDialogReturnValues> resultFunction,
 			Function<Throwable,SwingDialogReturnValues> errorFunction) {
 		
 		this.dialog = fxSystemDialog;
@@ -44,23 +53,23 @@ public class FileSystemDialogAdapter<DIALOG,CONTAINER,RESULT> {
 		this.afterClosing = null;
 	}
 	
-	public FileSystemDialogAdapter<DIALOG,CONTAINER,RESULT> beforeOpenDialog(Consumer<CONTAINER> beforeAction) {
+	public FileSystemDialogAdapter<D,W,R> beforeOpenDialog(Consumer<W> beforeAction) {
 		this.beforeOpen = beforeAction;
 		return this;
 	}
 	
-	public FileSystemDialogAdapter<DIALOG,CONTAINER,RESULT> afterClosingDialog(Consumer<CONTAINER> afterClosing) {
+	public FileSystemDialogAdapter<D,W,R> afterClosingDialog(Consumer<W> afterClosing) {
 		this.afterClosing = afterClosing;
 		return this;
 	}
 	
 	
-	public int runDialog(CONTAINER window) {
+	public int runDialog(W window) {
 		return runDialog(defaultDialogFunction, window);
 	}
 
 
-	public int runDialog(BiFunction<DIALOG,CONTAINER,RESULT> dialogFunction, CONTAINER window) {
+	public int runDialog(BiFunction<D,W,R> dialogFunction, W window) {
 
 		if (null != beforeOpen) {
 			beforeOpen.accept(window);
@@ -84,7 +93,7 @@ public class FileSystemDialogAdapter<DIALOG,CONTAINER,RESULT> {
 				.getValue();
 	}
 
-	public RESULT getResult() {
+	public R getResult() {
 		return result;
 	}
 

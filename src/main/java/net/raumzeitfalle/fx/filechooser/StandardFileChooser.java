@@ -26,21 +26,21 @@ public class StandardFileChooser {
 	
 	public StandardFileChooser() {
 		this.dialog = new FileChooser();
-		this.adapter = new FileSystemDialogAdapter<FileChooser, Window, File>(dialog,
-				(FileChooser dialog, Window window)->dialog.showOpenDialog(null));
+		this.adapter = new FileSystemDialogAdapter<>(dialog,
+				(FileChooser chooser, Window window)->chooser.showOpenDialog(null));
 		
 		this.beforeOpen = window -> { 
 			window.setFocusableWindowState(false);
 			window.setEnabled(false);	
 		};
 		
-		this.afterClosing = window -> {
+		this.afterClosing = window -> 
 			SwingUtilities.invokeLater(() -> {
 				window.setEnabled(true);
 				window.setFocusableWindowState(true);
 				window.toFront();
 			});
-		};
+
 		
 		this.adapter
 		    .beforeOpenDialog(beforeOpen)

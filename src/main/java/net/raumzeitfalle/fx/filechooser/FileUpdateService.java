@@ -59,7 +59,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
 	}
     
 	private void registerShutdownHook() {
-		Runnable shutDownAction = ()->Platform.runLater(()->this.cancelUpdate());
+		Runnable shutDownAction = ()->Platform.runLater(this::cancelUpdate);
         Runtime.getRuntime().addShutdownHook(new Thread(shutDownAction));
 	}
 
