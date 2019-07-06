@@ -43,7 +43,6 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser(title);
         PathSupplier pathSupplier = SwingDirectoryChooser.createIn(startHere, fc);
-        //PathSupplier pathSupplier = FXDirectoryChooser.createIn(startHere, null);
                 
         Platform.runLater(()->{
             try {
