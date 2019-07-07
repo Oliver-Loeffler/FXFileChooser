@@ -131,7 +131,7 @@ final class FileChooserController implements Initializable {
         
         fileNameFilter.textProperty().addListener( l -> handleFileNameFilterChanges());
         
-        listOfFiles.setOnMouseClicked(event->handleDoubleClickInFilesList(event));
+        listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
 
         listOfFiles.setCellFactory(c -> new FilesListCell());
         listOfFiles.getSelectionModel()
@@ -146,11 +146,11 @@ final class FileChooserController implements Initializable {
         
         // initialize PathFilter menu
 		this.model.getPathFilter()
-		          .forEach(p->addNewPathFilterMenuItem(p));
+		          .forEach(this::addNewPathFilterMenuItem);
         
         // permit to dynamically add or remove PathFilter menu items
         this.model.getPathFilter()
-        	      .addListener((Change<? extends PathFilter> change)->handlePathFilterModelChange(change));
+        	      .addListener(this::handlePathFilterModelChange);
         
         chooser.setOnAction(e -> changeDirectory());    
         refreshButton.setOnAction(e -> model.refreshFiles());
@@ -220,8 +220,8 @@ final class FileChooserController implements Initializable {
     
     private void handlePathFilterModelChange(Change<? extends PathFilter> change) {
     	if (change.next()) {
-    		change.getAddedSubList().forEach(p->addNewPathFilterMenuItem(p));
-    		change.getRemoved().forEach(p->removePathFilterMenuItem(p));
+    		change.getAddedSubList().forEach(this::addNewPathFilterMenuItem);
+    		change.getRemoved().forEach(this::removePathFilterMenuItem);
     	}
     }
 
@@ -231,14 +231,12 @@ final class FileChooserController implements Initializable {
 			item.setOnAction(e -> this.model.updateFilterCriterion(p, fileNameFilter.getText()));
 			this.fileExtensionFilter.getItems().add(item);
 		});
-	};
+	}
 	
 	private void removePathFilterMenuItem(PathFilter filterToRemove) {
-		Invoke.later(()->{
-			this.fileExtensionFilter
+		Invoke.later(()->this.fileExtensionFilter
 			.getItems()
-			.removeIf(mi->mi.getText().equalsIgnoreCase(filterToRemove.getName()));
-		});
+			.removeIf(mi->mi.getText().equalsIgnoreCase(filterToRemove.getName())));
 	}
 
     private void assignSortAction(MenuItem menuItem, Comparator<IndexedPath> comparator) {
