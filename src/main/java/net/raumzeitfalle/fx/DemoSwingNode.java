@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingNodeFileChooser;
 
-public class SwingNodeDemo extends Application {
+public class DemoSwingNode extends Application {
 
 	public static void main(String[] args) {
 		Application.launch(args);
