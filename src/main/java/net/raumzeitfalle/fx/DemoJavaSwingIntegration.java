@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 import javax.swing.JButton;
@@ -129,8 +130,7 @@ public class DemoJavaSwingIntegration {
 		gridLayout.setHgap(20);
 		gridLayout.setVgap(10);
 
-		JPanel buttonHolder = new JPanel(gridLayout);
-		return buttonHolder;
+		return new JPanel(gridLayout);
 	}
 
 	private void addExample(Example example) {
@@ -141,11 +141,11 @@ public class DemoJavaSwingIntegration {
 	private static class Example {
 
 		protected String buttonLabel = "Activity";
-		private JLabel label = new JLabel("");;
+		private JLabel label = new JLabel("");
 		protected Supplier<File> fileSource;
-		protected Supplier<Integer> dialogInteraction;
+		protected IntSupplier dialogInteraction;
 		
-		public Example(String title, Supplier<Integer> interaction, Supplier<File> fileSource) {
+		public Example(String title, IntSupplier interaction, Supplier<File> fileSource) {
 			this.buttonLabel = title;
 			this.dialogInteraction = interaction;
 			this.fileSource = fileSource;
@@ -154,7 +154,7 @@ public class DemoJavaSwingIntegration {
 		JButton getButton() {
 			JButton button = new JButton(buttonLabel);
 			button.addActionListener(l -> {
-				int option = dialogInteraction.get();
+				int option = dialogInteraction.getAsInt();
 				if (option == JFileChooser.APPROVE_OPTION) {
 					SwingUtilities.invokeLater(() -> {
 						File file = fileSource.get();
