@@ -18,22 +18,18 @@ public class StandardFileChooser {
 	private final FileChooser dialog;
 
 	private final FileSystemDialogAdapter<FileChooser, Window, File> adapter;
-	
-	private final Consumer<Window> beforeOpen;
-	
-	private final Consumer<Window> afterClosing;
-	
+		
 	public StandardFileChooser() {
 		this.dialog = new FileChooser();
 		this.adapter = new FileSystemDialogAdapter<>(dialog,
-				(FileChooser chooser, Window window)->chooser.showOpenDialog(null));
+				(fileChooser, window)->fileChooser.showOpenDialog(null));
 		
-		this.beforeOpen = window -> { 
+		Consumer<Window> beforeOpen = window -> { 
 			window.setFocusableWindowState(false);
 			window.setEnabled(false);	
 		};
 		
-		this.afterClosing = window -> 
+		Consumer<Window> afterClosing = window -> 
 			SwingUtilities.invokeLater(() -> {
 				window.setEnabled(true);
 				window.setFocusableWindowState(true);
@@ -55,12 +51,13 @@ public class StandardFileChooser {
 		return this.adapter.runDialog(window);
 	}
 	
-	public int showOpenDialog(Window frame) {
-		return this.adapter.runDialog(frame);
+	public int showOpenDialog(Window window) {
+		return this.adapter.runDialog(window);
 	}
 	
-	public int showSaveDialog(Window frame) {
-		return this.adapter.runDialog((FileChooser dialog, Window window)->dialog.showSaveDialog(null), frame);
+	public int showSaveDialog(Window ownerWindow) {
+		return this.adapter
+				   .runDialog((fileChooser, window)->fileChooser.showSaveDialog(null), ownerWindow);
 	}
 	
 	public File getSelectedFile() {

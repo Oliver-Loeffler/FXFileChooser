@@ -48,7 +48,7 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
             try {
                 FileChooserModel model = FileChooserModel.startingIn(startHere);
                 for (PathFilter f : filter) {
-                		model.addFilter(f);
+                		model.addOrRemoveFilter(f);
                 }        
                 Parent view = FileChooserView.create(model, pathSupplier, fc,skin);
                 Scene scene = new Scene(view);

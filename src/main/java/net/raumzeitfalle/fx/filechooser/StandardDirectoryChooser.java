@@ -17,22 +17,18 @@ public class StandardDirectoryChooser {
 	private final DirectoryChooser dialog;
 
 	private final FileSystemDialogAdapter<DirectoryChooser, Window, File> adapter;
-	
-	private final Consumer<Window> beforeOpen;
-	
-	private final Consumer<Window> afterClosing;
-	
+		
 	public StandardDirectoryChooser() {
 		this.dialog = new DirectoryChooser();
 		this.adapter = new FileSystemDialogAdapter<>(dialog,
 				(DirectoryChooser chooser, Window window)->chooser.showDialog(null));
 		
-		this.beforeOpen = window -> { 
+		Consumer<Window> beforeOpen = window -> { 
 			window.setFocusableWindowState(false);
 			window.setEnabled(false);
 		};
 		
-		this.afterClosing = window -> 		
+		Consumer<Window> afterClosing = window -> 		
 			SwingUtilities.invokeLater(() -> {
 				window.setEnabled(true);
 				window.setFocusableWindowState(true);
