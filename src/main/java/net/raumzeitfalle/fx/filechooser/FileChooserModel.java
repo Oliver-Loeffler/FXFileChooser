@@ -188,17 +188,17 @@ final class FileChooserModel {
         }
     }
     
-    public void updateFilesIn(Path directory) {
-        if (directory.toFile().isDirectory()) {          
-            this.fileUpdateService.restartIn(directory);
+	public void updateFilesIn(Path directory) {
+		if (directory.toFile().isDirectory()) {
+			this.fileUpdateService.restartIn(directory);
 
-        } else if (directory.toFile().isFile()) {
-        		Path parent = directory.getParent();
-        		if (parent != null) {
-        			this.fileUpdateService.restartIn(parent);	
-        		}
-        }
-    }
+		} else if (directory.toFile().isFile()) {
+			Path parent = directory.getParent();
+			if (parent != null) {
+				this.fileUpdateService.restartIn(parent);
+			}
+		}
+	}
     
     public void changeToUsersHome() {
         updateFilesIn(getUsersHome());

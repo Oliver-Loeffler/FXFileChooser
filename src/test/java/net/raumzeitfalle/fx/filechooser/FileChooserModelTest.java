@@ -29,7 +29,7 @@ public class FileChooserModelTest {
 	private static final Path TEST_ROOT = Paths.get("./TestData");
 	
 	private final FileChooserModel classUnderTest = createTestModel(TEST_ROOT, new ArrayList<>());
-	
+
 	
 	@Test
 	public void listFileContents() {
@@ -91,6 +91,7 @@ public class FileChooserModelTest {
 	
 	@Test
 	public void lookIntoUsersHome() {
+				
 		// TODO: change users home before test - ?
 		PathFilter filter = PathFilter.acceptAllFiles("all files");
 		classUnderTest.updateFilterCriterion(filter, "");
@@ -99,8 +100,7 @@ public class FileChooserModelTest {
 		assertTrue(classUnderTest.getFilteredPaths().size() > 1);
 		
 	}
-	
-	
+
 	private FileChooserModel createTestModel(Path testRoot, List<IndexedPath> paths) {
 		ObservableList<IndexedPath> observableList = FXCollections.observableArrayList(paths);
 		
