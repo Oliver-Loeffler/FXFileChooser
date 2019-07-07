@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
@@ -41,7 +43,16 @@ public class DemoJavaFxStage extends Application {
             logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
         
-        Scene mainScene = new Scene(button);
+        FileChooser standardFileChooser = new FileChooser();
+        Button standardFileChooserButton = new Button("JavaFX standard file chooser");
+        standardFileChooserButton.setOnAction(event->standardFileChooser.showOpenDialog(primaryStage));
+        
+        FileChooser standardDirectoryChooser = new FileChooser();
+        Button standardDirectoryChooserButton = new Button("JavaFX standard directory chooser");
+        standardDirectoryChooserButton.setOnAction(event->standardDirectoryChooser.showOpenDialog(primaryStage));
+        
+        VBox vbox = new VBox(button, standardDirectoryChooserButton, standardFileChooserButton);
+        Scene mainScene = new Scene(vbox);
         primaryStage.setScene(mainScene);
         primaryStage.setWidth(400);
         primaryStage.setHeight(400);

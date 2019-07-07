@@ -38,22 +38,22 @@ final class FileChooserModel {
     private final StringProperty fileSelection = new SimpleStringProperty();
     
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
-    
-    private final List<PathFilter> pathFilter = new ArrayList<>(10);
+    		
+    private final ObservableList<PathFilter> observablePathFilter = FXCollections.observableArrayList(new ArrayList<>(30));
     
     private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");
     
-    /*
-     * TODO: add possibility to construct model with list or array of filters
-     */
-    public static FileChooserModel startingInUsersHome() {
-        return startingIn(getUsersHome());
+
+    public static FileChooserModel startingInUsersHome(PathFilter ...filter) {
+        return startingIn(getUsersHome(), filter);
     }
     
-    public static FileChooserModel startingIn(Path startFolder) {
+    public static FileChooserModel startingIn(Path startFolder, PathFilter ...filter) {
     		ObservableList<IndexedPath> paths = FXCollections.observableArrayList(new ArrayList<>(300_000));
     		Supplier<UpdateService> serviceProvider = ()->new FileUpdateService(startFolder, paths);
-    		return new FileChooserModel(paths, serviceProvider);
+    		FileChooserModel model = new FileChooserModel(paths, serviceProvider);
+    		model.observablePathFilter.addAll(filter);
+    		return model;
     }
     
     public FileChooserModel(ObservableList<IndexedPath> paths, Supplier<UpdateService> serviceProvider) {
@@ -159,9 +159,9 @@ final class FileChooserModel {
     }
     
     public void initializeFilter(String text) {
-    		if (!this.pathFilter.isEmpty()) {
-    			PathFilter combined = this.pathFilter.get(0);
-    			for (PathFilter filter : this.pathFilter) {
+    		if (!this.observablePathFilter.isEmpty()) {
+    			PathFilter combined = this.observablePathFilter.get(0);
+    			for (PathFilter filter : this.observablePathFilter) {
     				combined = combined.combine(filter);
     			}
     			 this.effectiveFilter = combined;
@@ -204,15 +204,18 @@ final class FileChooserModel {
         updateFilesIn(getUsersHome());
     }
 
-    public void addFilter(PathFilter filter) {
-        this.pathFilter.add(filter);
-    }
-    
-    public List<PathFilter> getPathFilter() {
-    		return this.pathFilter;
+    public ObservableList<PathFilter> getPathFilter() {
+    	return this.observablePathFilter;
     }
 	
 	public void sort(Comparator<IndexedPath> comparator) {
 	    this.allPaths.sort(comparator);
+	}
+
+	public void addOrRemoveFilter(PathFilter newFilter) {
+		boolean wasRemoved = this.observablePathFilter.removeIf(pf->pf.getName().equalsIgnoreCase(newFilter.getName()));
+		if (!wasRemoved) {
+			this.observablePathFilter.add(newFilter);
+		}
 	}
 }

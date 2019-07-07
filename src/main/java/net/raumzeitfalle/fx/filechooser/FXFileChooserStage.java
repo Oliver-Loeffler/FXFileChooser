@@ -17,21 +17,17 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
     }
     
     public static FXFileChooserStage create(Skin skin,PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(),skin, filter);
+        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(filter),skin);
     }
     
     public static FXFileChooserStage create(Skin skin, Path inLocation, PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation),skin, filter);
+        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation, filter),skin);
     }
     
     private final FileChooserModel model;
     
-    private FXFileChooserStage(FileChooserModel model, Skin skin, PathFilter ...filter) throws IOException {
+    private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
         this.model = model;
-        for (PathFilter f : filter) {
-            this.model.addFilter(f);
-        }
-        
         FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->this);
         Parent view = FileChooserView.create(model,dirChooser,this, skin);
         Scene scene = new Scene(view);

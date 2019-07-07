@@ -14,14 +14,17 @@ import javafx.stage.Window;
 public class FXFileChooserDialog extends Dialog<Path> {
     
     public static FXFileChooserDialog create(Skin skin, PathFilter ...filter) throws IOException {
-    	FileChooserModel model = FileChooserModel.startingInUsersHome();
-    	for (PathFilter f : filter) {
-    		model.addFilter(f);
-    	}
-        return new FXFileChooserDialog(skin,model);
+    	
+    	FileChooserModel model = FileChooserModel.startingInUsersHome(filter);
+    	return new FXFileChooserDialog(skin,model);
+    	
     }
     
-    public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
+    public void addFilter(PathFilter filter) {
+    	model.addOrRemoveFilter(filter);
+	}
+
+	public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
         return new FXFileChooserDialog(skin,model);
     }
     
