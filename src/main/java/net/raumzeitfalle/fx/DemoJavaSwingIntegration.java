@@ -4,10 +4,10 @@ import java.awt.GridLayout;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Supplier;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,12 +28,9 @@ public class DemoJavaSwingIntegration {
 		SwingUtilities.invokeLater(app::initAndShowGui);
 	}
 
-	private final Logger logger;
-
 	private final JPanel buttonHolder;
 
-	DemoJavaSwingIntegration() {
-		this.logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
+	private DemoJavaSwingIntegration() {
 		this.buttonHolder = createButtonHolder();
 	}
 
@@ -50,6 +47,7 @@ public class DemoJavaSwingIntegration {
 
 		PathFilter html = PathFilter.forFileExtension("*.html", "html")
 				.combine(PathFilter.forFileExtension("*.htm", "html"));
+
 		PathFilter xls = PathFilter.forFileExtension("*.xls", "xls")
 				.combine(PathFilter.forFileExtension("*.xlsx", "xlsx"));
 
@@ -64,25 +62,16 @@ public class DemoJavaSwingIntegration {
 		// JavaFX stage placed inside a JDialog - default skin
 		Example stageInsideSwingDialog = new Example() {
 			{
-				String buttonLabel = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
-						+ SwingFileChooser.class.getName() + "<br>"
-						+ "<font color=#0000FF>(Default Skin)</font>" + "</center></html>";
-				
-				button = new JButton(buttonLabel);
+				buttonLabel = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
+						+ SwingFileChooser.class.getName() + "<br>" + "<font color=#0000FF>(Default Skin)</font>"
+						+ "</center></html>";
+
 				PathFilter[] filter = collectPathFilter().toArray(new PathFilter[0]);
 				SwingFileChooser fc = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:", "TestData\\SomeFiles",
 						filter);
-				label = new JLabel("");
 
-				button.addActionListener(l -> {
-					int option = fc.showOpenDialog(frame);
-					logger.log(Level.INFO, "Dialog return value: " + option);
-
-					if (option == SwingFileChooser.APPROVE_OPTION) {
-						SwingUtilities.invokeLater(
-								() -> label.setText(String.valueOf(fc.getSelectedFile())));
-					}
-				});
+				dialogInteraction = () -> fc.showOpenDialog(frame);
+				fileSource = () -> fc.getSelectedFile();
 			}
 		};
 
@@ -91,25 +80,16 @@ public class DemoJavaSwingIntegration {
 		// JavaFX stage placed inside a JDialog - dark skin
 		Example stageInsideSwingDialogDark = new Example() {
 			{
-				String buttonLabel = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
-						+ SwingFileChooser.class.getName() + "<br>"
-						+ "<font color=#0000FF>(Dark Skin)</font>" + "</center></html>";
-				
-				button = new JButton(buttonLabel);
+				buttonLabel = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
+						+ SwingFileChooser.class.getName() + "<br>" + "<font color=#0000FF>(Dark Skin)</font>"
+						+ "</center></html>";
+
 				PathFilter[] filter = collectPathFilter().toArray(new PathFilter[0]);
 				SwingFileChooser fc = SwingFileChooser.create(Skin.DARK, "Choose any file:", "TestData\\SomeFiles",
 						filter);
-				label = new JLabel("");
 
-				button.addActionListener(l -> {
-					int option = fc.showOpenDialog(frame);
-					logger.log(Level.INFO, "Dialog return value: " + option);
-
-					if (option == SwingFileChooser.APPROVE_OPTION) {
-						SwingUtilities.invokeLater(
-								() -> label.setText(String.valueOf(fc.getSelectedFile())));
-					}
-				});
+				dialogInteraction = () -> fc.showOpenDialog(frame);
+				fileSource = () -> fc.getSelectedFile();
 			}
 		};
 
@@ -118,23 +98,13 @@ public class DemoJavaSwingIntegration {
 		// JavaFX file chooser (usually the system file chooser) launched from Swing
 		Example standardFileChooserOpen = new Example() {
 			{
-				String buttonLabel = "<html><center><h3>JavaFX FileChooser <font color=#ff0000>(Open)</font></h3>"
+				buttonLabel = "<html><center><h3>JavaFX FileChooser <font color=#ff0000>(Open)</font></h3>"
 						+ FileChooser.class.getName() + "</center></html>";
-				
-				button = new JButton(buttonLabel);
-				label = new JLabel("");
+
 				StandardFileChooser stdFc = new StandardFileChooser();
 
-				button.addActionListener(l -> {
-					int option = stdFc.showOpenDialog(frame);
-					if (option == SwingFileChooser.APPROVE_OPTION) {
-						SwingUtilities.invokeLater(() -> {
-							File file = stdFc.getSelectedFile();
-							String text = (null == file) ? "" : String.valueOf(file);
-							label.setText(text);
-						});
-					}
-				});
+				dialogInteraction = () -> stdFc.showOpenDialog(frame);
+				fileSource = () -> stdFc.getSelectedFile();
 			}
 		};
 
@@ -143,25 +113,13 @@ public class DemoJavaSwingIntegration {
 		// JavaFX file chooser (usually the system file chooser) launched from Swing
 		Example standardFileChooserSave = new Example() {
 			{
-				
-				String buttonLabel = "<html><center><h3>JavaFX FileChooser <font color=#FF0000>(Save)</font></h3>"
+				buttonLabel = "<html><center><h3>JavaFX FileChooser <font color=#FF0000>(Save)</font></h3>"
 						+ FileChooser.class.getName() + "</center></html>";
-				
-				button = new JButton(buttonLabel);
-				
-				label = new JLabel("");
+
 				StandardFileChooser stdFc = new StandardFileChooser();
 
-				button.addActionListener(l -> {
-					int option = stdFc.showSaveDialog(frame);
-					if (option == SwingFileChooser.APPROVE_OPTION) {
-						SwingUtilities.invokeLater(() -> {
-							File file = stdFc.getSelectedFile();
-							String text = (null == file) ? "" : String.valueOf(file);
-							label.setText(text);
-						});
-					}
-				});
+				dialogInteraction = () -> stdFc.showSaveDialog(frame);
+				fileSource = () -> stdFc.getSelectedFile();
 			}
 		};
 
@@ -170,24 +128,13 @@ public class DemoJavaSwingIntegration {
 		// JavaFX standard directory chooser
 		Example standardDirectoryChooser = new Example() {
 			{
-				String buttonLabel = "<html><center><h3>JavaFX DirectoryChooser</h3>"
-						+ DirectoryChooser.class.getName() + "<br>"
-						+ "(Open Directory File)" + "</center></html>";
-				
-				button = new JButton(buttonLabel);
-				label = new JLabel("");
+				buttonLabel = "<html><center><h3>JavaFX DirectoryChooser</h3>" + DirectoryChooser.class.getName()
+						+ "<br> (Open Directory File) </center></html>";
+
 				StandardDirectoryChooser stdDirChooser = new StandardDirectoryChooser();
 
-				button.addActionListener(l -> {
-					int option = stdDirChooser.showDialog(frame);
-					if (option == SwingFileChooser.APPROVE_OPTION) {
-						SwingUtilities.invokeLater(() -> {
-							File file = stdDirChooser.getSelectedFile();
-							String text = (null == file) ? "" : String.valueOf(file);
-							label.setText(text);
-						});
-					}
-				});
+				dialogInteraction = () -> stdDirChooser.showDialog(frame);
+				fileSource = () -> stdDirChooser.getSelectedFile();
 			}
 		};
 
@@ -195,7 +142,7 @@ public class DemoJavaSwingIntegration {
 
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();
-		frame.setSize(800, 600);
+		frame.setSize(900, 700);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -216,10 +163,23 @@ public class DemoJavaSwingIntegration {
 
 	private abstract class Example {
 
-		protected JButton button;
-		protected JLabel label;
+		protected String buttonLabel = "Activity";
+		private JLabel label = new JLabel("");;
+		protected Supplier<File> fileSource;
+		protected Supplier<Integer> dialogInteraction;
 
 		JButton getButton() {
+			JButton button = new JButton(buttonLabel);
+			button.addActionListener(l -> {
+				int option = dialogInteraction.get();
+				if (option == JFileChooser.APPROVE_OPTION) {
+					SwingUtilities.invokeLater(() -> {
+						File file = fileSource.get();
+						String text = (null == file) ? "" : String.valueOf(file);
+						label.setText(text);
+					});
+				}
+			});
 			return button;
 		}
 
