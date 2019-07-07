@@ -60,7 +60,7 @@ public class DemoJavaFxStage extends Application {
     }
     
     public static void main(String[] args) {
-        launch(args);
+        launch(new String[0]);
     }
     
 }
