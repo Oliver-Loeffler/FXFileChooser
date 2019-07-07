@@ -61,30 +61,27 @@ public class DemoJavaSwingIntegration {
 		JFrame frame = new JFrame("JavaFX in Swing");
 
 		// JavaFX stage placed inside a JDialog - default skin
-		
+
 		PathFilter[] filter = collectPathFilter().toArray(new PathFilter[0]);
-		SwingFileChooser fc = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:", "TestData\\SomeFiles",filter);
-		String title =  "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
-				+ SwingFileChooser.class.getName() + "<br>" + "<font color=#0000FF>(Default Skin)</font>"
-				+ "</center></html>";
-		
-		Example stageInsideSwingDialog = new Example(title,
-				() -> fc.showOpenDialog(frame),
+		SwingFileChooser fc = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:", "TestData\\SomeFiles", filter);
+		String title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>" + SwingFileChooser.class.getName()
+				+ "<br>" + "<font color=#0000FF>(Default Skin)</font>" + "</center></html>";
+
+		Example stageInsideSwingDialog = new Example(title, 
+				() -> fc.showOpenDialog(frame), 
 				() -> fc.getSelectedFile());
-		
+
 		addExample(stageInsideSwingDialog);
 
-		
 		// JavaFX stage placed inside a JDialog - dark skin
-		title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>"
-				+ SwingFileChooser.class.getName() + "<br>" + "<font color=#0000FF>(Dark Skin)</font>"
-				+ "</center></html>";
-		SwingFileChooser darkFc = SwingFileChooser.create(Skin.DARK, "Choose any file:", "TestData\\SomeFiles",filter);
+		title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>" + SwingFileChooser.class.getName() + "<br>"
+				+ "<font color=#0000FF>(Dark Skin)</font>" + "</center></html>";
+		SwingFileChooser darkFc = SwingFileChooser.create(Skin.DARK, "Choose any file:", "TestData\\SomeFiles", filter);
 
-		Example stageInsideSwingDialogDark = new Example(title,
+		Example stageInsideSwingDialogDark = new Example(title, 
 				() -> darkFc.showOpenDialog(frame),
 				() -> darkFc.getSelectedFile());
-		
+
 		addExample(stageInsideSwingDialogDark);
 
 		// JavaFX file chooser (usually the system file chooser) launched from Swing
@@ -92,30 +89,30 @@ public class DemoJavaSwingIntegration {
 				+ FileChooser.class.getName() + "</center></html>";
 		StandardFileChooser stdFc = new StandardFileChooser();
 
-		Example standardFileChooserOpen = new Example(title,
+		Example standardFileChooserOpen = new Example(title, 
 				() -> stdFc.showOpenDialog(frame),
 				() -> stdFc.getSelectedFile());
-		
+
 		addExample(standardFileChooserOpen);
 
 		// JavaFX file chooser (usually the system file chooser) launched from Swing
 		title = "<html><center><h3>JavaFX FileChooser <font color=#ff0000>(Save)</font></h3>"
 				+ FileChooser.class.getName() + "</center></html>";
 		StandardFileChooser stdFcSave = new StandardFileChooser();
-		Example standardFileChooserSave = new Example(title,
+		Example standardFileChooserSave = new Example(title, 
 				() -> stdFcSave.showOpenDialog(frame),
 				() -> stdFcSave.getSelectedFile());
-		
+
 		addExample(standardFileChooserSave);
 
 		// JavaFX standard directory chooser
 		title = "<html><center><h3>JavaFX DirectoryChooser <font color=#ff0000>(Open Directory)</font></h3>"
 				+ DirectoryChooser.class.getName() + "</center></html>";
 		StandardDirectoryChooser stdDirChooser = new StandardDirectoryChooser();
-		Example standardDirectoryChooser = new Example(title,
+		Example standardDirectoryChooser = new Example(title, 
 				() -> stdDirChooser.showDialog(frame),
 				() -> stdDirChooser.getSelectedFile());
-		
+
 		addExample(standardDirectoryChooser);
 
 		frame.getContentPane().add(buttonHolder);
@@ -139,22 +136,17 @@ public class DemoJavaSwingIntegration {
 	}
 
 	private static class Example {
-
-		protected String buttonLabel = "Activity";
-		private JLabel label = new JLabel("");
-		protected Supplier<File> fileSource;
-		protected IntSupplier dialogInteraction;
+		
+		private final JLabel label;
+		private final JButton button;
 		
 		public Example(String title, IntSupplier interaction, Supplier<File> fileSource) {
-			this.buttonLabel = title;
-			this.dialogInteraction = interaction;
-			this.fileSource = fileSource;
-		}
-		
-		JButton getButton() {
-			JButton button = new JButton(buttonLabel);
-			button.addActionListener(l -> {
-				int option = dialogInteraction.getAsInt();
+			
+			this.label = new JLabel();
+			this.button = new JButton(title);
+			
+			this.button.addActionListener(l -> {
+				int option = interaction.getAsInt();
 				if (option == JFileChooser.APPROVE_OPTION) {
 					SwingUtilities.invokeLater(() -> {
 						File file = fileSource.get();
@@ -163,6 +155,9 @@ public class DemoJavaSwingIntegration {
 					});
 				}
 			});
+		}
+
+		JButton getButton() {
 			return button;
 		}
 
