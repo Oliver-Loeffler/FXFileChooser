@@ -1,5 +1,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -15,10 +16,10 @@ class Invoke {
         Platform.runLater(r);    
     }
     
-    static void laterWithDelay(long millis, Runnable r) {
+    static void laterWithDelay(Duration duration, Runnable r) {
         Platform.runLater(()->{
             try {
-                Thread.sleep(millis);
+                Thread.sleep(duration.toMillis());
             } catch (InterruptedException e) {
             	Thread.currentThread().interrupt(); 
             }
