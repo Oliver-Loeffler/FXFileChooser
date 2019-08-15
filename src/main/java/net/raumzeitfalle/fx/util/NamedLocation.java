@@ -70,7 +70,5 @@ class NamedLocation implements Location {
 		}
 		return false;
 	}
-	
-	
 
 }

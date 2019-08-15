@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -15,13 +16,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
+import net.raumzeitfalle.fx.util.Location;
 
 final class FileChooserModel {
     
@@ -40,9 +45,12 @@ final class FileChooserModel {
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     		
     private final ObservableList<PathFilter> observablePathFilter = FXCollections.observableArrayList(new ArrayList<>(30));
+
+    private final ObservableSet<Location> locations = FXCollections.observableSet(new TreeSet<>());
     
-    private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");
+    private final SetProperty<Location> locationsProperty;
     
+    private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
 
     public static FileChooserModel startingInUsersHome(PathFilter ...filter) {
         return startingIn(getUsersHome(), filter);
@@ -60,10 +68,10 @@ final class FileChooserModel {
         this.allPaths = paths;
         this.filteredPaths = new FilteredList<>(allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
-        this.filteredPathsProperty = new SimpleListProperty<>(filteredPaths);
+        this.filteredPathsProperty = new SimpleListProperty<>(this.filteredPaths);
+        this.locationsProperty = new SimpleSetProperty<>(this.locations);
         this.fileUpdateService = serviceProvider.get();
         this.fileUpdateService.startUpdate();
-             
         this.initializeFilter("");
     }
 
@@ -93,6 +101,10 @@ final class FileChooserModel {
     
     ReadOnlyBooleanProperty invalidSelectionProperty() {
         return this.invalidSelection;
+    }
+    
+    SetProperty<Location> locationsProperty() {
+    	return this.locationsProperty;
     }
     
     public void setSelectedFile(IndexedPath file) {
