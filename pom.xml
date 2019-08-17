@@ -208,6 +208,7 @@
 						<configuration>
 							<roots>
 								<root>src/main/java</root>
+								<root>src/main/resources</root>
 								<root>src/test/java</root>
 							</roots>
 						</configuration>
