@@ -6,31 +6,36 @@
 	<artifactId>filechooser</artifactId>
 	<version>0.0.5-SNAPSHOT</version>
 	<description>A custom file chooser with live filtering JavaFX and Swing</description>
+	<inceptionYear>2017</inceptionYear>
+	<organization>
+		<name>Oliver Loeffler, Raumzeitfalle.net</name>
+		<url>http://www.raumzeitfalle.net</url>
+	</organization>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
+
 		<java.version>1.8</java.version>
-		
+
 		<junit.platform.version>1.5.1</junit.platform.version>
 		<junit.jupiter.version>5.5.1</junit.jupiter.version>
-		
+
 		<testfx.version>4.0.15-alpha</testfx.version>
 		<testfx.monocle.version>8u76-b04</testfx.monocle.version> <!-- jdk-9+181 for Java 9 -->
-		
+
 		<maven.jacoco.plugin.version>0.8.0</maven.jacoco.plugin.version>
 		<maven.source.plugin.version>3.0.1</maven.source.plugin.version>
 		<maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
 		<maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
 		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 		<maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
-		
+
 		<maven.nexus.staging.plugin.version>1.6.7</maven.nexus.staging.plugin.version>
 		<maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
 		<maven.release.plugin.version>2.5.3</maven.release.plugin.version>
 		<maven.license.plugin.version>2.0.0</maven.license.plugin.version>
-		
+
 	</properties>
 
 	<distributionManagement>
@@ -94,6 +99,12 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven.jar.plugin.version}</version>
 				<configuration>
+					<archive>
+						<manifestEntries>
+							<url>${project.url}</url>
+							<Bundle-License>http://www.apache.org/licenses/LICENSE-2.0.txt</Bundle-License>
+						</manifestEntries>
+					</archive>
 					<excludes>
 						<exclude>**/fireworks/</exclude>
 						<exclude>net/raumzeitfalle/fx/Demo*.*</exclude>
@@ -159,7 +170,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>${maven.release.plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+				<version>${maven.release.plugin.version}</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<useReleaseProfile>false</useReleaseProfile>
@@ -171,12 +182,35 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<version>${maven.license.plugin.version}</version>
+				<configuration>
+					<verbose>true</verbose>
+					<licenseName>apache_v2</licenseName>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+			     	<includes>
+						<includes>**/*.java</includes>
+						<includes>**/*.fxml</includes>
+						<includes>**/*.css</includes>
+					</includes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>download-licenses</id>
 						<goals>
 							<goal>download-licenses</goal>
 						</goals>
+					</execution>
+					<execution>
+						<id>generate-license-headers</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -223,7 +257,7 @@
 
 	<licenses>
 		<license>
-			<name>Apache License, Version 2.0</name>
+			<name>Apache License version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
