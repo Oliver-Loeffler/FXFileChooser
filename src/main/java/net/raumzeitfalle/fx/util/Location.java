@@ -30,7 +30,7 @@ public interface Location extends Comparator<Location> {
 	
 	Path getPath();
 	
-	default public int compare(Location a, Location b) {
+	default int compare(Location a, Location b) {
 		return a.getName().compareToIgnoreCase(b.getName());
 	}
 }
