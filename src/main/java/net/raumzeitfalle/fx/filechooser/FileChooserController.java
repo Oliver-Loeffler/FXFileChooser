@@ -28,6 +28,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,6 +45,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
+import net.raumzeitfalle.fx.util.Location;
 
 final class FileChooserController implements Initializable {
     
@@ -171,7 +174,18 @@ final class FileChooserController implements Initializable {
         this.model.getPathFilter()
         	      .addListener(this::handlePathFilterModelChange);
         
-        chooser.setOnAction(e -> changeDirectory());    
+        chooser.setOnAction(e -> changeDirectory());
+        
+        // FIXME: Rework and redesign the update cycle for Locations
+        model.locationsProperty().addListener(new SetChangeListener<Location>() {
+
+			@Override
+			public void onChanged(Change<? extends Location> change) {
+				updateLocationsMenu();
+			}
+        	
+        });
+        
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
  
@@ -206,6 +220,21 @@ final class FileChooserController implements Initializable {
         okButton.visibleProperty().bind(showOkayCancelButtons);
         cancelButton.visibleProperty().bind(showOkayCancelButtons);
     }
+
+	private void updateLocationsMenu() {
+		ObservableList<MenuItem> locationMenu = this.chooser.getItems();
+		
+		for (Location l : this.model.locationsProperty()) {
+			MenuItem locationItem = new MenuItem(l.getName());
+			locationItem.setOnAction(e->this.model.updateFilesIn(l.getPath()));
+			
+			// TODO: Update model, so that the model holds the menu items
+			if (!locationMenu.contains(locationItem)) {
+				this.chooser.getItems().add(locationItem);
+			}
+		}
+		
+	}
 
 	private void handleFileNameFilterChanges() {
 		this.listOfFiles.getSelectionModel().clearSelection();

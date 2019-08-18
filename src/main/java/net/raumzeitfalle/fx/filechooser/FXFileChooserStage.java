@@ -23,11 +23,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import net.raumzeitfalle.fx.util.Location;
 
 public class FXFileChooserStage extends Stage implements HideableWindow {
     
@@ -58,12 +60,19 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
         if (null == this.getOwner()) {
             this.initOwner(ownerWindow);    
         }
+        
         this.showAndWait();
         return this.getSelectedPath();
     }
     
     private Optional<Path> getSelectedPath() {
         return Optional.ofNullable(this.model.getSelectedFile());
-    }    
+    }
+
+	public void addLocations(Location ...locations ) {
+		for (Location l : locations) {
+			Platform.runLater(()->this.model.addLocation(l));	
+		}
+	}    
     
 }
