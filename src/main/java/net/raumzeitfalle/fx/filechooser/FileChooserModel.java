@@ -35,10 +35,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -67,8 +65,6 @@ final class FileChooserModel {
 
     private final ObservableSet<Location> locations = FXCollections.observableSet(new TreeSet<>());
     
-    private final SetProperty<Location> locationsProperty;
-    
     private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
 
     public static FileChooserModel startingInUsersHome(PathFilter ...filter) {
@@ -88,7 +84,6 @@ final class FileChooserModel {
         this.filteredPaths = new FilteredList<>(allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(this.filteredPaths);
-        this.locationsProperty = new SimpleSetProperty<>(this.locations);
         this.fileUpdateService = serviceProvider.get();
         this.fileUpdateService.startUpdate();
         this.initializeFilter("");
@@ -122,8 +117,8 @@ final class FileChooserModel {
         return this.invalidSelection;
     }
     
-    SetProperty<Location> locationsProperty() {
-    	return this.locationsProperty;
+    ObservableSet<Location> locationsProperty() {
+    	return this.locations;
     }
     
     public void setSelectedFile(IndexedPath file) {
