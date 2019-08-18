@@ -63,7 +63,7 @@ final class FileChooserModel {
     		
     private final ObservableList<PathFilter> observablePathFilter = FXCollections.observableArrayList(new ArrayList<>(30));
 
-    private final ObservableSet<Location> locations = FXCollections.observableSet(new TreeSet<>());
+    private final ObservableSet<Location> locations = FXCollections.observableSet(new TreeSet<>((a,b)->a.getName().compareTo(b.getName())));
     
     private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
 
@@ -243,5 +243,9 @@ final class FileChooserModel {
 		if (!wasRemoved) {
 			this.observablePathFilter.add(newFilter);
 		}
+	}
+	
+	public void addLocation(Location location) {
+		this.locations.add(location);
 	}
 }
