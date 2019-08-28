@@ -2,7 +2,7 @@ The icons used in this project are based on FontAwesome Free 5.01.
 https://fontawesome.com/
 
 FontAwesome 5.01 is licensed under Font Awesome Free License.
-https://fontawesome.com/license
+https://fontawesome.com/license/free
 
 # Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
 In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
