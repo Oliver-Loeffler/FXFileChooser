@@ -2,13 +2,16 @@
 
 [![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser)  [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser)  [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.raumzeitfalle.fx%3Afilechooser&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.raumzeitfalle.fx%3Afilechooser)
 
-
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
 As the standard JavaFX file chooser uses system dialogs, so it is hard to test and it is not easy to modifiy (e. g. new Skin). In some cases the system controls even show poor performance opening folders with many files (depends on operating system and JRE version).
 
 On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser, simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as I required a simplistic way to filter the files by name.
 
+## Licensing and attributions
+
+See `LICENSE` and `NOTICE` for details. The project is licensed using the Apache License, Version 2.0 
+and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0 license).
 
 ## How it works
 
