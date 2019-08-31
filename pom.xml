@@ -50,6 +50,16 @@
 	</distributionManagement>
 
 	<build>
+		<resources>
+	      <resource>
+	        <directory>./</directory>
+	        <includes>
+	          <include>NOTICE</include>
+	          <include>LICENSE</include>
+	        </includes>
+	      </resource>
+	    </resources>
+	
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -103,6 +113,7 @@
 						<manifestEntries>
 							<url>${project.url}</url>
 							<Bundle-License>http://www.apache.org/licenses/LICENSE-2.0.txt</Bundle-License>
+							<Bundle-Attributions>see NOTICE for attributions</Bundle-Attributions>
 						</manifestEntries>
 					</archive>
 					<excludes>
