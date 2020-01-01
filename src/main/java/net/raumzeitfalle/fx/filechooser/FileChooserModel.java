@@ -43,7 +43,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
-import net.raumzeitfalle.fx.util.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 final class FileChooserModel {
     

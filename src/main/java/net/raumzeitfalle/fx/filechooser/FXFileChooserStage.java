@@ -29,7 +29,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import net.raumzeitfalle.fx.util.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class FXFileChooserStage extends Stage implements HideableWindow {
     
