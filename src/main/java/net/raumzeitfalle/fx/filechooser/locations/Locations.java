@@ -17,20 +17,28 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx.util;
+package net.raumzeitfalle.fx.filechooser.locations;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 
-public interface Location extends Comparator<Location> {
-	
-	String getName();
-	
-	boolean exists();
-	
-	Path getPath();
-	
-	default int compare(Location a, Location b) {
-		return a.getName().compareToIgnoreCase(b.getName());
+public class Locations {
+
+	public static Location at(Path path) {
+		if (Files.isRegularFile(path) && null != path.getParent()) {
+			Path parent = path.getParent();
+			return new NamedLocation(parent);
+		}
+		return withName(path.toString(), path);
+	}
+
+	public static Location withName(String name, Path path) {
+		return new NamedLocation(name, path);
+	}
+
+	private Locations() {
+		/*
+		 * Collection of static factory methods, not intended for instantiation.
+		 */
 	}
 }
