@@ -45,7 +45,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import net.raumzeitfalle.fx.util.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 final class FileChooserController implements Initializable {
     
