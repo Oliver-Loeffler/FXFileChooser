@@ -21,29 +21,45 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class IndexedPath {
 	
 	private final Path path;
 	
 	private final FileTime timestamp;
+
+	private static final Logger LOGGER = Logger.getLogger(IndexedPath.class.getName());
 	
 	public static IndexedPath valueOf(Path path) {
-		FileTime timestamp = getTimestamp(path);
+		FileTime timestamp;
+		try {
+			timestamp = getTimestamp(path);
+		} catch (IOException e) {
+			timestamp = FileTime.from(0, TimeUnit.MICROSECONDS);
+			String message = String.format("Could not determine lastModified timestamp for %s, returning %s instead.", path, timestamp);
+			LOGGER.log(Level.SEVERE, message, e);
+		}
 		return new IndexedPath(path, timestamp);
 	}
 
-	private static FileTime getTimestamp(Path path) {
-		try {			
-			return Files.getLastModifiedTime(path);
-		} catch (IOException e) {
-			Instant fallback = LocalDateTime.MAX.atZone(ZoneId.systemDefault()).toInstant();
-			return FileTime.from(fallback);
+	private static FileTime getTimestamp(Path path) throws IOException {
+		BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+		FileTime lastModified = attributes.lastModifiedTime();
+		FileTime created = attributes.creationTime();
+		if (lastModified.compareTo(created) > 0) {
+			return lastModified;
+		} else {
+			return created;
 		}
 	}
 

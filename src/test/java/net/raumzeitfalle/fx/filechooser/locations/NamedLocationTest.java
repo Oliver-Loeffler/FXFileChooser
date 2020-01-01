@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx.util;
+package net.raumzeitfalle.fx.filechooser.locations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
