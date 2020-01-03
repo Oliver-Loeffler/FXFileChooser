@@ -52,7 +52,6 @@ public class FXFileChooserDialog extends Dialog<Path> {
     // TODO: Make CSS file externally configurable
     private FXFileChooserDialog(Skin skin,FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;
-
         Skin.applyTo(getDialogPane(),skin);
 
         setTitle("File Selection");
@@ -61,11 +60,12 @@ public class FXFileChooserDialog extends Dialog<Path> {
         initModality(Modality.APPLICATION_MODAL);
 
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->getDialogPane().getScene().getWindow());
-        Hideable hideableWindow = ()->getDialogPane().getScene().getWindow().hide();
+        Hideable hideableWindow = ()->getDialogPane().getScene().getWindow().hide(); //close()
         FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, skin,FileChooserViewOption.DIALOG);
 
         //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
         getDialogPane().setContent(view);
+
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
         getDialogPane().minHeightProperty().set(500);
@@ -95,6 +95,5 @@ public class FXFileChooserDialog extends Dialog<Path> {
         }
         return this.showAndWait();
     }
-    
-    
+
 }
