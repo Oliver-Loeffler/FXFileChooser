@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.testfx:testfx-core:4.0.15-alpha">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/testfx/testfx-core/4.0.15-alpha/testfx-core-4.0.15-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
