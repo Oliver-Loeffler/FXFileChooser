@@ -49,7 +49,7 @@ public class FXFileChooserStage extends Stage implements Hideable {
     private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
         this.model = model;
         FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->this);
-        FileChooserView view = new FileChooserView(dirChooser, this, model, skin, FileChooserViewOption.DIALOG);
+        FileChooserView view = new FileChooserView(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
         Scene scene = new Scene(view);
         this.setScene(scene);
         initModality(Modality.APPLICATION_MODAL);
