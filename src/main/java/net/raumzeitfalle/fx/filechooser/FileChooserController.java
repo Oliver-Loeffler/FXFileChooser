@@ -112,7 +112,7 @@ final class FileChooserController implements Initializable {
       
     private final FileChooserModel model;
     
-    private final HideableWindow stage;
+    private final Hideable stage;
     
     private final BooleanProperty showOkayCancelButtons;
     
@@ -122,14 +122,14 @@ final class FileChooserController implements Initializable {
     		
     		final FileChooserModel fileChooserModel, 
     		final PathSupplier pathSupplier, 
-    		final HideableWindow window,
+    		final Hideable window,
             final FileChooserViewOption fileChooserViewOption) {
     	
         return new FileChooserController(fileChooserModel, pathSupplier, window::hide, fileChooserViewOption);
     }
     
     
-    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window, FileChooserViewOption fileChooserViewOption) {
+    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final Hideable window, FileChooserViewOption fileChooserViewOption) {
        this.model = fileChooserModel;
        this.stage = window;
        this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));

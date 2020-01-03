@@ -26,7 +26,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 
 
-public interface UpdateService {
+interface UpdateService {
 	void restartIn(Path location);
 	ObjectProperty<Path> searchPathProperty();
 	

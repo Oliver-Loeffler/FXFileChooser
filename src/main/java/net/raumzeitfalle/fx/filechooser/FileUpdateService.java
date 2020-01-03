@@ -32,8 +32,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
     private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
     
     private ObservableList<IndexedPath> pathsToUpdate;
-   
-            
+
     public FileUpdateService(Path folderToStart, ObservableList<IndexedPath> paths) {
         setSearchLocation(folderToStart);        
         this.pathsToUpdate = paths;
@@ -52,27 +51,29 @@ final class FileUpdateService extends javafx.concurrent.Service<Void> implements
     protected Task<Void> createTask() {
         return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
     }
-    
+
+    @Override
     public void restartIn(Path location) {
         setSearchLocation(location);
         this.refresh();
     }
-    
+
+    @Override
     public ObjectProperty<Path> searchPathProperty() {
         return this.rootFolder;
     }
 
-	@Override
+    @Override
 	public void refresh() {
 		this.restart();
 	}
-	
-	@Override
+
+    @Override
 	public void cancelUpdate() {
 		this.cancel();
 	}
-	
-	@Override
+
+    @Override
 	public void startUpdate() {
 		this.start();
 	}

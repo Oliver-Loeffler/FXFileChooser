@@ -61,9 +61,8 @@ public class FXFileChooserDialog extends Dialog<Path> {
         initModality(Modality.APPLICATION_MODAL);
 
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->getDialogPane().getScene().getWindow());
-        HideableWindow hideableWindow = ()->getDialogPane().getScene().getWindow().hide();
-        FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, FileChooserViewOption.DIALOG);
-        Skin.applyTo(view,skin);
+        Hideable hideableWindow = ()->getDialogPane().getScene().getWindow().hide();
+        FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, skin,FileChooserViewOption.DIALOG);
 
         //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
         getDialogPane().setContent(view);

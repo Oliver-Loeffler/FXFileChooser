@@ -34,7 +34,7 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 
-public class SwingFileChooser extends JFXPanel implements HideableWindow {
+public class SwingFileChooser extends JFXPanel implements Hideable {
 
     private static final long serialVersionUID = -5879082370711306802L;
     
@@ -69,9 +69,9 @@ public class SwingFileChooser extends JFXPanel implements HideableWindow {
                 	model.addOrRemoveFilter(f);
                 }
 
-                HideableWindow hideableWindow = ()->fc.setVisible(false);
-                FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, FileChooserViewOption.STAGE);
-                Skin.applyTo(view,skin);
+                Hideable hideableWindow = ()->fc.setVisible(false);
+                FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model,skin,FileChooserViewOption.STAGE);
+
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
                 fc.setModel(model);
