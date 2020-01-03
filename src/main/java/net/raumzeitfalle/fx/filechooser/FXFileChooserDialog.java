@@ -22,6 +22,7 @@ package net.raumzeitfalle.fx.filechooser;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
@@ -59,8 +60,9 @@ public class FXFileChooserDialog extends Dialog<Path> {
         headerTextProperty().bind(model.currentSearchPath().asString());
         initModality(Modality.APPLICATION_MODAL);
 
-        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->getDialogPane().getScene().getWindow());
-        Hideable hideableWindow = ()->getDialogPane().getScene().getWindow().hide(); //close()
+        Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
+        Hideable hideableWindow = ()->ownerProvider.get().hide(); // close();
         FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, skin,FileChooserViewOption.DIALOG);
 
         //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
