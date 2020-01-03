@@ -20,7 +20,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
@@ -33,7 +32,6 @@ import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -119,33 +117,26 @@ final class FileChooserController implements Initializable {
     private final BooleanProperty showOkayCancelButtons;
     
     private final PathSupplier pathSupplier;
-        
-    public static FileChooserController withDialog(
-    	
-    		final FileChooserModel fileChooserModel, 
-    		final PathSupplier pathSupplier, 
-    		final Dialog<Path> dialogWindow) {
-    	
-        return new FileChooserController(fileChooserModel, pathSupplier, dialogWindow::close, OkayCancelButtons.HIDE);       
-    }
     
     public static FileChooserController withStage(
     		
     		final FileChooserModel fileChooserModel, 
     		final PathSupplier pathSupplier, 
-    		final HideableWindow window) {
+    		final HideableWindow window,
+            final FileChooserViewOption fileChooserViewOption) {
     	
-        return new FileChooserController(fileChooserModel, pathSupplier, window::hide, OkayCancelButtons.SHOW);       
+        return new FileChooserController(fileChooserModel, pathSupplier, window::hide, fileChooserViewOption);
     }
     
     
-    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window, OkayCancelButtons useCase) {
+    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableWindow window, FileChooserViewOption fileChooserViewOption) {
        this.model = fileChooserModel;
        this.stage = window;
-       this.showOkayCancelButtons = new SimpleBooleanProperty(OkayCancelButtons.SHOW.equals(useCase));
+       this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));
        this.pathSupplier = pathSupplier;
     }
 
+    @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
@@ -303,8 +294,5 @@ final class FileChooserController implements Initializable {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
     
-    private enum OkayCancelButtons {
-        SHOW, 
-        HIDE;
-    }
+
 }

@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import javafx.application.Platform;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -50,7 +49,8 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
     private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
         this.model = model;
         FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->this);
-        Parent view = FileChooserView.create(model,dirChooser,this, skin);
+        FileChooserView view = new FileChooserView(dirChooser, this, model, FileChooserViewOption.DIALOG);
+        Skin.applyTo(view,skin);
         Scene scene = new Scene(view);
         this.setScene(scene);
         initModality(Modality.APPLICATION_MODAL);

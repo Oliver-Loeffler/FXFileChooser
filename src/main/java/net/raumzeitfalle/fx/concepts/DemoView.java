@@ -4,9 +4,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 public class DemoView extends AnchorPane {
 
@@ -21,6 +26,7 @@ public class DemoView extends AnchorPane {
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
         FXMLLoader loader = new FXMLLoader(resource);
+        loader.setRoot(this);
 
         /*
          * TODO: #2 identify and load controller by convention
@@ -29,7 +35,44 @@ public class DemoView extends AnchorPane {
          * loader.setControllerFactory(...);
          */
 
-        loader.setRoot(this);
+        String data = "Hallo Welt!";
+
+        Map<Class, Callable<?>> creators = new HashMap<>();
+        creators.put(DemoController.class, new Callable<DemoController>() {
+
+            @Override
+            public DemoController call() throws Exception {
+                return new DemoController(data);
+            }
+
+        });
+
+        /*
+        loader.setControllerFactory(new Callback<Class<?>, Object>() {
+
+            @Override
+            public Object call(Class<?> param) {
+                System.out.println(param);
+                Callable<?> callable = creators.get(param);
+                if (callable == null) {
+                    try {
+                        // default handling: use no-arg constructor
+                        return param.newInstance();
+                    } catch (InstantiationException | IllegalAccessException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                } else {
+                    try {
+                        return callable.call();
+                    } catch (Exception ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }
+            }
+        });
+    */
+        loader.setController(new DemoController(data));
+
 
         /*
          * TODO: #3 decide if and how necessary models can be loaded by convention, if needed.
