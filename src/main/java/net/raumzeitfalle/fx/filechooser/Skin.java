@@ -28,8 +28,10 @@ public enum Skin {
     DEFAULT,
     DARK;
 
-    public static void applyTo(Parent parent, Skin skin) {
-        URL url = getCssLocation(skin);
+    public static <T extends Parent> void applyTo(T parent, Skin skin) {
+        String className = getClassName(parent);
+        String styleName = getStyleName(skin);
+        URL url = getCssLocation(className, styleName);
         if (null != url) {
             parent.getStylesheets().add(url.toExternalForm());
             parent.applyCss();
@@ -37,10 +39,17 @@ public enum Skin {
         
     }
 
-	private static URL getCssLocation(Skin skin) {
-		if (DARK.equals(skin)) {
-        	return FileChooserView.class.getResource("FileChooserViewDark.css");
-        }
-		return FileChooserView.class.getResource("FileChooserViewDefault.css");
+    private static String getStyleName(Skin skin) {
+        String name = skin.name().substring(1).toLowerCase();
+        String first = new String(new char[]{skin.name().charAt(0)});
+        return first+name;
+    }
+
+    private static <T extends Parent> String getClassName(T parent) {
+        return parent.getClass().getSimpleName();
+    }
+
+    private static URL getCssLocation(String className, String styleName) {
+		return Skin.class.getResource(className + styleName + ".css");
 	}
 }

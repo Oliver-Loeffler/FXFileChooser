@@ -59,9 +59,14 @@ public class FXFileChooserDialog extends Dialog<Path> {
         setHeaderText("Select File from for processing:");
         headerTextProperty().bind(model.currentSearchPath().asString());
         initModality(Modality.APPLICATION_MODAL);
-        
-       
-        getDialogPane().setContent(FileChooserView.create(model,this, skin));
+
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->getDialogPane().getScene().getWindow());
+        HideableWindow hideableWindow = ()->getDialogPane().getScene().getWindow().hide();
+        FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, FileChooserViewOption.DIALOG);
+        Skin.applyTo(view,skin);
+
+        //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
+        getDialogPane().setContent(view);
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
         getDialogPane().minHeightProperty().set(500);
