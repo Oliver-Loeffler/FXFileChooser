@@ -9,7 +9,7 @@ import java.net.URL;
 
 final class FileChooserView extends VBox {
 
-    public FileChooserView(PathSupplier pathSupplier, final HideableWindow window, FileChooserModel model, FileChooserViewOption fileChooserViewOption) throws IOException {
+    public FileChooserView(PathSupplier pathSupplier, final Hideable window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption) throws IOException {
 
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
@@ -20,6 +20,8 @@ final class FileChooserView extends VBox {
         FileChooserController controller = FileChooserController.withStage(model, pathSupplier, window, fileChooserViewOption);
         loader.setController(controller);
         Parent view = loader.load();
+
+        Skin.applyTo(this,skin);
 
     }
 

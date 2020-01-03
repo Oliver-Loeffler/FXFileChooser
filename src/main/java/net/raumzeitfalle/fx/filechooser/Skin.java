@@ -29,9 +29,7 @@ public enum Skin {
     DARK;
 
     public static <T extends Parent> void applyTo(T parent, Skin skin) {
-        String className = getClassName(parent);
-        String styleName = getStyleName(skin);
-        URL url = getCssLocation(className, styleName);
+        URL url = getCssLocation(parent, skin);
         if (null != url) {
             parent.getStylesheets().add(url.toExternalForm());
             parent.applyCss();
@@ -49,7 +47,11 @@ public enum Skin {
         return parent.getClass().getSimpleName();
     }
 
-    private static URL getCssLocation(String className, String styleName) {
+    private static <T extends Parent> URL getCssLocation(T parent, Skin skin) {
+
+        String className = getClassName(parent);
+        String styleName = getStyleName(skin);
+
 		return Skin.class.getResource(className + styleName + ".css");
 	}
 }

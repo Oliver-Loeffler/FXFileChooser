@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
-public class FXFileChooserStage extends Stage implements HideableWindow {
+public class FXFileChooserStage extends Stage implements Hideable {
     
     public static FXFileChooserStage create(Skin skin) throws IOException {
         return create(skin,null,new PathFilter[0]);
@@ -49,8 +49,7 @@ public class FXFileChooserStage extends Stage implements HideableWindow {
     private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
         this.model = model;
         FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->this);
-        FileChooserView view = new FileChooserView(dirChooser, this, model, FileChooserViewOption.DIALOG);
-        Skin.applyTo(view,skin);
+        FileChooserView view = new FileChooserView(dirChooser, this, model, skin, FileChooserViewOption.DIALOG);
         Scene scene = new Scene(view);
         this.setScene(scene);
         initModality(Modality.APPLICATION_MODAL);
