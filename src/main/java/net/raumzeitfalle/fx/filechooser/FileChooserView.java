@@ -20,7 +20,6 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.net.URL;
 
 final class FileChooserView extends VBox {
 
-    public FileChooserView(PathSupplier pathSupplier, final Hideable window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption) throws IOException {
+    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption) throws IOException {
 
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
@@ -36,7 +35,7 @@ final class FileChooserView extends VBox {
         FXMLLoader loader = new FXMLLoader(resource);
         loader.setRoot(this);
 
-        FileChooserController controller = FileChooserController.withStage(model, pathSupplier, window, fileChooserViewOption);
+        FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption);
         loader.setController(controller);
         loader.load();
         Skin.applyTo(this,skin);

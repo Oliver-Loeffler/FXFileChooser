@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
-public class FXFileChooserStage extends Stage implements Hideable {
+public class FXFileChooserStage extends Stage implements HideableView {
     
     public static FXFileChooserStage create(Skin skin) throws IOException {
         return create(skin,null,new PathFilter[0]);
@@ -72,6 +72,10 @@ public class FXFileChooserStage extends Stage implements Hideable {
 		for (Location l : locations) {
 			Platform.runLater(()->this.model.addLocation(l));	
 		}
-	}    
-    
+	}
+
+    @Override
+    public void closeView() {
+        this.hide();
+    }
 }

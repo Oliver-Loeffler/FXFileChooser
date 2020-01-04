@@ -112,24 +112,13 @@ final class FileChooserController implements Initializable {
       
     private final FileChooserModel model;
     
-    private final Hideable stage;
+    private final HideableView stage;
     
     private final BooleanProperty showOkayCancelButtons;
     
     private final PathSupplier pathSupplier;
     
-    public static FileChooserController withStage(
-    		
-    		final FileChooserModel fileChooserModel, 
-    		final PathSupplier pathSupplier, 
-    		final Hideable window,
-            final FileChooserViewOption fileChooserViewOption) {
-    	
-        return new FileChooserController(fileChooserModel, pathSupplier, window::hide, fileChooserViewOption);
-    }
-    
-    
-    private FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final Hideable window, FileChooserViewOption fileChooserViewOption) {
+    public FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableView window, FileChooserViewOption fileChooserViewOption) {
        this.model = fileChooserModel;
        this.stage = window;
        this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));
@@ -183,7 +172,7 @@ final class FileChooserController implements Initializable {
         assignSortAction(buttonSortAz, PathComparator.ascendingByName());
         assignSortAction(buttonSortZa, PathComparator.descendingByName());
         assignSortAction(buttonSortOldestFirst, PathComparator.ascendingLastModified());
-        assignSortAction(buttonSortRecentFirst, PathComparator.descendingByName());
+        assignSortAction(buttonSortRecentFirst, PathComparator.descendingLastModified());
                 
         buttonSortRecentFirst.setVisible(true);
         buttonSortOldestFirst.setVisible(true);
@@ -241,12 +230,12 @@ final class FileChooserController implements Initializable {
 	}
     
     private void okayAction() {
-    	this.stage.hide();
+    	this.stage.closeView();
     }
     
     private void cancelAction() {
     	this.model.setSelectedFile(null);
-        this.stage.hide();
+        this.stage.closeView();
     }
     
     private void changeDirectory() {
