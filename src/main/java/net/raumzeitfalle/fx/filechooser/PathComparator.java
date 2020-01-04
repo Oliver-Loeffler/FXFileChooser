@@ -26,38 +26,13 @@ import java.util.Comparator;
  * Provides various {@link Comparator} variants to compare {@link Path} objects.
  */
 class PathComparator {
-	
-	enum Option {
-		ASCENDING,
-		DESCENDING;
-	}
-	
-	static Comparator<IndexedPath> ascendingByName() {
-		return lexical(Option.ASCENDING);
-	}
 
-	static Comparator<IndexedPath> descendingByName() {
-		return lexical(Option.DESCENDING);
-	}
-
-	private static int getOrder(Option option) {
-		return option.equals(Option.ASCENDING) ? 1 : -1;
-	}
-
-	static Comparator<IndexedPath> lexical(Option option) {
-		return (IndexedPath a, IndexedPath b)-> getOrder(option) * a.asPath().compareTo(b.asPath());
-	}
-
-	static Comparator<IndexedPath> descendingLastModified() {
-		return byLastModified(Option.DESCENDING);
+	static Comparator<IndexedPath> byName() {
+		return (IndexedPath a, IndexedPath b)-> a.asPath().compareTo(b.asPath());
 	}
 	
-	static Comparator<IndexedPath> ascendingLastModified() {
-		return byLastModified(Option.ASCENDING);
-	}
-	
-	static Comparator<IndexedPath> byLastModified(Option option) {
-		return (IndexedPath a, IndexedPath b)-> getOrder(option) * a.getTimestamp().compareTo(b.getTimestamp());
+	static Comparator<IndexedPath> byLastModified() {
+		return (IndexedPath a, IndexedPath b)-> a.getTimestamp().compareTo(b.getTimestamp());
 	}
 					
 	private PathComparator() {
