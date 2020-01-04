@@ -39,12 +39,15 @@ class PathComparator {
 	static Comparator<IndexedPath> descendingByName() {
 		return lexical(Option.DESCENDING);
 	}
-	
-	static Comparator<IndexedPath> lexical(Option option) {
-		int order = option.equals(Option.ASCENDING) ? 1 : -1;
-		return (IndexedPath a, IndexedPath b)-> order * a.asPath().compareTo(b.asPath());
+
+	private static int getOrder(Option option) {
+		return option.equals(Option.ASCENDING) ? 1 : -1;
 	}
-	
+
+	static Comparator<IndexedPath> lexical(Option option) {
+		return (IndexedPath a, IndexedPath b)-> getOrder(option) * a.asPath().compareTo(b.asPath());
+	}
+
 	static Comparator<IndexedPath> descendingLastModified() {
 		return byLastModified(Option.DESCENDING);
 	}
@@ -54,8 +57,7 @@ class PathComparator {
 	}
 	
 	static Comparator<IndexedPath> byLastModified(Option option) {
-		int order = option.equals(Option.ASCENDING) ? 1 : -1;
-		return (IndexedPath a, IndexedPath b)-> order * a.getTimestamp().compareTo(b.getTimestamp());
+		return (IndexedPath a, IndexedPath b)-> getOrder(option) * a.getTimestamp().compareTo(b.getTimestamp());
 	}
 					
 	private PathComparator() {
