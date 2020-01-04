@@ -19,13 +19,14 @@
  */
 package net.raumzeitfalle.fx.filechooser.locations;
 
-import java.nio.file.Files;
+import java.io.File;
 import java.nio.file.Path;
 
 public class Locations {
 
 	public static Location at(Path path) {
-		if (Files.isRegularFile(path) && null != path.getParent()) {
+		File file = path.toFile();
+		if (file.isFile() && null != path.getParent()) {
 			Path parent = path.getParent();
 			return new NamedLocation(parent);
 		}

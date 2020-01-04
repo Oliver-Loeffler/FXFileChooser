@@ -19,7 +19,6 @@
  */
 package net.raumzeitfalle.fx.filechooser.locations;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -49,7 +48,7 @@ class NamedLocation implements Location {
 
 	@Override
 	public boolean exists() {
-		return Files.exists(this.directory);
+		return this.directory.toFile().exists();
 	}
 
 	@Override
