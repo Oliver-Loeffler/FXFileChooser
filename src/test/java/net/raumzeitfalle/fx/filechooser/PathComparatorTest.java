@@ -45,7 +45,7 @@ public class PathComparatorTest {
 	@Test
 	void byName_ascending() {
 		
-		comparatorUnderTest = PathComparator.ascendingByName();
+		comparatorUnderTest = PathComparator.byName();
 	
 		List<Path> sorted = sortUsing(comparatorUnderTest, a,b,c);
 		
@@ -58,7 +58,7 @@ public class PathComparatorTest {
 	@Test
 	void byName_descending() {
 		
-		comparatorUnderTest = PathComparator.descendingByName();
+		comparatorUnderTest = PathComparator.byName().reversed();
 	
 		List<Path> sorted = sortUsing(comparatorUnderTest, a,b,c);
 		
@@ -73,12 +73,12 @@ public class PathComparatorTest {
 	void byLastModified_ascending() throws IOException {
 		
 		
-		comparatorUnderTest = PathComparator.ascendingLastModified();
+		comparatorUnderTest = PathComparator.byLastModified();
 		
 		Path fileA = Paths.get("./TestData/A-oldest.txt");		
 		Path fileB = Paths.get("./TestData/B-latest.txt");
 		
-		List<Path> paths = sortUsing(PathComparator.ascendingLastModified(),fileA,fileB);
+		List<Path> paths = sortUsing(comparatorUnderTest,fileA,fileB);
 		
 		assertEquals(fileA, paths.get(0));
 		assertEquals(fileB, paths.get(1));
