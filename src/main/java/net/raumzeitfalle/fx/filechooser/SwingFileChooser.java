@@ -90,7 +90,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         return startHere;
     }
     
-    private FileChooserModel model;
+    private transient FileChooserModel model;
     
     private JDialog dialog;   
     
