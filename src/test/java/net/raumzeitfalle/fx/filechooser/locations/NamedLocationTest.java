@@ -138,6 +138,7 @@ class NamedLocationTest {
 		};
 		
 		assertEquals(a,f);
+		assertEquals(a.hashCode(), f.hashCode());
 	}
 	
 	@Test

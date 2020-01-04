@@ -20,12 +20,18 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.collections.SetChangeListener;
@@ -44,6 +50,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 final class FileChooserController implements Initializable {
     
@@ -129,20 +136,21 @@ final class FileChooserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
-    	this.listOfFiles.setItems(this.model.getFilteredPaths()); 
-        
-        fileNameFilter.textProperty().addListener( l -> handleFileNameFilterChanges());
-        
-        listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
+    	this.listOfFiles.setItems(this.model.getFilteredPaths());
 
-        listOfFiles.setCellFactory(c -> new FilesListCell());
-        listOfFiles.getSelectionModel()
+        this.fileNameFilter.textProperty().addListener( l -> handleFileNameFilterChanges());
+
+        this.listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
+
+        this.listOfFiles.setCellFactory(e->new FilesListCell());
+        this.listOfFiles.getSelectionModel()
         	.selectedItemProperty()
         	.addListener(l -> model.setSelectedFile(selectedItem()));
-        
-        selectedFile.textProperty().bind(model.selectedFileProperty());
-        usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
-        showAllFilesFilter.setVisible(false);
+
+        this.selectedFile.textProperty().bind(model.selectedFileNameProperty());
+        this.usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
+
+        this.showAllFilesFilter.setVisible(false);
         
         this.model.initializeFilter(fileNameFilter.getText());
         
@@ -153,18 +161,19 @@ final class FileChooserController implements Initializable {
         // permit to dynamically add or remove PathFilter menu items
         this.model.getPathFilter()
         	      .addListener(this::handlePathFilterModelChange);
-        
-        chooser.setOnAction(e -> changeDirectory());
-        
-        // FIXME: Rework and redesign the update cycle for Locations
-        model.locationsProperty().addListener(new SetChangeListener<Location>() {
 
-			@Override
-			public void onChanged(Change<? extends Location> change) {
-				updateLocationsMenu();
-			}
-        	
-        });
+        this.chooser.setOnAction(e -> changeDirectory());
+
+        List<Location> locations = new ArrayList<>();
+        locations.add(Locations.withName("Configs: /etc",Paths.get("/etc")));
+        locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
+        locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
+
+        LocationMenuItemFactory menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
+        for (Location l : locations) {
+            MenuItem item = menuItemFactory.apply(l);
+            this.chooser.getItems().add(item);
+        }
         
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
@@ -201,22 +210,7 @@ final class FileChooserController implements Initializable {
         cancelButton.visibleProperty().bind(showOkayCancelButtons);
     }
 
-	private void updateLocationsMenu() {
-		ObservableList<MenuItem> locationMenu = this.chooser.getItems();
-		
-		for (Location l : this.model.locationsProperty()) {
-			MenuItem locationItem = new MenuItem(l.getName());
-			locationItem.setOnAction(e->this.model.updateFilesIn(l.getPath()));
-			
-			// TODO: Update model, so that the model holds the menu items
-			if (!locationMenu.contains(locationItem)) {
-				this.chooser.getItems().add(locationItem);
-			}
-		}
-		
-	}
-
-	private void handleFileNameFilterChanges() {
+    private void handleFileNameFilterChanges() {
 		this.listOfFiles.getSelectionModel().clearSelection();
 		this.model.updateFilterCriterion(fileNameFilter.getText());
 	}

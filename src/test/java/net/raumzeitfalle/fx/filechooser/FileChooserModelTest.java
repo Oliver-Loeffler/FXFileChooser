@@ -122,46 +122,50 @@ public class FileChooserModelTest {
 
 	private FileChooserModel createTestModel(Path testRoot, List<IndexedPath> paths) {
 		ObservableList<IndexedPath> observableList = FXCollections.observableArrayList(paths);
-		
-		UpdateService service = new UpdateService() {
-			
-			private Path location = testRoot;
-			
-			@Override
-			public void startUpdate() { /* nothing to do here */ }
-			
-			@Override
-			public ObjectProperty<Path> searchPathProperty() { return new SimpleObjectProperty<Path>(testRoot); }
-			
-			@Override
-			public ReadOnlyBooleanProperty runningProperty() { return new SimpleBooleanProperty(false); }
-			
-			@Override
-			public void restartIn(Path location) { this.location = location; this.refresh(); }
-			
-			@Override
-			public void refresh() { observableList.clear(); try {
-					
-					Files.list(location)
-						.filter(Files::isRegularFile)
-						.map(IndexedPath::valueOf)
-						.forEach(observableList::add);
-					
-				} catch (IOException e) { throw new RuntimeException(e); 
-					/* its good to see the error but there is no need to handle it here */ 
-				} 
-			}
-			
-			@Override
-			public ReadOnlyDoubleProperty progressProperty() { return new SimpleDoubleProperty(0.0); } 
-			
-			@Override
-			public void cancelUpdate() { /* nothing to do here */ }
-		};
-		
+
+		UpdateService service = getUpdateService(testRoot, observableList);
+
 		Supplier<UpdateService> serviceProvider = ()->service;
 		
 		return new FileChooserModel(observableList, serviceProvider);
+	}
+
+	private UpdateService getUpdateService(Path testRoot, ObservableList<IndexedPath> observableList) {
+		return new UpdateService() {
+
+				private Path location = testRoot;
+
+				@Override
+				public void startUpdate() { /* nothing to do here */ }
+
+				@Override
+				public ObjectProperty<Path> searchPathProperty() { return new SimpleObjectProperty<Path>(testRoot); }
+
+				@Override
+				public ReadOnlyBooleanProperty runningProperty() { return new SimpleBooleanProperty(false); }
+
+				@Override
+				public void restartIn(Path location) { this.location = location; this.refresh(); }
+
+				@Override
+				public void refresh() { observableList.clear(); try {
+
+						Files.list(location)
+							.filter(Files::isRegularFile)
+							.map(IndexedPath::valueOf)
+							.forEach(observableList::add);
+
+					} catch (IOException e) { throw new RuntimeException(e);
+						/* its good to see the error but there is no need to handle it here */
+					}
+				}
+
+				@Override
+				public ReadOnlyDoubleProperty progressProperty() { return new SimpleDoubleProperty(0.0); }
+
+				@Override
+				public void cancelUpdate() { /* nothing to do here */ }
+			};
 	}
 
 }
