@@ -68,12 +68,6 @@ public class FXFileChooserStage extends Stage implements HideableView {
         return Optional.ofNullable(this.model.getSelectedFile());
     }
 
-	public void addLocations(Location ...locations ) {
-		for (Location l : locations) {
-			Platform.runLater(()->this.model.addLocation(l));	
-		}
-	}
-
     @Override
     public void closeView() {
         this.hide();

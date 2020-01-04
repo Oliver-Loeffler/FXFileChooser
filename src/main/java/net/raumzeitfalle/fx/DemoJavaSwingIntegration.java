@@ -82,7 +82,9 @@ public class DemoJavaSwingIntegration {
 		// JavaFX stage placed inside a JDialog - default skin
 
 		PathFilter[] filter = collectPathFilter().toArray(new PathFilter[0]);
-		SwingFileChooser fc = SwingFileChooser.create(Skin.DEFAULT, "Choose any file:", "TestData\\SomeFiles", filter);
+		SwingFileChooser fc = SwingFileChooser
+				.create(Skin.DEFAULT, "Choose any file:", "TestData/SomeFiles", filter);
+
 		String title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>" + SwingFileChooser.class.getName()
 				+ "<br>" + "<font color=#0000FF>(Default Skin)</font>" + "</center></html>";
 
@@ -95,7 +97,7 @@ public class DemoJavaSwingIntegration {
 		// JavaFX stage placed inside a JDialog - dark skin
 		title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>" + SwingFileChooser.class.getName() + "<br>"
 				+ "<font color=#0000FF>(Dark Skin)</font>" + "</center></html>";
-		SwingFileChooser darkFc = SwingFileChooser.create(Skin.DARK, "Choose any file:", "TestData\\SomeFiles", filter);
+		SwingFileChooser darkFc = SwingFileChooser.create(Skin.DARK, "Choose any file:", "TestData/SomeFiles", filter);
 
 		Example stageInsideSwingDialogDark = new Example(title, 
 				() -> darkFc.showOpenDialog(frame),

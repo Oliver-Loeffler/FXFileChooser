@@ -25,23 +25,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
@@ -57,14 +50,14 @@ final class FileChooserModel {
         
     private final ListProperty<IndexedPath> filteredPathsProperty;
     
-    private final StringProperty fileSelection = new SimpleStringProperty();
-    
+    private final ObjectProperty<Path> fileSelection = new SimpleObjectProperty<>();
+
+    private final StringProperty selectedFileName = new SimpleStringProperty("");
+
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     		
     private final ObservableList<PathFilter> observablePathFilter = FXCollections.observableArrayList(new ArrayList<>(30));
 
-    private final ObservableSet<Location> locations = FXCollections.observableSet(new TreeSet<>((a,b)->a.getName().compareTo(b.getName())));
-    
     private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
 
     public static FileChooserModel startingInUsersHome(PathFilter ...filter) {
@@ -86,7 +79,16 @@ final class FileChooserModel {
         this.filteredPathsProperty = new SimpleListProperty<>(this.filteredPaths);
         this.fileUpdateService = serviceProvider.get();
         this.fileUpdateService.startUpdate();
+        this.selectedFileName.bind(createStringBindingTo(fileSelection));
         this.initializeFilter("");
+
+    }
+
+    private StringBinding createStringBindingTo(ObservableValue<?> observable) {
+        Callable<String> callable =
+                ()->(null != observable.getValue()) ? String.valueOf(observable.getValue()) : "";
+
+        return Bindings.createStringBinding(callable, observable);
     }
 
     private static Path getUsersHome() {
@@ -116,32 +118,26 @@ final class FileChooserModel {
     ReadOnlyBooleanProperty invalidSelectionProperty() {
         return this.invalidSelection;
     }
-    
-    ObservableSet<Location> locationsProperty() {
-    	return this.locations;
-    }
-    
+
     public void setSelectedFile(IndexedPath file) {
         if (null == file) {
-            this.fileSelection.setValue("");
+            this.fileSelection.setValue(null);
         } else {
-            this.fileSelection.setValue(file.asPath().toAbsolutePath().normalize().toString());
+            this.fileSelection.setValue(file.asPath().toAbsolutePath().normalize());
         }       
         this.invalidSelection.setValue(null == file);
     }
     
     public Path getSelectedFile() {
-        String selection = this.fileSelection.getValue();
-        if (null != selection) {
-            File selected = new File(selection);
-            return selected.toPath();
-        } else {
-            return null;
-        }
+        return this.fileSelection.getValue();
     }
     
-    public ReadOnlyStringProperty selectedFileProperty() {
+    public ReadOnlyObjectProperty<Path> selectedFileProperty() {
         return this.fileSelection;
+    }
+
+    public ReadOnlyStringProperty selectedFileNameProperty() {
+        return this.selectedFileName;
     }
     
     /**
@@ -213,7 +209,13 @@ final class FileChooserModel {
             updateFilesIn(directory.toPath());    
         }
     }
-    
+
+    public void updateFilesIn(Location location) {
+        if (null != location) {
+            updateFilesIn(location.getPath());
+        }
+    }
+
 	public void updateFilesIn(Path directory) {
 		if (directory.toFile().isDirectory()) {
 			this.fileUpdateService.restartIn(directory);
@@ -243,9 +245,5 @@ final class FileChooserModel {
 		if (!wasRemoved) {
 			this.observablePathFilter.add(newFilter);
 		}
-	}
-	
-	public void addLocation(Location location) {
-		this.locations.add(location);
 	}
 }

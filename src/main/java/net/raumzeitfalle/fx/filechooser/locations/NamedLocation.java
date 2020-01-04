@@ -20,9 +20,8 @@
 package net.raumzeitfalle.fx.filechooser.locations;
 
 import java.nio.file.Path;
-import java.util.Objects;
 
-class NamedLocation implements Location {
+class NamedLocation extends Location {
 	
 	private final String name;
 	
@@ -54,39 +53,6 @@ class NamedLocation implements Location {
 	@Override
 	public Path getPath() {
 		return this.directory;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(directory, name);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		
-		if (null == obj) {
-			return false;
-		}
-		
-		if (this == obj)
-			return true;
-		
-		if (!implementsLocationInterface(obj))
-			return false;
-		
-		Location other = (Location) obj;
-		
-		return     Objects.equals(directory, other.getPath()) 
-				&& Objects.equals(name, other.getName());
-	}
-
-	private boolean implementsLocationInterface(Object obj) {
-		Class<?>[] interfaces = obj.getClass().getInterfaces();
-		for (Class<?> i : interfaces) {
-			if (i.equals(Location.class))
-				return true;
-		}
-		return false;
 	}
 
 }
