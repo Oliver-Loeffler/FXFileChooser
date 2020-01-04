@@ -169,10 +169,10 @@ final class FileChooserController implements Initializable {
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
  
-        assignSortAction(buttonSortAz, PathComparator.ascendingByName());
-        assignSortAction(buttonSortZa, PathComparator.descendingByName());
-        assignSortAction(buttonSortOldestFirst, PathComparator.ascendingLastModified());
-        assignSortAction(buttonSortRecentFirst, PathComparator.descendingLastModified());
+        assignSortAction(buttonSortAz, PathComparator.byName());
+        assignSortAction(buttonSortZa, PathComparator.byName().reversed());
+        assignSortAction(buttonSortOldestFirst, PathComparator.byLastModified());
+        assignSortAction(buttonSortRecentFirst, PathComparator.byLastModified().reversed());
                 
         buttonSortRecentFirst.setVisible(true);
         buttonSortOldestFirst.setVisible(true);
