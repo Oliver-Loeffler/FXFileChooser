@@ -26,6 +26,6 @@ package net.raumzeitfalle.fx.filechooser;
  * Lambda can be created which ensures, that if requested, the window is closed properly.
  */
 @FunctionalInterface
-interface Hideable {
-    void hide();
+interface HideableView {
+    void closeView();
 }

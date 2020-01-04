@@ -31,7 +31,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
-public class FXFileChooserDialog extends Dialog<Path> {
+public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     
     public static FXFileChooserDialog create(Skin skin, PathFilter ...filter) throws IOException {
     	
@@ -62,8 +62,7 @@ public class FXFileChooserDialog extends Dialog<Path> {
 
         Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
-        Hideable hideableWindow = ()->ownerProvider.get().hide(); // close();
-        FileChooserView view = new FileChooserView(pathSupplier,hideableWindow,model, skin,FileChooserViewOption.DIALOG);
+        FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG);
 
         //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
         getDialogPane().setContent(view);
@@ -98,4 +97,8 @@ public class FXFileChooserDialog extends Dialog<Path> {
         return this.showAndWait();
     }
 
+    @Override
+    public void closeView() {
+        this.getDialogPane().getScene().getWindow().hide();
+    }
 }
