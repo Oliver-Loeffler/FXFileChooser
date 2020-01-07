@@ -31,7 +31,6 @@ import javax.swing.*;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class SwingFileChooser extends JFXPanel implements HideableView {
 

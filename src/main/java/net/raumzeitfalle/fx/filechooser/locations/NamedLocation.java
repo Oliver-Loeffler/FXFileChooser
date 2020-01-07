@@ -54,5 +54,15 @@ class NamedLocation extends Location {
 	public Path getPath() {
 		return this.directory;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return super.equals(other);
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 
 }
