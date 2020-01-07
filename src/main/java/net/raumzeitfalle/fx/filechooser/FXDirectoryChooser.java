@@ -66,6 +66,7 @@ public class FXDirectoryChooser implements PathSupplier {
     public void getUpdate(Consumer<Path> update) {
     		Window owner = ownerProvider.get();
 	    	Invoke.later(()->{
+
 	    		Optional<File> selection = Optional.ofNullable(dc.showDialog(owner));
 	            selection
 	            	.map(File::toPath)

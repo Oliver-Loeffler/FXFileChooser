@@ -70,5 +70,5 @@ public class StandardDirectoryChooser {
 	public File getSelectedFile() {
 		return this.adapter.getResult();
 	}
-	
+
 }

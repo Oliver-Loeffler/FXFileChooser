@@ -19,16 +19,14 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -61,23 +59,24 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser(title);
-        PathSupplier pathSupplier = SwingDirectoryChooser.createIn(startHere, fc);
-                
+
+
+        PathSupplier pathSupplier = FXDirectoryChooser.createIn(startHere, ()->fc.getScene().getWindow());
+        fc.model = FileChooserModel.startingIn(startHere);
+        for (PathFilter f : filter) {
+            fc.model.addOrRemoveFilter(f);
+        }
+
+        // do all JavaFX work
         Platform.runLater(()->{
             try {
-                FileChooserModel model = FileChooserModel.startingIn(startHere);
-                for (PathFilter f : filter) {
-                	model.addOrRemoveFilter(f);
-                }
-
-                FileChooserView view = new FileChooserView(pathSupplier,fc,model,skin,FileChooserViewOption.STAGE);
-
+                FileChooserView view = new FileChooserView(pathSupplier,fc,fc.model,skin,FileChooserViewOption.STAGE);
                 Scene scene = new Scene(view);
                 fc.setScene(scene);
-                fc.setModel(model);
             } catch (IOException e) {
                throw new RuntimeException(e);
-            }    
+            } ;
+
         });
         
         return fc;
@@ -137,5 +136,9 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
     @Override
     public void closeView() {
         this.dialog.setVisible(false);
+    }
+
+    public void addLocations(List<Location> locations) {
+        locations.forEach(model::addLocation);
     }
 }
