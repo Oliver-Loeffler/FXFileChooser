@@ -21,6 +21,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -30,6 +31,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     
@@ -100,5 +102,9 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     @Override
     public void closeView() {
         this.getDialogPane().getScene().getWindow().hide();
+    }
+
+    public void addLocations(List<Location> locations) {
+        locations.forEach(model::addLocation);
     }
 }

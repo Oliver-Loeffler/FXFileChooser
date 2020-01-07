@@ -20,20 +20,11 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener.Change;
-import javafx.collections.ObservableList;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,7 +41,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
-import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 final class FileChooserController implements Initializable {
     
@@ -164,17 +154,19 @@ final class FileChooserController implements Initializable {
 
         this.chooser.setOnAction(e -> changeDirectory());
 
-        List<Location> locations = new ArrayList<>();
-        locations.add(Locations.withName("Configs: /etc",Paths.get("/etc")));
-        locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
-        locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
-
         LocationMenuItemFactory menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
-        for (Location l : locations) {
-            MenuItem item = menuItemFactory.apply(l);
-            this.chooser.getItems().add(item);
-        }
-        
+        this.model.getLocations().forEach(l->chooser.getItems().add(menuItemFactory.apply(l)));
+        SetChangeListener<Location> listener = new SetChangeListener<Location>() {
+            @Override
+            public void onChanged(Change<? extends Location> change) {
+                if (change.wasAdded()) {
+                    Location added = change.getElementAdded();
+                    chooser.getItems().add(menuItemFactory.apply(added));
+                }
+            }
+        };
+        this.model.getLocations().addListener(listener);
+
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
  

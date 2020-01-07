@@ -20,6 +20,9 @@
 package net.raumzeitfalle.fx;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +35,8 @@ import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 public class DemoJavaFxDialog extends Application {
 
@@ -48,7 +53,13 @@ public class DemoJavaFxDialog extends Application {
         PathFilter xlsx = PathFilter.forFileExtension("Excel 2007+", "xlsx").combine(xls);
         
 		FXFileChooserDialog darkfc = FXFileChooserDialog.create(Skin.DARK,all,exe,xml,txt,xlsx);
-		
+
+		List<Location> locations = new ArrayList<>();
+		locations.add(Locations.withName("Configs: /etc", Paths.get("/etc")));
+		locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
+		locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
+
+		darkfc.addLocations(locations);
 
 		Logger logger = Logger.getLogger(DemoJavaFxDialog.class.getSimpleName());
 		

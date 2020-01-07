@@ -21,9 +21,9 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -71,5 +71,9 @@ public class FXFileChooserStage extends Stage implements HideableView {
     @Override
     public void closeView() {
         this.hide();
+    }
+
+    public void addLocations(List<Location> locations) {
+        locations.forEach(model::addLocation);
     }
 }

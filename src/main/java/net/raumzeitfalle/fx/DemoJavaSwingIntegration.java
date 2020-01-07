@@ -21,6 +21,8 @@ package net.raumzeitfalle.fx;
 
 import java.awt.GridLayout;
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntSupplier;
@@ -40,6 +42,8 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 import net.raumzeitfalle.fx.filechooser.StandardDirectoryChooser;
 import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 public class DemoJavaSwingIntegration {
 
@@ -85,8 +89,15 @@ public class DemoJavaSwingIntegration {
 		SwingFileChooser fc = SwingFileChooser
 				.create(Skin.DEFAULT, "Choose any file:", "TestData/SomeFiles", filter);
 
-		String title = "<html><center><h3>JavaFX Stage inside Swing JDialog</h3>" + SwingFileChooser.class.getName()
+		String title = "<html><center><h3>JavaFX Stage inside Swing JDialog (with Locations)</h3>" + SwingFileChooser.class.getName()
 				+ "<br>" + "<font color=#0000FF>(Default Skin)</font>" + "</center></html>";
+
+		List<Location> locations = new ArrayList<>();
+		locations.add(Locations.withName("Configs: /etc", Paths.get("/etc")));
+		locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
+		locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
+
+		fc.addLocations(locations);
 
 		Example stageInsideSwingDialog = new Example(title, 
 				() -> fc.showOpenDialog(frame), 

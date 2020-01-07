@@ -21,6 +21,8 @@ package net.raumzeitfalle.fx;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +36,8 @@ import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
+import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 public class DemoJavaFxStage extends Application {
 
@@ -56,6 +60,13 @@ public class DemoJavaFxStage extends Application {
         Path local = Paths.get("./");
         FXFileChooserStage fc = FXFileChooserStage
                 .create(Skin.DARK, local,all,xml, xlsx, na0, txt, exe,combined);
+
+        List<Location> locations = new ArrayList<>();
+        locations.add(Locations.withName("Configs: /etc", Paths.get("/etc")));
+        locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
+        locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
+
+        fc.addLocations(locations);
         
         Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
         button.setOnAction(e -> {

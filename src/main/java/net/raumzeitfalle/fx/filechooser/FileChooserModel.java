@@ -22,9 +22,7 @@ package net.raumzeitfalle.fx.filechooser;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -35,6 +33,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
@@ -57,6 +56,8 @@ final class FileChooserModel {
     private final BooleanProperty invalidSelection = new SimpleBooleanProperty(true);
     		
     private final ObservableList<PathFilter> observablePathFilter = FXCollections.observableArrayList(new ArrayList<>(30));
+
+    private final ObservableSet<Location> locations = FXCollections.observableSet(new LinkedHashSet<>());
 
     private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
 
@@ -235,7 +236,15 @@ final class FileChooserModel {
     public ObservableList<PathFilter> getPathFilter() {
     	return this.observablePathFilter;
     }
-	
+
+    public void addLocation(Location location) {
+        this.locations.add(location);
+    }
+
+    public ObservableSet<Location> getLocations() {
+        return this.locations;
+    }
+
 	public void sort(Comparator<IndexedPath> comparator) {
 	    this.allPaths.sort(comparator);
 	}
