@@ -55,7 +55,7 @@ class NamedLocationTest {
 		Location atRoot = Locations.at(Paths.get("/"));
 	
 		assertTrue(atRoot instanceof NamedLocation);
-		assertEquals("\\", atRoot.getName());
+		assertEquals(Paths.get("\\"), Paths.get(atRoot.getName()));
 		assertEquals(Paths.get("/"), atRoot.getPath());
 	}
 	
@@ -65,7 +65,7 @@ class NamedLocationTest {
 		Location atRoot = Locations.at(Paths.get("/directory/"));
 	
 		assertTrue(atRoot instanceof NamedLocation);
-		assertEquals("\\directory", atRoot.getName());
+		assertEquals(Paths.get("\\directory"), Paths.get(atRoot.getName()));
 		assertEquals(Paths.get("\\directory"), atRoot.getPath());
 	}
 	
