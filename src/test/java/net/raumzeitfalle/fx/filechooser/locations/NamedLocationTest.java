@@ -48,25 +48,15 @@ class NamedLocationTest {
 		assertEquals("path", path.getName());
 		assertEquals(Paths.get("path"), path.getPath());
 	}
-	
-	@Test
-	void creation_at_root() {
-		
-		Location atRoot = Locations.at(Paths.get("/"));
-	
-		assertTrue(atRoot instanceof NamedLocation);
-		assertEquals(Paths.get("\\"), Paths.get(atRoot.getName()));
-		assertEquals(Paths.get("/"), atRoot.getPath());
-	}
-	
+
 	@Test
 	void creation_at_directory() {
 		
-		Location atRoot = Locations.at(Paths.get("/directory/"));
+		Location atRoot = Locations.at(Paths.get("/directory/other"));
 	
 		assertTrue(atRoot instanceof NamedLocation);
-		assertEquals(Paths.get("\\directory"), Paths.get(atRoot.getName()));
-		assertEquals(Paths.get("\\directory"), atRoot.getPath());
+		assertEquals(Paths.get("/directory/other"), Paths.get(atRoot.getName()));
+		assertEquals(Paths.get("/directory/other"), atRoot.getPath());
 	}
 	
 	@Test
