@@ -13,6 +13,24 @@ On Microsoft Windows platforms running with Java 8, I've encountered cases where
 See `LICENSE` and `NOTICE` for details. The project is licensed using the Apache License, Version 2.0 
 and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0 license).
 
+## Adding FXFileChooser to your Maven or Gradle project
+
+### Dependency for Maven `POM.xml`
+
+```xml
+<dependency>
+  <groupId>net.raumzeitfalle.fx</groupId>
+  <artifactId>filechooser</artifactId>
+  <version>0.0.5</version>
+</dependency>
+```
+### Dependency for Gradle `build.gradle`
+
+```Groovy
+implementation 'net.raumzeitfalle.fx:filechooser:0.0.5'
+```
+
+
 ## How it works
 
 FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. 
