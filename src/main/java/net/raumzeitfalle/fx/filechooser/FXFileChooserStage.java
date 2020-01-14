@@ -21,6 +21,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ import net.raumzeitfalle.fx.filechooser.locations.Location;
 public class FXFileChooserStage extends Stage implements HideableView {
     
     public static FXFileChooserStage create(Skin skin) throws IOException {
-        return create(skin,null,new PathFilter[0]);
+        return create(skin, Paths.get("."),new PathFilter[0]);
     }
     
     public static FXFileChooserStage create(Skin skin,PathFilter ...filter) throws IOException {

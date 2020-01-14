@@ -59,16 +59,27 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## Using the FileChooser with Swing
 
 ```java
-    JButton showDialog = new JButton("Show Dialog");
-    SwingFileChooser fileChooser = SwingFileChooser.create(200_000);
-    showDialog.addActionListener(l -> {
-        int option = fileChooser.showOpenDialog(frame);
-        
-        System.out.println(option);
-        if (option == SwingFileChooser.APPROVE_OPTION) {
-            System.out.println(fileChooser.getSelectedFile().toString());
-        } 
-    });
+public class Demos {
+    public static void main(String ... args) {
+
+        JFrame frame = new JFrame("Window");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JButton showDialogButton = new JButton("show SwingFileChooser");
+        frame.getContentPane().add(showDialogButton);
+
+        SwingFileChooser fileChooser = SwingFileChooser.create(Skin.DARK);
+
+        showDialogButton.addActionListener(l -> {
+            int option = fileChooser.showOpenDialog(frame);
+            if (option == SwingFileChooser.APPROVE_OPTION) {
+                JOptionPane.showMessageDialog(frame, fileChooser.getSelectedFile().toString());
+            }
+        });
+
+        frame.pack();
+        frame.setVisible(true);
+    }
+}
 ```
 
 ![Swing version with Filter](pages/OSX_Swing_JFXPanel.png)
@@ -77,18 +88,30 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## Using the JavaFX Dialog version
 
 ```java
-	FXFileChooserDialog fc = FXFileChooserDialog.create();
-    
-    Button showDialog = new Button("Show Dialog");
-    showDialog.setOnAction(a -> {
-        try {
-            Optional<Path> path = fc.showOpenDialog(primaryStage);
-            System.out.println(path.map(String::valueOf).orElse("Nothing selected"));
-            
-        } catch (IOException e) {
-            // don't mind 
-        }
-    });
+public class FxDialogDemo extends Application  {
+    public static void main(String[] args) {
+        Application.launch();
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Button button = new Button("Show File Chooser Dialog");
+        FXFileChooserDialog dialog = FXFileChooserDialog.create(Skin.DARK);
+        button.setOnAction(evt-> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+
+        Scene scene = new Scene(button);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Demo");
+        primaryStage.show();
+    }
+
+    private void showSelection(Path selectedPath) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("File Selection");
+        alert.setContentText(selectedPath.toString());
+        alert.show();
+    }
+}
 ```
 
 
@@ -98,34 +121,29 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## A version with a completely customizable stage
 
 ```java
-    PathFilter xmlOnly = PathFilter.create(".xml", p->p.getFileName().endsWith(".xml"));
-    FXFileChooserImpl fc = FXFileChooserImpl.create(xmlOnly);
-    
-    Button button = new Button("Show Dialog");
-    button.setOnAction(e -> {
-        Optional<Path> selection = fc.showOpenDialog(arg0);
-        selection.map(String::valueOf).ifPresent(System.out::println);
-        System.out.println("Result is present: " + selection.isPresent());
-    });
-    
-    Scene mainScene = new Scene(button);
-```
+public class FxStageDemo extends Application  {
+    public static void main(String[] args) {
+        Application.launch();
+    }
 
-
-## Example with running process
-
-In cases with many files, the background activity of listing all files is indicated. Aside a label shows the number of currently filtered files and total available files.
-
-The activity is implemented as a Service so it can be cancelled.
-
-```java 
-final class FileUpdateService extends javafx.concurrent.Service<Void> {
-
-    ObservableList<Path> pathsToUpdate
-    
     @Override
-    protected Task<Void> createTask() {
-        return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
+    public void start(Stage primaryStage) throws Exception {
+        Button button = new Button("Show File Chooser Stage");
+        FXFileChooserStage fc = FXFileChooserStage.create(Skin.DARK);
+        button.setOnAction(evt-> fc.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+
+        Scene scene = new Scene(button);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Demo");
+        primaryStage.show();
+    }
+
+    private void showSelection(Path selectedPath) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("File Selection");
+        alert.setContentText(selectedPath.toString());
+        alert.show();
     }
 }
 ```
+
