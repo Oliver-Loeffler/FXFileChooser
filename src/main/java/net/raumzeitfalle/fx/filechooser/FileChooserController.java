@@ -19,8 +19,14 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.*;
@@ -28,19 +34,16 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Modality;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
+import org.controlsfx.control.NotificationPane;
 
 final class FileChooserController implements Initializable {
     
@@ -114,12 +117,15 @@ final class FileChooserController implements Initializable {
     private final BooleanProperty showOkayCancelButtons;
     
     private final PathSupplier pathSupplier;
-    
+
+    private final LocationMenuItemFactory menuItemFactory;
+
     public FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableView window, FileChooserViewOption fileChooserViewOption) {
        this.model = fileChooserModel;
        this.stage = window;
        this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));
        this.pathSupplier = pathSupplier;
+       this.menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
     }
 
     @FXML
@@ -128,7 +134,7 @@ final class FileChooserController implements Initializable {
         
     	this.listOfFiles.setItems(this.model.getFilteredPaths());
 
-        this.fileNameFilter.textProperty().addListener( l -> handleFileNameFilterChanges());
+        this.fileNameFilter.textProperty().addListener(l -> handleFileNameFilterChanges());
 
         this.listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
 
@@ -141,8 +147,9 @@ final class FileChooserController implements Initializable {
         this.usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
 
         this.showAllFilesFilter.setVisible(false);
-        
+
         this.model.initializeFilter(fileNameFilter.getText());
+        this.fileNameFilter.setOnKeyPressed(this::handleReturnKeyPressedInFilter);
         
         // initialize PathFilter menu
 		this.model.getPathFilter()
@@ -154,18 +161,9 @@ final class FileChooserController implements Initializable {
 
         this.chooser.setOnAction(e -> changeDirectory());
 
-        LocationMenuItemFactory menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
         this.model.getLocations().forEach(l->chooser.getItems().add(menuItemFactory.apply(l)));
-        SetChangeListener<Location> listener = new SetChangeListener<Location>() {
-            @Override
-            public void onChanged(Change<? extends Location> change) {
-                if (change.wasAdded()) {
-                    Location added = change.getElementAdded();
-                    chooser.getItems().add(menuItemFactory.apply(added));
-                }
-            }
-        };
-        this.model.getLocations().addListener(listener);
+
+        this.model.getLocations().addListener(this::handleAddedLocation);
 
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
@@ -202,12 +200,43 @@ final class FileChooserController implements Initializable {
         cancelButton.visibleProperty().bind(showOkayCancelButtons);
     }
 
+    private void handleReturnKeyPressedInFilter(KeyEvent keyEvent) {
+        if (KeyCode.ENTER.equals(keyEvent.getCode())) {
+            Path pastedPath = this.model.pastedPathProperty().get();
+            if (null != pastedPath) {
+                model.updateFilesIn(pastedPath);
+            }
+        }
+    }
+
     private void handleFileNameFilterChanges() {
 		this.listOfFiles.getSelectionModel().clearSelection();
 		this.model.updateFilterCriterion(fileNameFilter.getText());
-	}
 
-	private void handleDoubleClickInFilesList(MouseEvent event) {
+        evaluateIfPathWasEntered();
+
+    }
+
+    private void evaluateIfPathWasEntered() {
+        try {
+            Path possiblePath = Paths.get(fileNameFilter.getText());
+
+            if (possiblePath.toFile().isFile()) {
+                possiblePath = possiblePath.getParent();
+            }
+
+            if (null != possiblePath && possiblePath.toFile().exists()) {
+                this.model.pastedPathProperty().set(possiblePath);
+            } else {
+                this.model.pastedPathProperty().set(null);
+            }
+
+        } catch (InvalidPathException ipe) {
+            this.model.pastedPathProperty().set(null);
+        }
+    }
+
+    private void handleDoubleClickInFilesList(MouseEvent event) {
 		if (event.getClickCount() == 2) {
 		    model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());
 		    event.consume();
@@ -237,6 +266,13 @@ final class FileChooserController implements Initializable {
     		change.getAddedSubList().forEach(this::addNewPathFilterMenuItem);
     		change.getRemoved().forEach(this::removePathFilterMenuItem);
     	}
+    }
+
+    private void handleAddedLocation(SetChangeListener.Change<? extends Location> change) {
+        if (change.wasAdded()) {
+            Location added = change.getElementAdded();
+            chooser.getItems().add(menuItemFactory.apply(added));
+        }
     }
 
 	private void addNewPathFilterMenuItem(PathFilter p) {

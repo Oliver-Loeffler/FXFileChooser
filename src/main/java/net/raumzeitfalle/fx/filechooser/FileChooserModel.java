@@ -70,7 +70,9 @@ final class FileChooserModel {
 
     private final ObservableSet<Location> locations = FXCollections.observableSet(new LinkedHashSet<>());
 
-    private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");    
+    private PathFilter effectiveFilter = PathFilter.acceptAllFiles("all files");
+
+    private final ObjectProperty<Path> pastedPath = new SimpleObjectProperty<>();
 
     public static FileChooserModel startingInUsersHome(PathFilter ...filter) {
         return startingIn(getUsersHome(), filter);
@@ -266,4 +268,12 @@ final class FileChooserModel {
 			this.observablePathFilter.add(newFilter);
 		}
 	}
+
+    public Path getPastedPath() {
+        return pastedPath.get();
+    }
+
+    public ObjectProperty<Path> pastedPathProperty() {
+        return pastedPath;
+    }
 }
