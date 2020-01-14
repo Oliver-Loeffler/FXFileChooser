@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.raumzeitfalle.fx</groupId>
 	<artifactId>filechooser</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<description>A custom file chooser with live filtering JavaFX and Swing</description>
 	<inceptionYear>2017</inceptionYear>
 	<organization>
@@ -268,7 +268,7 @@
 		<url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
 		<connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
 		<developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
-		<tag>v0.0.6</tag>
+		<tag>v@{project.version}</tag>
 	</scm>
 
 	<licenses>
