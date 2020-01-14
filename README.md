@@ -59,7 +59,7 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## Using the FileChooser with Swing
 
 ```java
-public class Demos {
+public class SwingDemo {
     public static void main(String ... args) {
 
         JFrame frame = new JFrame("Window");
