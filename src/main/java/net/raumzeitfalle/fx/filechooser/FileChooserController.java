@@ -19,14 +19,11 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.File;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
@@ -43,9 +40,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.Modality;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
-import org.controlsfx.control.NotificationPane;
 
 final class FileChooserController implements Initializable {
     
