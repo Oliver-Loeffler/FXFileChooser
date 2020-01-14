@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -68,9 +69,18 @@ public class DemoJavaFxStage extends Application {
 
         fc.addLocations(locations);
         
-        Button button = new Button("Show customized Stage: FXFileChooserImpl.class");
+        Button button = new Button("FXFileChooserStage (Skin.DARK)");
         button.setOnAction(e -> {
             Optional<Path> selection = fc.showOpenDialog(primaryStage);
+            logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
+        });
+
+        FXFileChooserStage fcDefault = FXFileChooserStage
+                .create(Skin.DEFAULT, local,all,xml, xlsx, na0, txt, exe,combined);
+
+        Button buttonDefault = new Button("FXFileChooserStage (Skin.DEFAULT)");
+        buttonDefault.setOnAction(e -> {
+            Optional<Path> selection = fcDefault.showOpenDialog(primaryStage);
             logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
         
@@ -82,10 +92,11 @@ public class DemoJavaFxStage extends Application {
         Button standardDirectoryChooserButton = new Button("JavaFX standard directory chooser");
         standardDirectoryChooserButton.setOnAction(event->standardDirectoryChooser.showOpenDialog(primaryStage));
         
-        VBox vbox = new VBox(button, standardDirectoryChooserButton, standardFileChooserButton);
+        VBox vbox = new VBox(button,buttonDefault, standardDirectoryChooserButton, standardFileChooserButton);
+
         Scene mainScene = new Scene(vbox);
         primaryStage.setScene(mainScene);
-        primaryStage.setWidth(400);
+        primaryStage.setWidth(600);
         primaryStage.setHeight(400);
         primaryStage.show();
     }
