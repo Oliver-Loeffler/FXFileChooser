@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.SetChangeListener;
@@ -136,6 +138,9 @@ final class FileChooserController implements Initializable {
 
         this.fileNameFilter.textProperty().addListener(l -> handleFileNameFilterChanges());
 
+        StringBinding binding = Bindings.createStringBinding(()->this.model.currentSearchPath().get().toAbsolutePath().toString(),this.model.currentSearchPath());
+        this.selectedFile.promptTextProperty().bind(binding);
+
         this.listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
 
         this.listOfFiles.setCellFactory(e->new FilesListCell());
@@ -205,6 +210,7 @@ final class FileChooserController implements Initializable {
             Path pastedPath = this.model.pastedPathProperty().get();
             if (null != pastedPath) {
                 model.updateFilesIn(pastedPath);
+                this.fileNameFilter.setText("");
             }
         }
     }
