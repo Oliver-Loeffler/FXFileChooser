@@ -68,8 +68,10 @@
    -fx-font-weight: bold;
    -fx-prompt-text-fill: black;
 
-   -fx-focus-color: transparent; 
-   -fx-faint-focus-color:transparent; 
+   -fx-focus-color : transparent;
+   -fx-faint-focus-color : transparent;
+   -fx-highlight-fill: #ffa700;
+   -fx-highlight-text-fill: black;
 }
 
 .counter-label {
