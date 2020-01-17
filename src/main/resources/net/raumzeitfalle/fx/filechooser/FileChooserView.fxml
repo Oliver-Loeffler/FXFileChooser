@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<fx:root fx:id="fileChooserForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.192" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="fileChooserForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0" VBox.vgrow="NEVER">
          <children>
-            <SplitMenuButton fx:id="chooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Choose Directory" HBox.hgrow="ALWAYS">
+            <SplitMenuButton fx:id="chooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-insets: 0;" text="Choose Directory" HBox.hgrow="ALWAYS">
                <items>
                   <MenuItem fx:id="usersHomeCommand" mnemonicParsing="false" text="Users Home" />
                </items>
@@ -84,16 +84,11 @@
                </graphic></Button>
          </children>
       </HBox>
-      <ProgressBar fx:id="progressBar" maxHeight="8.0" maxWidth="1.7976931348623157E308" minHeight="8.0" progress="0.68" style="-fx-background-radius: 0px;" VBox.vgrow="NEVER" />
+      <ProgressBar fx:id="progressBar" maxHeight="10.0" maxWidth="1.7976931348623157E308" minHeight="10.0" prefHeight="10.0" prefWidth="600.0" progress="0.68" style="-fx-background-radius: 0px;" VBox.vgrow="NEVER" />
       <StackPane VBox.vgrow="NEVER">
          <children>
             <HBox alignment="CENTER_LEFT" StackPane.alignment="TOP_LEFT">
                <children>
-                  <SVGPath content="M 14.343089,0.99999546 H 1.6570127 c -0.582914,0 -0.87705065,0.70727004 -0.4640234,1.12030004 l 5.0570069,5.05777 v 5.6344295 c 0,0.21412 0.1044805,0.4148 0.2799179,0.53763 l 2.1874996,1.5307 c 0.4315663,0.30209 1.0325818,-0.004 1.0325818,-0.53763 V 7.1780655 l 5.0571435,-5.05777 c 0.41218,-0.41221 0.120067,-1.12030004 -0.46405,-1.12030004 z" fill="#00000087" stroke="WHITE" styleClass="filter-icon" HBox.hgrow="NEVER">
-                     <HBox.margin>
-                        <Insets left="5.0" />
-                     </HBox.margin>
-                  </SVGPath>
                   <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="SOMETIMES">
                      <children>
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text="(" />
@@ -116,6 +111,11 @@
                   <Insets left="25.0" />
                </padding>
             </TextField>
+            <SVGPath content="M 14.343089,0.99999546 H 1.6570127 c -0.582914,0 -0.87705065,0.70727004 -0.4640234,1.12030004 l 5.0570069,5.05777 v 5.6344295 c 0,0.21412 0.1044805,0.4148 0.2799179,0.53763 l 2.1874996,1.5307 c 0.4315663,0.30209 1.0325818,-0.004 1.0325818,-0.53763 V 7.1780655 l 5.0571435,-5.05777 c 0.41218,-0.41221 0.120067,-1.12030004 -0.46405,-1.12030004 z" fill="#00000087" stroke="WHITE" styleClass="filter-icon" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="6.0" />
+               </StackPane.margin>
+            </SVGPath>
          </children>
       </StackPane>
       <ListView fx:id="listOfFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

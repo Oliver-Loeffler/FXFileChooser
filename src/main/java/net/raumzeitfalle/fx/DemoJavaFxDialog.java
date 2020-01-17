@@ -71,7 +71,7 @@ public class DemoJavaFxDialog extends Application {
 
 		});
 		
-		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.DEFAULT,all,exe,xml,txt,xlsx);
+		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.MODENA,all,exe,xml,txt,xlsx);
 		Button showDialog = new Button("Show default JavaFX Dialog (FXFileChooserDialog.class)");
 		showDialog.setOnAction(a -> {
 

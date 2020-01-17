@@ -25,7 +25,7 @@ import javafx.scene.Parent;
 
 public enum Skin {
 
-    DEFAULT,
+    MODENA,
     DARK;
 
     public static <T extends Parent> void applyTo(T parent, Skin skin) {

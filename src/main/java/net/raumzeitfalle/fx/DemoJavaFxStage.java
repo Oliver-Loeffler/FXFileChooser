@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -76,7 +75,7 @@ public class DemoJavaFxStage extends Application {
         });
 
         FXFileChooserStage fcDefault = FXFileChooserStage
-                .create(Skin.DEFAULT, local,all,xml, xlsx, na0, txt, exe,combined);
+                .create(Skin.MODENA, local,all,xml, xlsx, na0, txt, exe,combined);
 
         Button buttonDefault = new Button("FXFileChooserStage (Skin.DEFAULT)");
         buttonDefault.setOnAction(e -> {

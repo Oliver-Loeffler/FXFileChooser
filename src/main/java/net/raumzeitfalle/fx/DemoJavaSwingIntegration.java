@@ -87,7 +87,7 @@ public class DemoJavaSwingIntegration {
 
 		PathFilter[] filter = collectPathFilter().toArray(new PathFilter[0]);
 		SwingFileChooser fc = SwingFileChooser
-				.create(Skin.DEFAULT, "Choose any file:", "TestData/SomeFiles", filter);
+				.create(Skin.MODENA, "Choose any file:", "TestData/SomeFiles", filter);
 
 		String title = "<html><center><h3>JavaFX Stage inside Swing JDialog (with Locations)</h3>" + SwingFileChooser.class.getName()
 				+ "<br>" + "<font color=#0000FF>(Default Skin)</font>" + "</center></html>";
