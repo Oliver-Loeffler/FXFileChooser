@@ -91,6 +91,8 @@ final class FileChooserModel {
         this.filteredPaths = new FilteredList<>(allPaths);
         this.allPathsProperty = new SimpleListProperty<>(this.allPaths);
         this.filteredPathsProperty = new SimpleListProperty<>(this.filteredPaths);
+
+        // TODO: Make FileUpdateService part of the controller and rewire model and service inside the controller
         this.fileUpdateService = serviceProvider.get();
         this.fileUpdateService.startUpdate();
         this.selectedFileName.bind(createStringBindingTo(fileSelection));
@@ -230,6 +232,7 @@ final class FileChooserModel {
         }
     }
 
+    // TODO: Move this logic into FileUpdateService
 	public void updateFilesIn(Path directory) {
 		if (directory.toFile().isDirectory()) {
 			this.fileUpdateService.restartIn(directory);
