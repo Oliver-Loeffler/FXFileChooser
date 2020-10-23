@@ -23,56 +23,55 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
+import org.junit.jupiter.api.io.TempDir;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 
 class FindFilesTaskTest extends ApplicationTest {
 
 	private final Path searchLocation = Paths.get("TestData/SomeFiles");
 
-	private static final Path NO_FILES_IN_HERE = Paths.get("TestData/NoFilesHere");
-
-	private final ObservableList<IndexedPath> listOfPaths = FXCollections.observableArrayList();
+	private ObservableList<IndexedPath> consumerCollection;
 
 	private FindFilesTask classUnderTest;
-
-	@BeforeAll
-	static void prepare() throws IOException {
-		Files.createDirectories(NO_FILES_IN_HERE);
-	}
-
-	@AfterAll
-	static void cleanup() throws IOException {
-		Files.delete(NO_FILES_IN_HERE);
+	
+	@BeforeEach
+	void prepareConsumer() {
+		consumerCollection = FXCollections.observableArrayList();
+		consumerCollection.add(IndexedPath.valueOf(Paths.get("/notexisting")));
 	}
 
 	@Test
 	void runningTheTask_inPopulatedFolder() throws Exception {
 
-		classUnderTest = new FindFilesTask(searchLocation, listOfPaths);
-
-		runTask(classUnderTest);
-
-		Set<String> fileNames = listOfPaths.stream().map(IndexedPath::asPath).map(Path::getFileName)
-				.map(String::valueOf).collect(Collectors.toSet());
+		classUnderTest = new FindFilesTask(searchLocation, consumerCollection);
+		
+		
+		
+		Awaitility.await()
+				  .atMost(Duration.ofSeconds(30))
+				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+	
+		Set<String> fileNames = consumerCollection.stream()
+												  .map(IndexedPath::asPath)
+												  .map(Path::getFileName)
+												  .map(String::valueOf)
+												  .collect(Collectors.toSet());
 
 		assertAll(
-				() -> assertEquals(11, listOfPaths.size(), "files found"),
+				() -> assertEquals(11, consumerCollection.size(), "files found"),
 				() -> assertTrue(fileNames.contains("HorrbibleSpreadSheet.xls")),
 				() -> assertTrue(fileNames.contains("JustNumbers.csv")),
 				() -> assertTrue(fileNames.contains("NewerDocument.docx")),
@@ -86,31 +85,22 @@ class FindFilesTaskTest extends ApplicationTest {
 				() -> assertTrue(fileNames.contains("XtremeHorrbibleSpreadSheet.xlsx")));
 	}
 
-	private void runTask(Task<?> task) throws InterruptedException, ExecutionException {
-		task.setOnFailed(e -> {
-			throw new AssertionFailedError("Could not execute task - task failed");
-		});
-		task.setOnCancelled(e -> {
-			throw new AssertionFailedError("Could not execute task - was cancelled");
-		});
-
-		task.run();
-
-		Invoke.andWait(() -> {
-			while (task.isRunning()) {
-				/* wait */}
-		});
-	}
 
 	@Test
-	void runningTheTask_inEmptyFolder() throws Exception {
+	void runningTheTask_inEmptyFolder(@TempDir Path emptyDirectory) throws Exception {
 
 		ObservableList<IndexedPath> listOfPaths = FXCollections.observableArrayList();
-		classUnderTest = new FindFilesTask(NO_FILES_IN_HERE, listOfPaths);
+		classUnderTest = new FindFilesTask(emptyDirectory, listOfPaths);
 
-		runTask(classUnderTest);
-
+		Awaitility.await()
+				  .atMost(Duration.ofSeconds(30))
+				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+		  
 		assertEquals(0, listOfPaths.size());
+	}
+	
+	private Predicate<Integer> allFilesHaveBeenProcessed() {
+		return v->v>=0;
 	}
 
 }

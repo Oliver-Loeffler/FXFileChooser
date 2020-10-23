@@ -19,22 +19,24 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
+import javax.swing.JFileChooser;
+
 public enum SwingDialogReturnValues {
 
     /**
      * Return value if cancel is chosen.
      */
-    CANCEL_OPTION(1),
+    CANCEL_OPTION(JFileChooser.CANCEL_OPTION),
 
     /**
      * Return value if approve (yes, ok) is chosen.
      */
-    APPROVE_OPTION(0),
+    APPROVE_OPTION(JFileChooser.APPROVE_OPTION),
 
     /**
      * Return value if an error occurred.
      */
-    ERROR_OPTION(-1);
+    ERROR_OPTION(JFileChooser.ERROR_OPTION);
 
 	private final int returnValue;
 	

@@ -35,12 +35,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
-import net.raumzeitfalle.fx.filechooser.StandardDirectoryChooser;
-import net.raumzeitfalle.fx.filechooser.StandardFileChooser;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 import net.raumzeitfalle.fx.filechooser.locations.Locations;
@@ -115,37 +111,6 @@ public class DemoJavaSwingIntegration {
 				() -> darkFc.getSelectedFile());
 
 		addExample(stageInsideSwingDialogDark);
-
-		// JavaFX file chooser (usually the system file chooser) launched from Swing
-		title = "<html><center><h3>JavaFX FileChooser <font color=#ff0000>(Open)</font></h3>"
-				+ FileChooser.class.getName() + "</center></html>";
-		StandardFileChooser stdFc = new StandardFileChooser();
-
-		Example standardFileChooserOpen = new Example(title, 
-				() -> stdFc.showOpenDialog(frame),
-				() -> stdFc.getSelectedFile());
-
-		addExample(standardFileChooserOpen);
-
-		// JavaFX file chooser (usually the system file chooser) launched from Swing
-		title = "<html><center><h3>JavaFX FileChooser <font color=#ff0000>(Save)</font></h3>"
-				+ FileChooser.class.getName() + "</center></html>";
-		StandardFileChooser stdFcSave = new StandardFileChooser();
-		Example standardFileChooserSave = new Example(title, 
-				() -> stdFcSave.showOpenDialog(frame),
-				() -> stdFcSave.getSelectedFile());
-
-		addExample(standardFileChooserSave);
-
-		// JavaFX standard directory chooser
-		title = "<html><center><h3>JavaFX DirectoryChooser <font color=#ff0000>(Open Directory)</font></h3>"
-				+ DirectoryChooser.class.getName() + "</center></html>";
-		StandardDirectoryChooser stdDirChooser = new StandardDirectoryChooser();
-		Example standardDirectoryChooser = new Example(title, 
-				() -> stdDirChooser.showDialog(frame),
-				() -> stdDirChooser.getSelectedFile());
-
-		addExample(standardDirectoryChooser);
 
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();

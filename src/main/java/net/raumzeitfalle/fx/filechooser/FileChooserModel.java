@@ -54,7 +54,7 @@ final class FileChooserModel {
     
     private final FilteredList<IndexedPath> filteredPaths;
 
-    private UpdateService fileUpdateService;
+    private final UpdateService fileUpdateService;
     
     private final ListProperty<IndexedPath> allPathsProperty;
         
@@ -161,8 +161,12 @@ final class FileChooserModel {
      * @param criterion {@link String} A search text such as &quot;index&quot; for &quot;index.html&quot; or &quot;index.txt&quot;.
      */
     public void updateFilterCriterion(String criterion) {
-        Predicate<IndexedPath> customFilter = createManualListFilter(criterion);                           
-        this.filteredPaths.setPredicate(combineFilterPredicates(customFilter));
+        
+        Predicate<IndexedPath> combined = createManualListFilter(criterion).and(
+        		indexedPath -> this.effectiveFilter.getPredicate().test(indexedPath.asPath())
+        		);
+        
+        this.filteredPaths.setPredicate(combined);
     }
 
     /**
@@ -180,20 +184,6 @@ final class FileChooserModel {
         return p -> null == corrected 
         				|| corrected.isEmpty() 
         				|| p.toString().toLowerCase().contains(corrected.toLowerCase());
-    }
-
-    private Predicate<IndexedPath> combineFilterPredicates(Predicate<IndexedPath> customFilter) {
-    	
-    		Predicate<Path> effective = this.effectiveFilter.getPredicate();
-    	
-    		List<Predicate<IndexedPath>> predicates = new ArrayList<>();
-    		predicates.add(indexedPath -> effective.test(indexedPath.asPath()));
-    		predicates.add(customFilter);
-
-        return predicates
-        				.stream()
-        				.reduce(x -> true, Predicate::and);
-        
     }
     
     public void initializeFilter(String text) {
@@ -222,31 +212,18 @@ final class FileChooserModel {
     
     public void updateFilesIn(File directory) {
         if (null != directory) {
-            updateFilesIn(directory.toPath());    
+            fileUpdateService.restartIn(directory.toPath());    
         }
     }
 
     public void updateFilesIn(Location location) {
         if (null != location) {
-            updateFilesIn(location.getPath());
+        	fileUpdateService.restartIn(location.getPath());
         }
     }
-
-    // TODO: Move this logic into FileUpdateService
-	public void updateFilesIn(Path directory) {
-		if (directory.toFile().isDirectory()) {
-			this.fileUpdateService.restartIn(directory);
-
-		} else if (directory.toFile().isFile()) {
-			Path parent = directory.getParent();
-			if (parent != null) {
-				this.fileUpdateService.restartIn(parent);
-			}
-		}
-	}
     
     public void changeToUsersHome() {
-        updateFilesIn(getUsersHome());
+    	fileUpdateService.restartIn(getUsersHome());
     }
 
     public ObservableList<PathFilter> getPathFilter() {

@@ -20,6 +20,7 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -27,60 +28,94 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-final class FileUpdateService extends javafx.concurrent.Service<Void> implements UpdateService {
-     
-    private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
-    
-    private ObservableList<IndexedPath> pathsToUpdate;
+final class FileUpdateService extends javafx.concurrent.Service<Integer> implements UpdateService {
 
-    public FileUpdateService(Path folderToStart, ObservableList<IndexedPath> paths) {
-        setSearchLocation(folderToStart);        
-        this.pathsToUpdate = paths;
-        registerShutdownHook();
-    }
+	private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
 
-    private void setSearchLocation(Path folderToStart) {
-        if (folderToStart.toFile().isDirectory()) {
-            this.rootFolder.setValue(folderToStart);
-        } else {
-            this.rootFolder.setValue(folderToStart.getParent());
-        }
-    }
+	private ObservableList<IndexedPath> pathsToUpdate;
 
-    @Override
-    protected Task<Void> createTask() {
-        return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
-    }
+	public FileUpdateService(Path folderToStart, ObservableList<IndexedPath> paths) {
+		setSearchLocation(folderToStart);
+		assignTargetCollection(paths);
+		registerShutdownHook();
+	}
 
-    @Override
-    public void restartIn(Path location) {
-        setSearchLocation(location);
-        this.refresh();
-    }
+	private void assignTargetCollection(ObservableList<IndexedPath> paths) {
+		pathsToUpdate = Objects.requireNonNull(paths, "Target collection paths must not be null");
+	}
 
-    @Override
-    public ObjectProperty<Path> searchPathProperty() {
-        return this.rootFolder;
-    }
+	private void setSearchLocation(Path folderToStart) {
+		rootFolder.setValue(obtainDirectory(folderToStart));
+	}
 
-    @Override
+	private Path obtainDirectory(Path folderToStart) {
+		if (null == folderToStart)
+			return null;
+		
+		if (folderToStart.toFile().isDirectory())
+			return folderToStart;
+		else
+			return folderToStart.getParent();
+	}
+
+	@Override
+	protected Task<Integer> createTask() {
+		return new FindFilesTask(rootFolder.getValue(), pathsToUpdate);
+	}
+
+	@Override
+	public void restartIn(Path directory) {
+		if (null != directory)
+			restartInDirectory(directory);
+	}
+
+	@Override
+	public ObjectProperty<Path> searchPathProperty() {
+		return this.rootFolder;
+	}
+
+	@Override
 	public void refresh() {
 		this.restart();
 	}
 
-    @Override
+	@Override
 	public void cancelUpdate() {
 		this.cancel();
 	}
 
-    @Override
+	@Override
 	public void startUpdate() {
 		this.start();
 	}
-    
+
+	private void restartInDirectory(Path directory) {
+		if (directory.toFile().isDirectory())
+			refreshWhenExists(directory);
+		else
+			attemptRefreshUsingParent(directory);
+
+	}
+
+	private void attemptRefreshUsingParent(Path directory) {
+		Path parent = directory.getParent();
+		if (null != parent)
+			refreshWhenExists(parent);
+	}
+
+	protected void refreshWhenExists(Path location) {
+		if (location.toFile().exists())
+			setLocationAndRefresh(location);
+	}
+
+	private void setLocationAndRefresh(Path location) {
+		setSearchLocation(location);
+		this.refresh();
+	}
+
 	private void registerShutdownHook() {
-		Runnable shutDownAction = ()->Platform.runLater(this::cancelUpdate);
-        Runtime.getRuntime().addShutdownHook(new Thread(shutDownAction));
+		Runnable shutDownAction = () -> Platform.runLater(this::cancelUpdate);
+		Runtime.getRuntime().addShutdownHook(new Thread(shutDownAction));
 	}
 
 }

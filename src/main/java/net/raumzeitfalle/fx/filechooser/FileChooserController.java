@@ -217,7 +217,7 @@ final class FileChooserController implements Initializable {
         if (KeyCode.ENTER.equals(keyEvent.getCode())) {
             Path pastedPath = this.model.pastedPathProperty().get();
             if (null != pastedPath) {
-                model.updateFilesIn(pastedPath);
+                model.getUpdateService().restartIn(pastedPath);
                 this.fileNameFilter.setText("");
             }
         }
@@ -270,7 +270,7 @@ final class FileChooserController implements Initializable {
     private void changeDirectory() {
     	Invoke.later(()->{
     		fileChooserForm.setDisable(true);
-            pathSupplier.getUpdate(model::updateFilesIn);
+            pathSupplier.getUpdate(value->model.getUpdateService().restartIn(value));
             fileChooserForm.setDisable(false);
     	});
     }

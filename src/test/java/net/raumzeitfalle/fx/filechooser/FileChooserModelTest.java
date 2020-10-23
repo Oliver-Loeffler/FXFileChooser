@@ -52,14 +52,14 @@ public class FileChooserModelTest {
 	
 	@Test
 	public void listFileContents() {
-		
+	
 		// update from a directory which only contains directories
-		classUnderTest.updateFilesIn(TEST_ROOT);
+		classUnderTest.getUpdateService().restartIn(TEST_ROOT);
 		assertTrue(classUnderTest.getFilteredPaths().isEmpty());
 		assertEquals(0, classUnderTest.allPathsSizeProperty().get());
 		
 		// take a path object
-		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles/"));
+		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles/"));
 		classUnderTest.updateFilesIn((File) null);
 		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
@@ -74,14 +74,14 @@ public class FileChooserModelTest {
 		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
 		
 		// take a Path pointing to a filename
-		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles").resolve("XtremeHorrbibleSpreadSheet.xlsx"));
+		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles").resolve("XtremeHorrbibleSpreadSheet.xlsx"));
 		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
 		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
 		assertEquals(11, classUnderTest.allPathsSizeProperty().get());
 		
 		// take a Path pointing to a share only
-		classUnderTest.updateFilesIn(Paths.get("//server/share"));
+		classUnderTest.getUpdateService().restartIn(Paths.get("//server/share"));
 		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
 		assertEquals(11, classUnderTest.filteredPathsSizeProperty().get());
@@ -91,16 +91,15 @@ public class FileChooserModelTest {
 	@Test
 	public void applySimpleStringFilter() {
 		
-		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
+		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles"));
 		classUnderTest.updateFilterCriterion(".csv");
 		assertEquals(1, classUnderTest.getFilteredPaths().size());
-		
+
 	}
 	
 	@Test
 	public void usingPathFilter() {
-		
-		classUnderTest.updateFilesIn(TEST_ROOT.resolve("SomeFiles"));
+		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles"));
 		PathFilter filter = PathFilter.create(p->p.getFileName().toString().startsWith("Test"));
 		
 		classUnderTest.updateFilterCriterion(filter, "5");
@@ -145,7 +144,19 @@ public class FileChooserModelTest {
 				public ReadOnlyBooleanProperty runningProperty() { return new SimpleBooleanProperty(false); }
 
 				@Override
-				public void restartIn(Path location) { this.location = location; this.refresh(); }
+				public void restartIn(Path location) {				
+					if (null != location && Files.isRegularFile(location)) {
+						Path parent = location.getParent();
+						if (null != parent && parent.toFile().exists()) {
+							this.location = parent;
+							this.refresh();
+						}
+					} else if (null != location && location.toFile().exists()){
+						this.location = location;
+						this.refresh();
+					}
+					 
+				}
 
 				@Override
 				public void refresh() { observableList.clear(); try {
@@ -155,7 +166,8 @@ public class FileChooserModelTest {
 							.map(IndexedPath::valueOf)
 							.forEach(observableList::add);
 
-					} catch (IOException e) { throw new RuntimeException(e);
+					} catch (IOException e) { 
+						throw new RuntimeException(e);
 						/* its good to see the error but there is no need to handle it here */
 					}
 				}

@@ -60,7 +60,7 @@ public class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
 					    "search path before directory change");
 		
 		// Consider moving the service into the controller out of the model
-		Invoke.andWait(()->classUnderTest.updateFilesIn(testRoot));
+		Invoke.andWait(()->classUnderTest.getUpdateService().restartIn(testRoot));
 			
 		assertEquals(testRoot.toAbsolutePath(), 
 					 classUnderTest.currentSearchPath().get().toAbsolutePath(),

@@ -1,15 +1,14 @@
 package net.raumzeitfalle.fx;
 
+import java.nio.file.Path;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
-import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.Skin;
-
-import java.nio.file.Path;
 
 public class FxDialogDemo extends Application  {
     public static void main(String[] args) {
