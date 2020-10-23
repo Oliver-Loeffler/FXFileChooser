@@ -20,6 +20,7 @@
 package net.raumzeitfalle.fx.filechooser.locations;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 class NamedLocation extends Location {
 	
@@ -31,13 +32,14 @@ class NamedLocation extends Location {
 		this(createName(parent), parent);
 	}
 	
-	private static String createName(Path parent) {
-		return parent.toString();
+	private static String createName(Path location) {
+		Objects.requireNonNull(location, "location must not be null");
+		return location.toString();
 	}
 
 	protected NamedLocation(String name, Path path) {
-		this.name = name;
-		this.directory = path;
+		this.name = Objects.requireNonNull(name, "name must not be null");
+		this.directory = Objects.requireNonNull(path, "path must not be null");
 	}
 
 	@Override
@@ -47,7 +49,7 @@ class NamedLocation extends Location {
 
 	@Override
 	public boolean exists() {
-		return this.directory.toFile().exists();
+		return directory.toFile().exists();
 	}
 
 	@Override

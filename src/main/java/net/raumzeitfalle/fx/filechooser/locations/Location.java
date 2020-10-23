@@ -20,19 +20,19 @@
 package net.raumzeitfalle.fx.filechooser.locations;
 
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.Objects;
 
-public abstract class Location implements Comparator<Location> {
+public abstract class Location implements Comparable<Location> {
 
 	public abstract String getName();
 
 	public abstract boolean exists();
 	
 	public abstract Path getPath();
-	
-	public int compare(Location a, Location b) {
-		return a.getName().compareToIgnoreCase(b.getName());
+
+	@Override
+	public int compareTo(Location o) {
+		return this.getName().compareToIgnoreCase(o.getName());
 	}
 
 	@Override
@@ -43,9 +43,8 @@ public abstract class Location implements Comparator<Location> {
 	@Override
 	public boolean equals(Object obj) {
 
-		if (null == obj) {
+		if (null == obj) 
 			return false;
-		}
 
 		if (this == obj)
 			return true;

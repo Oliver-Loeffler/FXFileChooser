@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class NamedLocationTest {
 
@@ -38,7 +39,7 @@ class NamedLocationTest {
 		assertEquals(Paths.get("./"), namedLocation.getPath());
 		
 	}
-	
+		
 	@Test
 	void creation_at() {
 		
@@ -137,6 +138,65 @@ class NamedLocationTest {
 		Location a = Locations.withName("MyName", Paths.get("./"));
 		assertFalse(a.equals(null));	
 		
+	}
+	
+	@Test
+	void exception_is_thrown_when_constructorArgIsNull() {
+		
+		Throwable t = assertThrows(NullPointerException.class,
+				()->new NamedLocation(null));
+		
+		assertEquals("location must not be null", t.getMessage());
+		
+	}
+	
+	@Test
+	void exception_is_thrown_when_constructorPathIsNull() {
+		
+		Throwable t = assertThrows(NullPointerException.class,
+				()->new NamedLocation("NameOfLoc", null));
+		
+		assertEquals("path must not be null", t.getMessage());
+		
+	}
+	
+	@Test
+	void exception_is_thrown_when_constructorNameIsNull() {
+		
+		Throwable t = assertThrows(NullPointerException.class,
+				()->new NamedLocation(null, Paths.get("somewhere")));
+		
+		assertEquals("name must not be null", t.getMessage());
+		
+	}
+	
+	@Test
+	void location_exists(@TempDir Path existingDirectory) {
+		
+		Location existingLocation = Locations.withName("ExistingTempDir", existingDirectory);
+		
+		assertTrue(existingLocation.exists());
+		
+	}
+	
+	@Test
+	void location_not_exists(@TempDir Path existingDirectory) {
+		
+		Location notExistingLocation = Locations.withName("ExistingTempDir", existingDirectory.resolve("shouldNot/exist"));
+		
+		assertFalse(notExistingLocation.exists());
+		
+	}
+	
+	@Test
+	void compare() {
+		Location a = Locations.withName("A", Paths.get("./"));
+		Location b = Locations.withName("B", Paths.get("./"));
+		Location c = Locations.withName("C", Paths.get("./"));
+		
+		assertEquals(-1, a.compareTo(b));
+		assertEquals( 1, c.compareTo(b));
+		assertEquals( 0, b.compareTo(b));
 	}
 
 }
