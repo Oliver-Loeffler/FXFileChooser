@@ -19,7 +19,7 @@ before_install:
 
 install: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V --no-transfer-progress
 
-script: ./mvnw clean verify -Dgpg.skip --no-transfer-progress
+script: ./mvnw clean verify install -Dgpg.skip --no-transfer-progress
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
