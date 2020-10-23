@@ -21,12 +21,13 @@ package net.raumzeitfalle.fx.filechooser.locations;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class Locations {
 
 	public static Location at(Path path) {
-		File file = path.toFile();
-		if (file.isFile() && null != path.getParent()) {
+		File file = Objects.requireNonNull(path, "path must not be null").toFile();
+		if (null != path.getParent() && file.isFile()) {
 			Path parent = path.getParent();
 			return new NamedLocation(parent);
 		}
@@ -39,7 +40,9 @@ public class Locations {
 
 	private Locations() {
 		/*
-		 * Collection of static factory methods, not intended for instantiation.
+		 * Collection of static factory methods, 
+		 * not intended for instantiation.
+		 * 
 		 */
 	}
 }

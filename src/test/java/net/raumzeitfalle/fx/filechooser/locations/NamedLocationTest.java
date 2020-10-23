@@ -113,7 +113,7 @@ class NamedLocationTest {
 	}
 	
 	@Test
-	void identity_sameValues_differentType() {
+	void identity_sameValues_differentType_butSameInterface() {
 		
 		Location a = Locations.withName("MyName", Paths.get("./"));
 		Location f = new Location() {
@@ -130,6 +130,16 @@ class NamedLocationTest {
 		
 		assertEquals(a,f);
 		assertEquals(a.hashCode(), f.hashCode());
+	}
+	
+	@Test
+	void identity_with_different_types() {
+		
+		Location a = Locations.withName("MyName", Paths.get("./"));
+		String location = "Its not a location";
+		
+		assertFalse(a.equals(location));
+		
 	}
 	
 	@Test
