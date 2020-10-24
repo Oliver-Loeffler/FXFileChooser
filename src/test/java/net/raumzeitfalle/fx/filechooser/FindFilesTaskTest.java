@@ -102,8 +102,9 @@ class FindFilesTaskTest extends ApplicationTest {
 	@Test
 	void that_null_for_listOfPaths_causes_exception() {
 		
+		Path path = Paths.get("./");
 		Throwable t = assertThrows(NullPointerException.class,
-				()->new FindFilesTask(Paths.get("./"), null));
+				()->new FindFilesTask(path, null));
 		
 		assertEquals("listOfPaths must not be null", t.getMessage());
 		

@@ -138,7 +138,7 @@ class NamedLocationTest {
 		Location a = Locations.withName("MyName", Paths.get("./"));
 		String location = "Its not a location";
 		
-		assertFalse(a.equals(location));
+		assertNotEquals(a, location);
 		
 	}
 	
@@ -146,7 +146,8 @@ class NamedLocationTest {
 	void identity_with_null() {
 		
 		Location a = Locations.withName("MyName", Paths.get("./"));
-		assertFalse(a.equals(null));	
+		
+		assertNotEquals(a, null);
 		
 	}
 	
@@ -173,8 +174,9 @@ class NamedLocationTest {
 	@Test
 	void exception_is_thrown_when_constructorNameIsNull() {
 		
+		Path path = Paths.get("somewhere");
 		Throwable t = assertThrows(NullPointerException.class,
-				()->new NamedLocation(null, Paths.get("somewhere")));
+				()->new NamedLocation(null, path));
 		
 		assertEquals("name must not be null", t.getMessage());
 		

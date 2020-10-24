@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-public class FileChooserModelApplicationTest extends ApplicationTest {
+class FileChooserModelApplicationTest extends ApplicationTest {
 	
 	private FileChooserModel classUnderTest;
 	
@@ -45,7 +45,7 @@ public class FileChooserModelApplicationTest extends ApplicationTest {
 
 	
 	@Test
-	public void performFilterOperation() throws InterruptedException, ExecutionException {
+	void performFilterOperation() throws InterruptedException, ExecutionException {
 				
 		assertEquals(testRoot.toAbsolutePath(), 
 					 classUnderTest.currentSearchPath().get().toAbsolutePath(),

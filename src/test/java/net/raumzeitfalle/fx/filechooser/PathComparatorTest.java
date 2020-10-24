@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-public class PathComparatorTest {
+class PathComparatorTest {
 	
 	private final Path b = Paths.get("byFarOldestFile.txt");
 	

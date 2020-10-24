@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-public class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
+class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
 	
 	private FileChooserModel classUnderTest;
 	
@@ -41,7 +41,7 @@ public class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
 	}
 	
 	@Test
-	public void startingInUsersHome() {
+	void startingInUsersHome() {
 		
 		
 		
@@ -52,7 +52,7 @@ public class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
 	}
 	
 	@Test
-	public void changingDirectory_updateFilesIn() throws InterruptedException, ExecutionException {
+	void changingDirectory_updateFilesIn() throws InterruptedException, ExecutionException {
 		
 	
 		assertNotEquals(testRoot.isAbsolute(), 

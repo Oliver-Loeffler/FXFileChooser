@@ -43,7 +43,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class FileChooserModelTest {
+class FileChooserModelTest {
 	
 	private static final Path TEST_ROOT = Paths.get("./TestData");
 	
@@ -51,7 +51,7 @@ public class FileChooserModelTest {
 
 	
 	@Test
-	public void listFileContents() {
+	void listFileContents() {
 	
 		// update from a directory which only contains directories
 		classUnderTest.getUpdateService().restartIn(TEST_ROOT);
@@ -89,7 +89,7 @@ public class FileChooserModelTest {
 	}
 	
 	@Test
-	public void applySimpleStringFilter() {
+	void applySimpleStringFilter() {
 		
 		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles"));
 		classUnderTest.updateFilterCriterion(".csv");
@@ -98,7 +98,7 @@ public class FileChooserModelTest {
 	}
 	
 	@Test
-	public void usingPathFilter() {
+	void usingPathFilter() {
 		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles"));
 		PathFilter filter = PathFilter.create(p->p.getFileName().toString().startsWith("Test"));
 		
@@ -108,7 +108,7 @@ public class FileChooserModelTest {
 	}
 	
 	@Test
-	public void lookIntoUsersHome() {
+	void lookIntoUsersHome() {
 				
 		// TODO: change users home before test - ?
 		PathFilter filter = PathFilter.acceptAllFiles("all files");
