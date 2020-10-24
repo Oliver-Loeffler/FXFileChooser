@@ -33,6 +33,7 @@ import javafx.scene.layout.Priority;
 class FilesListCell extends ListCell<IndexedPath> {
 
 	private static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd  -  HH:mm:ss";
+	
 	private static final String FILE_ICON_LABEL = "file-icon-label";
 
 	@Override
@@ -48,12 +49,16 @@ class FilesListCell extends ListCell<IndexedPath> {
             gridPane.getStyleClass().add(FILE_ICON_LABEL);      
                         
             Pane icon = FileIcons.fromFile(getItem().asPath(), 32);
+            icon.setId("fileListCell-fileTypeIcon");
+            
             gridPane.addColumn(0, icon);
             GridPane.setHgrow(icon, Priority.SOMETIMES);
             
             
             Label fileName = new Label(String.valueOf(getItem().asPath().getFileName()));
             fileName.getStyleClass().add(FILE_ICON_LABEL);
+            fileName.setId("fileListCell-fileName");
+            
             gridPane.addColumn(1, fileName);
             GridPane.setHgrow(fileName, Priority.ALWAYS);
             
@@ -62,7 +67,8 @@ class FilesListCell extends ListCell<IndexedPath> {
             FileTime time = getItem().getTimestamp();
             LocalDateTime timestamp = LocalDateTime.from(time.toInstant().atZone(ZoneId.systemDefault()));
             date.setText(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN).format(timestamp));
- 
+            date.setId("fileListCell-fileDate");
+            
             date.getStyleClass().add(FILE_ICON_LABEL);
             gridPane.addColumn(2, date);
             GridPane.setHgrow(date, Priority.NEVER);
