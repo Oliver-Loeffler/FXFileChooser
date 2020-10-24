@@ -50,17 +50,5 @@ class LocationsTest {
 		
 	}
 	
-	@Test
-	void at_with_directory_having_no_parent() {
-		
-		Path path = Paths.get("\\\\root\\share");
-		Location location = Locations.at(path);
-		
-		assertAll(
-			()->assertEquals("//root/share/", location.getName().replace("\\", "/"),"name"),
-			()->assertEquals("//root/share/", location.getPath().toString().replace("\\", "/"), "path")
-		);
-		
-	}
 	
 }
