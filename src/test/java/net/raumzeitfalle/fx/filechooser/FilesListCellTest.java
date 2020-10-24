@@ -57,7 +57,11 @@ class FilesListCellTest extends ApplicationTest {
 		
 		assertNotNull(expectedNodes.get("fileListCell-fileDate"));
 		assertTrue(expectedNodes.get("fileListCell-fileDate") instanceof Labeled);
-		assertEquals("2019-08-31  -  09:18:52", ((Labeled) expectedNodes.get("fileListCell-fileDate")).getText());
+		
+		String expectedPattern = "\\d{4}-\\d{2}-\\d{2}  -  \\d{2}:\\d{2}:\\d{2}";
+		String labelText = ((Labeled) expectedNodes.get("fileListCell-fileDate")).getText();
+		
+		assertTrue(labelText.matches(expectedPattern));
 	}
 	
 	@Test
