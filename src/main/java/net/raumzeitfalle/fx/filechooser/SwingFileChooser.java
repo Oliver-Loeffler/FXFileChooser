@@ -19,14 +19,17 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -99,10 +102,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
     private SwingFileChooser(String title) {
     		this.title = (null != title) ? title : "Choose file:";
     }
-    
-    private void setModel(FileChooserModel model) {
-        this.model = model;
-    }
+      
     
     public int showOpenDialog(Component parent) {
         if (null == this.dialog) {

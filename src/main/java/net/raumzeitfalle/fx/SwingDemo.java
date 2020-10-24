@@ -1,15 +1,11 @@
 package net.raumzeitfalle.fx;
 
-import javafx.application.Application;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import net.raumzeitfalle.fx.filechooser.Skin;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
-
-import javax.swing.*;
-import java.nio.file.Path;
-import java.util.Optional;
 
 public class SwingDemo {
     public static void main(String ... args) {
