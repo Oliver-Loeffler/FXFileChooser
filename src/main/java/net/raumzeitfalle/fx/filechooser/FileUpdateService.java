@@ -33,6 +33,8 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
 	private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
 
 	private ObservableList<IndexedPath> pathsToUpdate;
+	
+	private Thread shutdownThread = null;
 
 	public FileUpdateService(Path folderToStart, ObservableList<IndexedPath> paths) {
 		setSearchLocation(folderToStart);
@@ -115,7 +117,12 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
 
 	private void registerShutdownHook() {
 		Runnable shutDownAction = () -> Platform.runLater(this::cancelUpdate);
-		Runtime.getRuntime().addShutdownHook(new Thread(shutDownAction));
+		shutdownThread = new Thread(shutDownAction);
+		Runtime.getRuntime().addShutdownHook(shutdownThread);
+	}
+	
+	protected Thread getShutdownThread() {
+		return this.shutdownThread;
 	}
 
 }
