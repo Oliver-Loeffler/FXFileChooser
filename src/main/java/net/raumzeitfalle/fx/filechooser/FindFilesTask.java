@@ -38,6 +38,9 @@ final class FindFilesTask extends Task<Integer>{
     }
 
     /**
+     * Even in case the directory to be processed is empty or does not exist, 
+     * the consumer collection is always cleared as first step. 
+     * 
      * @return number of files found and processed
      */
     @Override

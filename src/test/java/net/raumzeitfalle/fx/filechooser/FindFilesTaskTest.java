@@ -21,6 +21,7 @@ package net.raumzeitfalle.fx.filechooser;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
@@ -89,14 +90,59 @@ class FindFilesTaskTest extends ApplicationTest {
 	@Test
 	void runningTheTask_inEmptyFolder(@TempDir Path emptyDirectory) throws Exception {
 
-		ObservableList<IndexedPath> listOfPaths = FXCollections.observableArrayList();
-		classUnderTest = new FindFilesTask(emptyDirectory, listOfPaths);
+		classUnderTest = new FindFilesTask(emptyDirectory, consumerCollection);
 
 		Awaitility.await()
 				  .atMost(Duration.ofSeconds(30))
 				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
 		  
-		assertEquals(0, listOfPaths.size());
+		assertEquals(0, consumerCollection.size());
+	}
+	
+	@Test
+	void that_null_for_listOfPaths_causes_exception() {
+		
+		Throwable t = assertThrows(NullPointerException.class,
+				()->new FindFilesTask(Paths.get("./"), null));
+		
+		assertEquals("listOfPaths must not be null", t.getMessage());
+		
+	}
+	
+	@Test
+	void that_null_for_searchDirectory_works() {
+		
+		classUnderTest = new FindFilesTask(null, consumerCollection);
+		assertEquals(1, consumerCollection.size());
+		
+		Awaitility.await()
+		  .atMost(Duration.ofSeconds(30))
+		  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+
+		assertEquals(0, consumerCollection.size());
+		
+	}
+	
+	@Test
+	void that_files_are_not_processed_as_directory() {
+		
+		/*
+		 * 
+		 * The test if a file is given or a directory is not performed in FindFilesTask.
+		 * If a file is provided instead of a directory, then task will not search 
+		 * the parent directory yet.
+		 * 
+		 */
+		Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
+		
+		classUnderTest = new FindFilesTask(givenFile, consumerCollection);
+		
+		Awaitility.await()
+				  .atMost(Duration.ofSeconds(30))
+				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+
+		assertEquals(0, consumerCollection.size());
+		
 	}
 	
 	private Predicate<Integer> allFilesHaveBeenProcessed() {
