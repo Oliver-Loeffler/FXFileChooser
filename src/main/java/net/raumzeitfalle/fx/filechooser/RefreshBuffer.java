@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.collections.ObservableList;
 
-class RefreshBuffer {
+final class RefreshBuffer {
     
     static RefreshBuffer get(FindFilesTask task, int expectedNumberOfElements, ObservableList<IndexedPath> target) {
     	int bufferSize = determineBufferSize(expectedNumberOfElements);
