@@ -132,13 +132,14 @@ class NamedLocationTest {
 		assertEquals(a.hashCode(), f.hashCode());
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	@Test
 	void identity_with_different_types() {
 		
 		Location a = Locations.withName("MyName", Paths.get("./"));
 		String location = "Its not a location";
 		
-		assertNotEquals(a, location);
+		assertFalse(a.equals(location));
 		
 	}
 	
@@ -147,7 +148,7 @@ class NamedLocationTest {
 		
 		Location a = Locations.withName("MyName", Paths.get("./"));
 		
-		assertNotEquals(a, null);
+		assertNotEquals(a, (Location) null);
 		
 	}
 	
