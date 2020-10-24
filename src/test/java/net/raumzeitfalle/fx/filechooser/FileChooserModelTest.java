@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -108,11 +109,14 @@ class FileChooserModelTest {
 	}
 	
 	@Test
-	void lookIntoUsersHome() {
+	void lookIntoUsersHome(@TempDir Path emptyTemporaryDir) {
 				
-		// TODO: change users home before test - ?
+		
 		PathFilter filter = PathFilter.acceptAllFiles("all files");
+
 		classUnderTest.updateFilterCriterion(filter, "");
+		classUnderTest.updateFilesIn(emptyTemporaryDir.toFile());
+		
 		classUnderTest.changeToUsersHome();
 		
 		assertTrue(classUnderTest.getFilteredPaths().size() > 1);
