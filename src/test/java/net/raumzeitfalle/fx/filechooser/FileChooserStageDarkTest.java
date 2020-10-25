@@ -42,7 +42,7 @@ class FileChooserStageDarkTest extends FileChooserStageTestBase {
 	@Test
 	void viewCanBeLoaded() {
 
-		assertDoesNotThrow(()->lookup("#okButton").queryButton());
+		assertDoesNotThrow(()->lookup("#okButton").query());
 		
 		clickOn("#refreshButton", MouseButton.PRIMARY);
 				

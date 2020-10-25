@@ -40,7 +40,7 @@ class FileChooserStageModenaTest extends FileChooserStageTestBase {
 	@Test
 	void viewCanBeLoaded() {
 
-		assertDoesNotThrow(()->lookup("#okButton").queryButton());
+		assertDoesNotThrow(()->lookup("#okButton").query());
 		
 		Parent root = primaryStage.getScene().getRoot();
 		

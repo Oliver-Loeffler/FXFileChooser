@@ -20,7 +20,7 @@
 		<junit.jupiter.version>5.7.0</junit.jupiter.version>
 		<awaitility.version>4.0.3</awaitility.version>
 
-		<testfx.version>4.0.15-alpha</testfx.version>
+		<testfx.version>4.0.8-alpha</testfx.version>
 		<testfx.monocle.version>8u76-b04</testfx.monocle.version> <!-- jdk-9+181 for Java 9 -->
 
 		<maven.jacoco.plugin.version>0.8.0</maven.jacoco.plugin.version>

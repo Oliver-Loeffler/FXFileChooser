@@ -33,10 +33,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.testfx.api.FxRobot;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
+import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -53,8 +50,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
-@ExtendWith(ApplicationExtension.class)
-class FileChooserControllerSelectionAndDirchangeTest {
+class FileChooserControllerSelectionAndDirchangeTest extends ApplicationTest {
 
 	protected Stage primaryStage;
 	
@@ -73,7 +69,7 @@ class FileChooserControllerSelectionAndDirchangeTest {
 	
 	protected Skin getSkin() { return Skin.DARK; }
 	
-	@Start
+	@Override
 	public void start(Stage stage) {
 		primaryStage = stage;
 		
@@ -115,32 +111,33 @@ class FileChooserControllerSelectionAndDirchangeTest {
 	// TODO: Figure out, why it runs differntly in Linux.
 	@Test
 	@EnabledOnOs({OS.WINDOWS})
-	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox(FxRobot robot) {
+	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
 		
-		Button okay   = robot.lookup("#okButton").queryButton();
+		Button okay   = lookup("#okButton").query();
 		assertTrue(okay.isDisabled());
 		
-		robot.clickOn("#fileNameFilter");
-		robot.write("./TestData/SomeFiles/");
+		clickOn("#fileNameFilter");
+		write("./TestData/SomeFiles/");
 		
-		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
+		ListView<?> list = lookup("#listOfFiles").query();
+				
 		assertTrue(list.getItems().isEmpty());
 		
-		robot.clickOn("#fileNameFilter");
-		robot.press(KeyCode.ENTER);
+		clickOn("#fileNameFilter");
+		press(KeyCode.ENTER);
 				
 		assertEquals(11, list.getItems().size());
 		
-		robot.clickOn("#listOfFiles");
-		robot.scroll(2, VerticalDirection.DOWN);
-		robot.sleep(300); // must not appear like a double click
-		robot.clickOn("#listOfFiles");	
+		clickOn("#listOfFiles");
+		scroll(2, VerticalDirection.DOWN);
+		sleep(300); // must not appear like a double click
+		clickOn("#listOfFiles");	
 		
 		
 		assertTrue(primaryStage.isShowing());
 		
 		
-		robot.clickOn(okay);
+		clickOn(okay);
 		
 		assertFalse(primaryStage.isShowing());
 		
