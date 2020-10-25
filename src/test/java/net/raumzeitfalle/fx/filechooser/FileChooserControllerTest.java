@@ -22,14 +22,16 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.VerticalDirection;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -44,7 +46,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
-class FileChooserControllerTest extends ApplicationTest {
+@ExtendWith(ApplicationExtension.class)
+class FileChooserControllerTest {
 
 	protected Stage primaryStage;
 	
@@ -63,7 +66,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	
 	protected Skin getSkin() { return Skin.DARK; }
 	
-	@Override 
+	@Start
 	public void start(Stage stage) {
 		primaryStage = stage;
 		
@@ -104,20 +107,20 @@ class FileChooserControllerTest extends ApplicationTest {
 		
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void clickOnCancelClosesWindow() {
+	void clickOnCancelClosesWindow(FxRobot robot) {
 		
-		clickOn("#cancelButton", MouseButton.PRIMARY);
+		robot.clickOn("#cancelButton", MouseButton.PRIMARY);
 		
 		assertFalse(primaryStage.isShowing());
 	}
 	
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_dialog_is_initialized_properly() {
+	void that_dialog_is_initialized_properly(FxRobot robot) {
 		
-		ListView<?> list = lookup("#listOfFiles").queryListView();
-		Button okay   = lookup("#okButton").queryButton();
-		Button cancel = lookup("#cancelButton").queryButton();
+		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
+		Button okay   = robot.lookup("#okButton").queryButton();
+		Button cancel = robot.lookup("#cancelButton").queryButton();
 		
 		assertTrue(okay.isDisabled());
 		assertFalse(cancel.isDisabled());
@@ -126,51 +129,16 @@ class FileChooserControllerTest extends ApplicationTest {
 		assertNull(model.getSelectedFile());
 		
 	}
-	
+		
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
-		
-		Button okay   = lookup("#okButton").queryButton();
-		assertTrue(okay.isDisabled());
-		
-		clickOn("#fileNameFilter");
-		write(Paths.get("TestData/SomeFiles").toString());
-		
-		ListView<?> list = lookup("#listOfFiles").queryListView();
-		assertTrue(list.getItems().isEmpty());
-		
-		press(KeyCode.ENTER);
-		
-		assertEquals(11, list.getItems().size());
-		
-		clickOn("#listOfFiles");
-		scroll(2, VerticalDirection.DOWN);
-		sleep(300); // must not appear like a double click
-		clickOn("#listOfFiles");	
-		
-		
-		assertTrue(primaryStage.isShowing());
-		
-		
-		clickOn(okay);
-		
-		assertFalse(primaryStage.isShowing());
-		
-		Path selection = model.getSelectedFile();
-		assertNotNull(selection);
-
-	}
-	
-	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
+	void that_parent_of_filepath_is_used_for_dirchange_in_textbox(FxRobot robot) {
 				
-		clickOn("#fileNameFilter");
-		write(Paths.get("TestData/SomeFiles/TestFile1.txt").toString());
-		press(KeyCode.ENTER);
+		robot.clickOn("#fileNameFilter");
+		robot.write(Paths.get("TestData/SomeFiles/TestFile1.txt").toString());
+		robot.press(KeyCode.ENTER);
 		
-		ListView<?> list = lookup("#listOfFiles").queryListView();
+		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
 		
 		assertEquals(11, list.getItems().size());
 
@@ -178,45 +146,45 @@ class FileChooserControllerTest extends ApplicationTest {
 	
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_list_is_updated_after_clicking_refresh(@TempDir Path directory) throws IOException {
+	void that_list_is_updated_after_clicking_refresh(FxRobot robot, @TempDir Path directory) throws IOException {
 		
-		ObservableList<Object> items = lookup("#listOfFiles").queryListView().getItems();
+		ObservableList<Object> items = robot.lookup("#listOfFiles").queryListView().getItems();
 	
 		dirChooser.setDirectory(directory);
-		clickOn("#chooser");
-		clickOn("#refreshButton");
+		robot.clickOn("#chooser");
+		robot.clickOn("#refreshButton");
 
-		sleep(200);
+		robot.sleep(200);
 		assertTrue(items.isEmpty());
 		
 		Path source = Paths.get("TestData/SomeFiles/TestFile1.txt");
 		Path target = directory.resolve(source.getFileName());
 		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
 		
-		clickOn("#refreshButton");
+		robot.clickOn("#refreshButton");
 		
-		sleep(200);
+		robot.sleep(200);
 		assertEquals(1, items.size());
 
 	}
 	
 	@Disabled("Sort functionality")
 	@Test
-	void that_list_is_sorted_after_clicking_on_sortmenu() {
+	void that_list_is_sorted_after_clicking_on_sortmenu(FxRobot robot) {
 		
 	}
 		
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_selection_is_accepted_with_doubleclick() {
+	void that_selection_is_accepted_with_doubleclick(FxRobot robot) {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
-		clickOn("#chooser");
+		robot.clickOn("#chooser");
 		
-		ListView<?> list = lookup("#listOfFiles").queryListView();
+		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
 		assertEquals(11, list.getItems().size());
 		
-		doubleClickOn("#listOfFiles");
+		robot.doubleClickOn("#listOfFiles");
 		
 		assertFalse(primaryStage.isShowing());
 			
@@ -227,25 +195,25 @@ class FileChooserControllerTest extends ApplicationTest {
 	
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
-	void that_list_content_is_reduced_by_entering_filtertext() {
+	void that_list_content_is_reduced_by_entering_filtertext(FxRobot robot) {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
-		clickOn("#chooser");
+		robot.clickOn("#chooser");
 		
-		ListView<?> list = lookup("#listOfFiles").queryListView();
+		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
 		assertEquals(11, list.getItems().size());
 		
-		clickOn("#fileNameFilter");
-		write("doc");
+		robot.clickOn("#fileNameFilter");
+		robot.write("doc");
 				
 		assertEquals(2, list.getItems().size(), "there are only 2 files which match the filter 'doc'");
 		
-		write("xml");
+		robot.write("xml");
 		
 		assertEquals(0, list.getItems().size(), "there is NO file which matches the filter 'docxml'");
 		
-		eraseText("docxml".length());
-		write("xml");
+		robot.eraseText("docxml".length());
+		robot.write("xml");
 		
 		assertEquals(1, list.getItems().size(), "there is 1 file which matches the filter 'xml'");
 		
@@ -253,29 +221,29 @@ class FileChooserControllerTest extends ApplicationTest {
 	
 	@Test
 	@EnabledOnOs({OS.WINDOWS})
-	void that_pathfilters_from_file_type_menu_are_applied() {
+	void that_pathfilters_from_file_type_menu_are_applied(FxRobot robot) {
 		
 		dirChooser.setDirectory(Paths.get("./TestData/SomeFiles"));
-		clickOn("#chooser");
+		robot.clickOn("#chooser");
 				
-		ListView<?> list = lookup("#listOfFiles").queryListView();
+		ListView<?> list = robot.lookup("#listOfFiles").queryListView();
 		
-		MenuButton filterMenu = lookup("#fileExtensionFilter").query();
-		clickOn(filterMenu);
-		clickOn("XML");
+		MenuButton filterMenu = robot.lookup("#fileExtensionFilter").query();
+		robot.clickOn(filterMenu);
+		robot.clickOn("XML");
 		
-		sleep(300);
+		robot.sleep(300);
 		assertEquals(1, list.getItems().size(), "there is 1 file which matches the filter 'xml'");
 		
-		clickOn(filterMenu);
-		clickOn("all files");
-		sleep(300);
+		robot.clickOn(filterMenu);
+		robot.clickOn("all files");
+		robot.sleep(300);
 		
 		assertEquals(11, list.getItems().size(), "for filter 'all files' 11 files are expected.");
 	}
 	
-	protected void captureImage(Parent put, String filename) {
-		BufferedImage bImage = SwingFXUtils.fromFXImage(capture(put).getImage(), null);
+	protected void captureImage(FxRobot robot, Parent put, String filename) {
+		BufferedImage bImage = SwingFXUtils.fromFXImage(robot.capture(put).getImage(), null);
         try {
 			ImageIO.write(bImage, "png", new File(filename));
 		} catch (IOException e) {
