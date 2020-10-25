@@ -29,6 +29,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.VerticalDirection;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -239,6 +240,42 @@ class FileChooserControllerTest extends ApplicationTest {
 		sleep(300);
 		
 		assertEquals(11, list.getItems().size(), "for filter 'all files' 11 files are expected.");
+	}
+	
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
+		
+		Button okay   = lookup("#okButton").query();
+		assertTrue(okay.isDisabled());
+		
+		clickOn("#fileNameFilter");
+		write("./TestData/SomeFiles/");
+		
+		ListView<?> list = lookup("#listOfFiles").query();
+				
+		assertTrue(list.getItems().isEmpty());
+		
+		clickOn("#fileNameFilter");
+		press(KeyCode.ENTER);
+				
+		assertEquals(11, list.getItems().size());
+		
+		clickOn("#listOfFiles");
+		scroll(2, VerticalDirection.DOWN);
+		sleep(300); // must not appear like a double click
+		clickOn("#listOfFiles");	
+		
+		
+		assertTrue(primaryStage.isShowing());
+		
+		
+		clickOn(okay);
+		
+		assertFalse(primaryStage.isShowing());
+		
+		Path selection = model.getSelectedFile();
+		assertNotNull(selection);
+
 	}
 	
 	protected void captureImage(Parent put, String filename) {
