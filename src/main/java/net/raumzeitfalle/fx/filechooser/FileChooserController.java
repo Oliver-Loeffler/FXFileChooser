@@ -105,7 +105,7 @@ final class FileChooserController implements Initializable {
     private Button cancelButton;
     
     @FXML
-    private VBox fileChooserForm;
+    private VBox fileChooserView;
       
     private final FileChooserModel model;
     
@@ -269,9 +269,9 @@ final class FileChooserController implements Initializable {
     
     private void changeDirectory() {
     	Invoke.later(()->{
-    		fileChooserForm.setDisable(true);
+    		fileChooserView.setDisable(true);
             pathSupplier.getUpdate(value->model.getUpdateService().restartIn(value));
-            fileChooserForm.setDisable(false);
+            fileChooserView.setDisable(false);
     	});
     }
     

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import javafx.scene.Parent;
+import javafx.scene.input.MouseButton;
 
 class FileChooserStageDarkTest extends FileChooserStageTestBase {
 
@@ -43,9 +44,13 @@ class FileChooserStageDarkTest extends FileChooserStageTestBase {
 
 		assertDoesNotThrow(()->lookup("#okButton").queryButton());
 		
+		clickOn("#refreshButton", MouseButton.PRIMARY);
+				
 		Parent root = primaryStage.getScene().getRoot();
 		
 		captureImage(root, "ScreenshotDarkTheme.png");
+		
+		
     }
 	
 }

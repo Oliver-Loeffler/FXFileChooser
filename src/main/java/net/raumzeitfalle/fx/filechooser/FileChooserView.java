@@ -19,26 +19,30 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.net.URL;
 
-final class FileChooserView extends VBox {
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
+
+final class FileChooserView extends AnchorPane {
 
     public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption) throws IOException {
 
-        Class<?> thisClass = getClass();
-        String fileName = thisClass.getSimpleName() + ".fxml";
-        URL resource = thisClass.getResource(fileName);
-        FXMLLoader loader = new FXMLLoader(resource);
-        loader.setRoot(this);
-
-        FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption);
-        loader.setController(controller);
-        loader.load();
-        Skin.applyTo(this,skin);
+    	 Class<?> thisClass = getClass();
+         String fileName = thisClass.getSimpleName() + ".fxml";
+         URL resource = thisClass.getResource(fileName);
+         FXMLLoader loader = new FXMLLoader(resource);
+         FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption);
+         loader.setController(controller);
+         Parent view = loader.load();
+         this.getChildren().add(view);
+         AnchorPane.setLeftAnchor(view, 0.0);
+         AnchorPane.setRightAnchor(view, 0.0);
+         AnchorPane.setTopAnchor(view, 0.0);
+         AnchorPane.setBottomAnchor(view, 0.0);
+         Skin.applyTo(this,skin);
 
     }
 
