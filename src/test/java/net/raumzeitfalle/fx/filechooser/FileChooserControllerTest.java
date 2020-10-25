@@ -252,7 +252,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
-	@EnabledOnOs({OS.WINDOWS})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_pathfilters_from_file_type_menu_are_applied() {
 		
 		dirChooser.setDirectory(Paths.get("./TestData/SomeFiles"));
@@ -262,7 +262,6 @@ class FileChooserControllerTest extends ApplicationTest {
 		
 		MenuButton filterMenu = lookup("#fileExtensionFilter").query();
 		clickOn(filterMenu);
-		
 		clickOn("XML");
 		
 		sleep(300);
