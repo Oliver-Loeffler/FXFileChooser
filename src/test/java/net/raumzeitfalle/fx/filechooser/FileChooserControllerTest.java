@@ -109,12 +109,14 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 	
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_dialog_is_initialized_properly() {
 		
 		ListView<?> list = lookup("#listOfFiles").query();
 		Button okay   = lookup("#okButton").query();
 		Button cancel = lookup("#cancelButton").query();
+		
+		sleep(400);
 		
 		assertTrue(okay.isDisabled());
 		assertFalse(cancel.isDisabled());
@@ -132,7 +134,10 @@ class FileChooserControllerTest extends FxTestTemplate {
 		write(Paths.get("TestData/SomeFiles/TestFile1.txt").toString());
 		press(KeyCode.ENTER);
 		
+		sleep(200);
+		
 		ListView<?> list = lookup("#listOfFiles").query();
+		
 		
 		assertEquals(11, list.getItems().size());
 
@@ -148,8 +153,8 @@ class FileChooserControllerTest extends FxTestTemplate {
 		dirChooser.setDirectory(directory);
 		clickOn("#chooser");
 		clickOn("#refreshButton");
-
 		sleep(200);
+
 		assertTrue(items.isEmpty());
 		
 		Path source = Paths.get("TestData/SomeFiles/TestFile1.txt");
@@ -157,8 +162,8 @@ class FileChooserControllerTest extends FxTestTemplate {
 		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
 		
 		clickOn("#refreshButton");
-		
 		sleep(200);
+		
 		assertEquals(1, items.size());
 
 	}
@@ -175,12 +180,13 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
 		clickOn("#chooser");
+		sleep(200);		
 		
 		ListView<?> list = lookup("#listOfFiles").query();
-		
 		assertEquals(11, list.getItems().size());
 		
 		doubleClickOn("#listOfFiles");
+		sleep(200);
 		
 		assertFalse(primaryStage.isShowing());
 			
@@ -195,6 +201,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
 		clickOn("#chooser");
+		sleep(200);
 		
 		ListView<?> list = lookup("#listOfFiles").query();
 		
@@ -228,13 +235,13 @@ class FileChooserControllerTest extends FxTestTemplate {
 		MenuButton filterMenu = lookup("#fileExtensionFilter").query();
 		clickOn(filterMenu);
 		clickOn("XML");
+		sleep(200);
 		
-		sleep(300);
 		assertEquals(1, list.getItems().size(), "there is 1 file which matches the filter 'xml'");
 		
 		clickOn(filterMenu);
 		clickOn("all files");
-		sleep(300);
+		sleep(200);
 		
 		assertEquals(11, list.getItems().size(), "for filter 'all files' 11 files are expected.");
 	}
@@ -247,6 +254,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		clickOn("#fileNameFilter");
 		write("./TestData/SomeFiles/");
+		sleep(200);
 		
 		ListView<?> list = lookup("#listOfFiles").query();
 				
@@ -254,12 +262,14 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		clickOn("#fileNameFilter");
 		press(KeyCode.ENTER);
-				
+		sleep(200);
+		
 		assertEquals(11, list.getItems().size());
 		
 		clickOn("#listOfFiles");
 		scroll(2, VerticalDirection.DOWN);
-		sleep(300); // must not appear like a double click
+		sleep(400); // must not appear like a double click
+		
 		clickOn("#listOfFiles");	
 		
 		
@@ -267,6 +277,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		
 		clickOn(okay);
+		sleep(200);
 		
 		assertFalse(primaryStage.isShowing());
 		
