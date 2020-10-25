@@ -1,18 +1,21 @@
 package net.raumzeitfalle.fx.filechooser;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 
-class FilesListCellTest extends ApplicationTest {
+class FilesListCellTest extends FxTestTemplate {
 
 	private FilesListCell controlUnderTest; 
 	

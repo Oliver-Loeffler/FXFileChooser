@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
@@ -44,9 +43,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
-class FileChooserControllerTest extends ApplicationTest {
-
-	protected Stage primaryStage;
+class FileChooserControllerTest extends FxTestTemplate {
 	
 	private FileChooserModel model;
 	

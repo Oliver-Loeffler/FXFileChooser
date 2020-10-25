@@ -27,9 +27,8 @@ import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
 
-class FileChooserModelFactoryMethodsFxTest extends ApplicationTest {
+class FileChooserModelFactoryMethodsFxTest extends FxTestTemplate {
 	
 	private FileChooserModel classUnderTest;
 	

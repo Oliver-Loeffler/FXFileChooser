@@ -35,12 +35,11 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-class FindFilesTaskTest extends ApplicationTest {
+class FindFilesTaskTest extends FxTestTemplate {
 
 	private final Path searchLocation = Paths.get("TestData/SomeFiles");
 

@@ -9,14 +9,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import net.raumzeitfalle.fx.filechooser.ServiceWorkerStateListener.ServiceExecResult;
 
-class FileUpdateServiceTest extends ApplicationTest {
+class FileUpdateServiceTest extends FxTestTemplate {
 	
 	public static @TempDir Path emptyTemporaryFolder;
 	
