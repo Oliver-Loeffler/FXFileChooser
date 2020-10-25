@@ -20,6 +20,8 @@ import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -101,6 +103,7 @@ class FileChooserControllerTest extends ApplicationTest {
     }
 		
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void clickOnCancelClosesWindow() {
 		
 		clickOn("#cancelButton", MouseButton.PRIMARY);
@@ -109,6 +112,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_dialog_is_initialized_properly() {
 		
 		ListView<?> list = lookup("#listOfFiles").queryListView();
@@ -124,6 +128,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
 		
 		Button okay   = lookup("#okButton").queryButton();
@@ -158,6 +163,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
 				
 		clickOn("#fileNameFilter");
@@ -171,6 +177,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_list_is_updated_after_clicking_refresh(@TempDir Path directory) throws IOException {
 		
 		ObservableList<Object> items = lookup("#listOfFiles").queryListView().getItems();
@@ -200,6 +207,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 		
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_selection_is_accepted_with_doubleclick() {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
@@ -218,6 +226,7 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
 	void that_list_content_is_reduced_by_entering_filtertext() {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
@@ -243,9 +252,10 @@ class FileChooserControllerTest extends ApplicationTest {
 	}
 	
 	@Test
+	@EnabledOnOs({OS.WINDOWS})
 	void that_pathfilters_from_file_type_menu_are_applied() {
 		
-		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
+		dirChooser.setDirectory(Paths.get("./TestData/SomeFiles"));
 		clickOn("#chooser");
 				
 		ListView<?> list = lookup("#listOfFiles").queryListView();
