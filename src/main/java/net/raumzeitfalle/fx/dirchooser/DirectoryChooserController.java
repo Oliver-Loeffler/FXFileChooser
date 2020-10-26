@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
+import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +24,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 public class DirectoryChooserController implements Initializable {
@@ -33,11 +35,19 @@ public class DirectoryChooserController implements Initializable {
 	@FXML
 	private TreeView<String> directoryTree;
 	
-	private DirectoryTreeItem root;
+	@FXML
+    private Button okButton;
+    
+    @FXML
+    private Button cancelButton;
 	
-	public DirectoryChooserController(DirectoryChooserModel model) {
-		
-	}
+	private ObjectProperty<Path> selectedDirectoryProperty = new SimpleObjectProperty<Path>(null);
+	
+	private DirectoryTreeItem root;
+
+	private Runnable onSelect;
+
+	private Runnable onCancel;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -48,13 +58,62 @@ public class DirectoryChooserController implements Initializable {
 		this.directoryTree.showRootProperty().set(true);
 		root.setExpanded(true);
 		
+		selectedDirectory.textProperty().bind(selectedDirectoryProperty.asString());
 		
+		selectedDirectoryProperty.set(null);
 		
+		okButton.setOnAction(e -> okayAction());
+		
+        cancelButton.setOnAction(e -> cancelAction());
+		
+        this.directoryTree.setOnKeyPressed(keyEvent->{
+        	if (keyEvent.getCode() == KeyCode.RIGHT) {
+        		readSubDirsForSelectedItem(true);        		
+        	}
+        	else if (keyEvent.getCode() == KeyCode.ENTER) {
+        		okayAction();
+        	}
+        	else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+        		cancelAction();
+        	}
+        });
+        
+        
+        this.directoryTree.setOnMouseClicked(mouseEvent->{
+        	if (mouseEvent.getClickCount() == 1)
+        		readSubDirsForSelectedItem(false);
+        	else if (mouseEvent.getClickCount() == 2)
+        		readSubDirsForSelectedItem(true);
+        });
+        
 		this.directoryTree.getSelectionModel().selectedItemProperty().addListener((observable,oldItem,newItem)->{
 			
-			if (null != newItem) {
+			if (null != newItem && null != ((DirectoryTreeItem) newItem).getFullPath()) {
 				DirectoryTreeItem item = (DirectoryTreeItem) newItem;
-				selectedDirectory.setText(item.getFullPath());
+				
+				if (null == item.getFullPath())
+					selectedDirectoryProperty.set(null);
+				else
+					selectedDirectoryProperty.set(Paths.get(item.getFullPath()));
+				
+				
+				readSubDirsForSelectedItem(false);
+
+			}
+		});
+		
+		
+		
+		
+	}
+	
+	private void readSubDirsForSelectedItem(boolean expandNode) {
+		DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree.getSelectionModel().selectedItemProperty().get();
+		
+		if (null != item) {
+			if (null == item.getFullPath()) {
+				item.setExpanded(expandNode);
+			} else {
 				Path path = Paths.get(item.getFullPath());
 				
 				Node graphic = item.getGraphic();
@@ -86,7 +145,7 @@ public class DirectoryChooserController implements Initializable {
 					update.setOnSucceeded(event->{
 						Platform.runLater(()->{
 							item.setGraphic(graphic);
-							item.setExpanded(false);
+							item.setExpanded(expandNode);
 						});
 					});
 					
@@ -100,15 +159,18 @@ public class DirectoryChooserController implements Initializable {
 					
 					Executors.newCachedThreadPool().submit(update);
 				}
-
-			}
-		});
-		
-		
-		
-		
+			}	
+		}
 	}
 	
+	private void cancelAction() {
+		Platform.runLater(onCancel);
+	}
+
+	private void okayAction() {
+		Platform.runLater(onSelect);
+	}
+
 	public void initDirTree() {
 		Runnable treeInit = ()->{
 			Iterable<Path> rootDirectories=FileSystems.getDefault().getRootDirectories();
@@ -144,6 +206,18 @@ public class DirectoryChooserController implements Initializable {
 			
 		}
 		
+	}
+
+	public ReadOnlyObjectProperty<Path> selectedDirectoryProperty() {
+		return selectedDirectoryProperty;
+	}
+
+	public void setOnSelect(Runnable action) {
+		this.onSelect = action;
+	}
+
+	public void setOnCancel(Runnable action) {
+		this.onCancel = action;
 	}
 
 }

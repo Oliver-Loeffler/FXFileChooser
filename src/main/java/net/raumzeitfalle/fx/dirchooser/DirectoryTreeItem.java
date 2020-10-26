@@ -1,19 +1,14 @@
 package net.raumzeitfalle.fx.dirchooser;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.Event;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
@@ -71,7 +66,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
 		
 		this.addEventHandler(TreeItem.branchExpandedEvent(), this::handleExpansion);
 		this.addEventHandler(TreeItem.branchCollapsedEvent(), this::handleCollapse);
-
+		
 	}
 	
 	private long countSubDirs(Path path) {
@@ -135,9 +130,8 @@ public class DirectoryTreeItem extends TreeItem<String> {
 				Platform.runLater(()->item.setGraphic(newIcon(FOLDER_OPEN)));
 			});
 			
-			
-			
-			//Executors.newCachedThreadPool().submit(update);
+			// if (item.getChildren().isEmpty())
+				// Executors.newCachedThreadPool().submit(update);
 			
 			
 
@@ -150,7 +144,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
 			if (item.getChildren().isEmpty()) {
 				item.setGraphic(newIcon(EMPTY_FOLDER));
 			} else {
-				item.setGraphic(newIcon(FOLDER_WITH_CONTENT));
+				item.setGraphic(newIcon(FOLDER_WITH_CONTENT));				
 				Platform.runLater(()->item.getChildren().clear());
 			}
 		}

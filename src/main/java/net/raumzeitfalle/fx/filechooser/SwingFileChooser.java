@@ -19,22 +19,20 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.awt.*;
+import java.io.*;
+import java.nio.file.*;
 import java.util.List;
+import java.util.function.Consumer;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
+import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
@@ -64,18 +62,55 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         SwingFileChooser fc = new SwingFileChooser(title);
 
 
-        PathSupplier pathSupplier = FXDirectoryChooser.createIn(startHere, ()->fc.getScene().getWindow());
         fc.model = FileChooserModel.startingIn(startHere);
         for (PathFilter f : filter) {
             fc.model.addOrRemoveFilter(f);
         }
 
+        
+        
         // do all JavaFX work
         Platform.runLater(()->{
             try {
+            	
+            	boolean useOldSchoolDirChooser = false;
+            	
+            	PathSupplier pathSupplier = null;
+            	if (useOldSchoolDirChooser) {            		
+            		pathSupplier = FXDirectoryChooser.createIn(startHere, ()->fc.getScene().getWindow());
+            	} else {
+            		DirectoryChooserView dirChooser = new DirectoryChooserView(skin);
+                	Scene dirChooserScene = new Scene(dirChooser);
+                	
+            		pathSupplier = new PathSupplier() {
+    					
+    					@Override
+    					public void getUpdate(Consumer<Path> update) {
+    						fc.setTitle("Choose directory:");
+    						Scene previousScene = fc.getScene();
+    						String previousTitle = fc.title;
+    						fc.setScene(dirChooserScene);
+    						
+    						dirChooser.onSelect(()->{
+    							Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+    							if (null != selectedDir) {
+    								fc.setTitle(selectedDir.toString());
+    								update.accept(selectedDir);
+    							} else {
+    								fc.setTitle(previousTitle);    								
+    							}
+        						fc.setScene(previousScene);	
+    						});
+    						
+    						dirChooser.onCancel(()->fc.setScene(previousScene));
+    						
+    					}
+    				};	
+            	}
+            	
                 FileChooserView view = new FileChooserView(pathSupplier,fc,fc.model,skin,FileChooserViewOption.STAGE);
-                Scene scene = new Scene(view);
-                fc.setScene(scene);
+                Scene fileChooserScene = new Scene(view);
+                fc.setScene(fileChooserScene);
             } catch (IOException e) {
                throw new RuntimeException(e);
             } ;
@@ -97,7 +132,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
     
     private JDialog dialog;   
     
-    private final String title;
+    private String title;
     
     private SwingFileChooser(String title) {
     		this.title = (null != title) ? title : "Choose file:";
@@ -113,7 +148,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
             this.setPreferredSize(size);
             this.setMinimumSize(size);
             dialog.pack();
-            dialog.setResizable(true);            
+            dialog.setResizable(true);   
         }
        
         
@@ -140,5 +175,10 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
 
     public void addLocations(List<Location> locations) {
         locations.forEach(model::addLocation);
+    }
+    
+    protected void setTitle(String newTitle) {
+    	this.title = newTitle;
+    	this.dialog.setTitle(title);
     }
 }

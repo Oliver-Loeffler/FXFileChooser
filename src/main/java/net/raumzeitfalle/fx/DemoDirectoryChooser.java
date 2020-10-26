@@ -15,7 +15,7 @@ public class DemoDirectoryChooser extends Application  {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	
-    	DirectoryChooserView view = new DirectoryChooserView(null, null, Skin.DARK);
+    	DirectoryChooserView view = new DirectoryChooserView(Skin.DARK);
     	Scene scene = new Scene(view);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");

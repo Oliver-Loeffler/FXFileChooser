@@ -51,6 +51,8 @@ class FileChooserModelApplicationTest extends FxTestTemplate {
 					 classUnderTest.currentSearchPath().get().toAbsolutePath(),
 					 "search path after initialization");
 					
+		sleep(500);
+		
 		assertEquals(11, classUnderTest.getFilteredPaths().size());
 
 		// search all files with extension ".txt"	

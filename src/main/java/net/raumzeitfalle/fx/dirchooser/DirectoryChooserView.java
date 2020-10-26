@@ -2,16 +2,20 @@ package net.raumzeitfalle.fx.dirchooser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import net.raumzeitfalle.fx.filechooser.Skin;
 
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class DirectoryChooserView extends VBox {
 
-	public DirectoryChooserView(Stage parent, DirectoryChooserModel model, Skin skin) throws IOException {
+	private final DirectoryChooserController controller;
+	
+	public DirectoryChooserView(Skin skin) throws IOException {
 
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
@@ -19,7 +23,7 @@ public class DirectoryChooserView extends VBox {
         FXMLLoader loader = new FXMLLoader(resource);
         loader.setRoot(this);
 
-        DirectoryChooserController controller = new DirectoryChooserController(model);
+        controller = new DirectoryChooserController();
         loader.setController(controller);
         loader.load();
         Skin.applyTo(this,skin);
@@ -28,5 +32,18 @@ public class DirectoryChooserView extends VBox {
         controller.initDirTree();
 
     }
+
+	public ReadOnlyObjectProperty<Path> selectedDirectoryProperty() {
+		return controller.selectedDirectoryProperty();
+	}
+
+	public void onSelect(Runnable action) {
+		controller.setOnSelect(action);
+	}
+
+	public void onCancel(Runnable action) {
+		controller.setOnCancel(action);
+		
+	}
 	
 }
