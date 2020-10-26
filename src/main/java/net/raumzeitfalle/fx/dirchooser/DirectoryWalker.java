@@ -32,7 +32,7 @@ class DirectoryWalker {
 	}
 	
 	public DirectoryTreeItem read() {
-		try (DirectoryStream<Path> dirs = Files.newDirectoryStream(current)) {
+		try (DirectoryStream<Path> dirs = Files.newDirectoryStream(current, p->p.toFile().isDirectory())) {
 			dirs.forEach(this::addNode);
 		} catch (IOException e) {
 			// consume error
@@ -41,7 +41,7 @@ class DirectoryWalker {
 	}
 	
 	private void addNode(Path path) {
-		if (Files.isDirectory(path) && currentDepth <= maxDepth) {
+		if (currentDepth <= maxDepth) {
 			
 			DirectoryTreeItem leaf = new DirectoryWalker(this, path).read();
 			rootNode.getChildren().add(leaf);	

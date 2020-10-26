@@ -1,12 +1,19 @@
 package net.raumzeitfalle.fx.dirchooser;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.Event;
-import javafx.scene.control.*;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
@@ -99,9 +106,41 @@ public class DirectoryTreeItem extends TreeItem<String> {
 		if (null != item) {
 			item.setGraphic(newIcon(FOLDER_OPEN));
 			Path path = Paths.get(item.getFullPath());
-			item.getChildren().clear();
 			
-			item.getChildren().addAll(new DirectoryWalker(path, 1).read().getChildren());
+			Task<Void> update = new Task<Void>() {
+
+				@Override
+				protected Void call() throws Exception {
+					List<TreeItem<String>> items = new DirectoryWalker(path).read().getChildren();
+					item.getChildren().clear();
+					item.getChildren().addAll(items);
+					return null;
+				}
+				
+			};
+			
+			update.setOnRunning(event->{
+				ProgressBar progress = new ProgressBar();
+				progress.setProgress(-1);
+				progress.setMaxSize(32, 12);
+				progress.setPrefSize(32, 12);
+				Platform.runLater(()->item.setGraphic(progress));
+			});
+			
+			update.setOnSucceeded(event->{
+				Platform.runLater(()->item.setGraphic(newIcon(FOLDER_OPEN)));
+			});
+			
+			update.setOnFailed(event->{
+				Platform.runLater(()->item.setGraphic(newIcon(FOLDER_OPEN)));
+			});
+			
+			
+			
+			//Executors.newCachedThreadPool().submit(update);
+			
+			
+
 		}
 	}
 	
@@ -112,9 +151,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
 				item.setGraphic(newIcon(EMPTY_FOLDER));
 			} else {
 				item.setGraphic(newIcon(FOLDER_WITH_CONTENT));
-				for (TreeItem<String> child : item.getChildren()) {
-					child.getChildren().clear();
-				}
+				Platform.runLater(()->item.getChildren().clear());
 			}
 		}
 	}

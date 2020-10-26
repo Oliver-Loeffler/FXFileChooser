@@ -23,6 +23,9 @@ public class DirectoryChooserView extends VBox {
         loader.setController(controller);
         loader.load();
         Skin.applyTo(this,skin);
+        
+        
+        controller.initDirTree();
 
     }
 	
