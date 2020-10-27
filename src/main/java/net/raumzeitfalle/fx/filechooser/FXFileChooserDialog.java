@@ -52,7 +52,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     
     private final FileChooserModel model;
     
-    // TODO: Replace FXDirectoryChooser with custom integrated file chooser
+    // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well but keep old API alive for JavaFX
     // TODO: Make CSS file externally configurable
     private FXFileChooserDialog(Skin skin,FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;

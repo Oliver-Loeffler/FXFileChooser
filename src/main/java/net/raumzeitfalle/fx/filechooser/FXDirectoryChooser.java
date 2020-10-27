@@ -31,7 +31,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 
-/*
+/**
+ * Functionality will become internal-API.
+ * 
  * TODO: Remove the old style FX Directory Chooser.
  */
 @Deprecated
