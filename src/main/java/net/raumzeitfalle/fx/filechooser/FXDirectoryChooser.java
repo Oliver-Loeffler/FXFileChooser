@@ -31,6 +31,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 
+/*
+ * TODO: Remove the old style FX Directory Chooser.
+ */
+@Deprecated
 public class FXDirectoryChooser implements PathSupplier {
     
     public static FXDirectoryChooser createIn(ObjectProperty<Path> startLocation, Supplier<Window> ownerProvider) {
