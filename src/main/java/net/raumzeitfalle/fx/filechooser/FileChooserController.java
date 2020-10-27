@@ -149,6 +149,10 @@ final class FileChooserController implements Initializable {
         this.selectedFile.promptTextProperty()
                 .bind(binding);
 
+        /*
+         * TODO: Add Key listener to accept selected file when pressing ENTER
+         * TODO: Add Key listener to perform CANCEL when pressing ESC
+         */
         this.listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
 
         this.listOfFiles.setCellFactory(e->new FilesListCell());
