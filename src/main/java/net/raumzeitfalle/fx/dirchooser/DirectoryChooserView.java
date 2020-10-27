@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-import net.raumzeitfalle.fx.filechooser.Skin;
-
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.Parent;
+import javafx.scene.layout.AnchorPane;
+import net.raumzeitfalle.fx.filechooser.Skin;
 
-public class DirectoryChooserView extends VBox {
+public class DirectoryChooserView extends AnchorPane {
 
 	private final DirectoryChooserController controller;
 	
@@ -21,16 +20,19 @@ public class DirectoryChooserView extends VBox {
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
         FXMLLoader loader = new FXMLLoader(resource);
-        loader.setRoot(this);
-
+        
         controller = new DirectoryChooserController();
         loader.setController(controller);
-        loader.load();
+        Parent view = loader.load();
+        this.getChildren().add(view);
+        
+        AnchorPane.setLeftAnchor(view, 0.0);
+        AnchorPane.setRightAnchor(view, 0.0);
+        AnchorPane.setTopAnchor(view, 0.0);
+        AnchorPane.setBottomAnchor(view, 0.0);
+        
         Skin.applyTo(this,skin);
         
-        
-        controller.initDirTree();
-
     }
 
 	public ReadOnlyObjectProperty<Path> selectedDirectoryProperty() {

@@ -1,10 +1,16 @@
 package net.raumzeitfalle.fx.dirchooser;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 class DirectoryWalker {
-	
+		
 	private Path current;
 	
 	private int maxDepth;
@@ -12,6 +18,8 @@ class DirectoryWalker {
 	private int currentDepth;
 	
 	private DirectoryTreeItem rootNode;
+	
+	private static Filter<Path> pathFilter = getPathFilter();
 	
 	public DirectoryWalker(Path start) {
 		this(start,0);
@@ -32,14 +40,23 @@ class DirectoryWalker {
 	}
 	
 	public DirectoryTreeItem read() {
-		try (DirectoryStream<Path> dirs = Files.newDirectoryStream(current, p->p.toFile().isDirectory())) {
-			dirs.forEach(this::addNode);
+		return read(new SimpleBooleanProperty(false));
+	}
+	
+	protected DirectoryTreeItem read(ReadOnlyBooleanProperty cancelled) {
+		try (DirectoryStream<Path> dirs = Files.newDirectoryStream(current, pathFilter)) {
+			for (Path path : dirs) {
+				if (cancelled.getValue())
+					break;
+				addNode(path);
+			}
 		} catch (IOException e) {
 			// consume error
 		}
 		return this.rootNode;
 	}
 	
+
 	private void addNode(Path path) {
 		if (currentDepth <= maxDepth) {
 			
@@ -49,4 +66,15 @@ class DirectoryWalker {
 		}
 	}
 	
+	private static Filter<Path> getPathFilter() {
+		return DirectoryWalker::isDirectory;
+	}
+	
+	private static boolean isDirectory(Path path) {
+		/*
+		 * On Windows, testing for junctions requires testing for existence of the file system 
+		 * entry. Here path.toFile().exists() does not work, whereas Files.exists(path) works fine. 
+		 */
+		return path.toFile().isDirectory() && Files.exists(path);
+	}
 }

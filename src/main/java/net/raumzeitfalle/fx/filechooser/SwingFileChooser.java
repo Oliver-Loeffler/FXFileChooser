@@ -19,20 +19,24 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.awt.*;
-import java.io.*;
-import java.nio.file.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.swing.*;
-
-import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
-import net.raumzeitfalle.fx.filechooser.locations.Location;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
@@ -61,7 +65,6 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser(title);
 
-
         fc.model = FileChooserModel.startingIn(startHere);
         for (PathFilter f : filter) {
             fc.model.addOrRemoveFilter(f);
@@ -71,8 +74,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         
         // do all JavaFX work
         Platform.runLater(()->{
-            try {
-            	
+            try {           	
             	boolean useOldSchoolDirChooser = false;
             	
             	PathSupplier pathSupplier = null;
@@ -81,7 +83,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
             	} else {
             		DirectoryChooserView dirChooser = new DirectoryChooserView(skin);
                 	Scene dirChooserScene = new Scene(dirChooser);
-                	
+                                	
             		pathSupplier = new PathSupplier() {
     					
     					@Override

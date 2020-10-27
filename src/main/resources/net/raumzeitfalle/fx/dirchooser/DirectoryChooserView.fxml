@@ -1,52 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.SVGPath?>
 
 
-<fx:root fx:id="directoryChooserForm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="directoryChooserView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane>
-         <children>
-            <HBox alignment="CENTER_LEFT" StackPane.alignment="TOP_LEFT">
-               <children>
-                  <FlowPane fx:id="counterPane" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="SOMETIMES">
-                     <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text="(" />
-                        <Label fx:id="filteredPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text="filtered" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text="/" />
-                        <Label fx:id="allPathsCount" alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text="allPaths" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="counter-label" text=")" />
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </FlowPane>
-               </children>
-            </HBox>
-            <TextField fx:id="fileNameFilter1" maxHeight="1.7976931348623157E308" minHeight="36.0" promptText="(filter criterion)">
-               <padding>
-                  <Insets left="25.0" />
-               </padding>
-            </TextField>
-            <SVGPath content="M 14.343089,0.99999546 H 1.6570127 c -0.582914,0 -0.87705065,0.70727004 -0.4640234,1.12030004 l 5.0570069,5.05777 v 5.6344295 c 0,0.21412 0.1044805,0.4148 0.2799179,0.53763 l 2.1874996,1.5307 c 0.4315663,0.30209 1.0325818,-0.004 1.0325818,-0.53763 V 7.1780655 l 5.0571435,-5.05777 c 0.41218,-0.41221 0.120067,-1.12030004 -0.46405,-1.12030004 z" fill="#00000087" stroke="WHITE" styleClass="filter-icon" StackPane.alignment="CENTER_LEFT">
-               <StackPane.margin>
-                  <Insets left="6.0" />
-               </StackPane.margin>
-            </SVGPath>
-         </children>
-      </StackPane>
       <TreeView fx:id="directoryTree" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
       <TextField fx:id="selectedDirectory" editable="false" minHeight="36.0" promptText="(shows the selected directory)" VBox.vgrow="NEVER" />
       <HBox prefHeight="36.0" prefWidth="200.0" VBox.vgrow="NEVER">
@@ -56,4 +18,4 @@
          </children>
       </HBox>
    </children>
-</fx:root>
+</VBox>

@@ -1,14 +1,16 @@
 package net.raumzeitfalle.fx.dirchooser;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.Event;
-import javafx.scene.control.*;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
@@ -19,8 +21,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
 	private static final String FOLDER_WITH_CONTENT = "M464,128H272L208,64H48A48,48,0,0,0,0,112V400a48,48,0,0,0,48,48H464a48,48,0,0,0,48-48V176A48,48,0,0,0,464,128ZM359.5,296a16,16,0,0,1-16,16h-64v64a16,16,0,0,1-16,16h-16a16,16,0,0,1-16-16V312h-64a16,16,0,0,1-16-16V280a16,16,0,0,1,16-16h64V200a16,16,0,0,1,16-16h16a16,16,0,0,1,16,16v64h64a16,16,0,0,1,16,16Z";
 	
 	private static final String FOLDER_OPEN = "M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z";
-		
-	
+			
 	// this stores the full path to the file or directory
 	private String fullPath;
 
@@ -29,6 +30,8 @@ public class DirectoryTreeItem extends TreeItem<String> {
 	}
 
 	private boolean isDirectory;
+
+	private double iconSize = 32.0;
 
 	public boolean isDirectory() {
 		return (this.isDirectory);
@@ -46,11 +49,12 @@ public class DirectoryTreeItem extends TreeItem<String> {
 		Path path = Paths.get(this.fullPath);
 		
 		long subDirs = countSubDirs(path);
-		
-		if (subDirs > 1) {
-			this.setGraphic(newIcon(FOLDER_WITH_CONTENT));						
+		if (subDirs > 0) {
+			//this.setGraphic(newIcon(FOLDER_WITH_CONTENT));
+			this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize ));
 		} else {
-			this.setGraphic(newIcon(EMPTY_FOLDER));
+			//this.setGraphic(newIcon(EMPTY_FOLDER));
+			this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
 		}
 		
 
@@ -85,12 +89,15 @@ public class DirectoryTreeItem extends TreeItem<String> {
 		pane.setMinSize(witdh, height);
 		pane.setPrefSize(witdh, height);
 		pane.setMaxSize(witdh, height);
-		
 		SVGPath path = new SVGPath();
 		path.setContent(folder);
-		path.setScaleX(0.03);
-		path.setScaleY(0.03);
+		path.setScaleX(0.04);
+		path.setScaleY(0.04);
 
+//		path.setStroke(Color.BLACK);
+//		path.setStrokeWidth(1);
+//		path.setFill(Color.DARKBLUE);
+		
 		pane.getChildren().add(path);
 		
 		return pane;
@@ -99,42 +106,8 @@ public class DirectoryTreeItem extends TreeItem<String> {
 	private void handleExpansion(Event e) {
 		DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
 		if (null != item) {
-			item.setGraphic(newIcon(FOLDER_OPEN));
-			Path path = Paths.get(item.getFullPath());
-			
-			Task<Void> update = new Task<Void>() {
-
-				@Override
-				protected Void call() throws Exception {
-					List<TreeItem<String>> items = new DirectoryWalker(path).read().getChildren();
-					item.getChildren().clear();
-					item.getChildren().addAll(items);
-					return null;
-				}
-				
-			};
-			
-			update.setOnRunning(event->{
-				ProgressBar progress = new ProgressBar();
-				progress.setProgress(-1);
-				progress.setMaxSize(32, 12);
-				progress.setPrefSize(32, 12);
-				Platform.runLater(()->item.setGraphic(progress));
-			});
-			
-			update.setOnSucceeded(event->{
-				Platform.runLater(()->item.setGraphic(newIcon(FOLDER_OPEN)));
-			});
-			
-			update.setOnFailed(event->{
-				Platform.runLater(()->item.setGraphic(newIcon(FOLDER_OPEN)));
-			});
-			
-			// if (item.getChildren().isEmpty())
-				// Executors.newCachedThreadPool().submit(update);
-			
-			
-
+			//item.setGraphic(newIcon(FOLDER_OPEN));
+			item.setGraphic(DirectoryIcons.OPEN.get(iconSize));
 		}
 	}
 	
@@ -142,10 +115,12 @@ public class DirectoryTreeItem extends TreeItem<String> {
 		DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
 		if (null != item) {
 			if (item.getChildren().isEmpty()) {
-				item.setGraphic(newIcon(EMPTY_FOLDER));
+				//item.setGraphic(newIcon(EMPTY_FOLDER));
+				this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
 			} else {
-				item.setGraphic(newIcon(FOLDER_WITH_CONTENT));				
-				Platform.runLater(()->item.getChildren().clear());
+				//item.setGraphic(newIcon(FOLDER_WITH_CONTENT));
+				this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
+				//Platform.runLater(()->item.getChildren().clear());
 			}
 		}
 	}
