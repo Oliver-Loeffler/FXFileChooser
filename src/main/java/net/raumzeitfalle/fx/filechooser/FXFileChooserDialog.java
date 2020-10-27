@@ -66,8 +66,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
         FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG);
-
-        //getDialogPane().setContent(FileChooserPresenter.create(model,this, skin));
+     
         getDialogPane().setContent(view);
 
         getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
