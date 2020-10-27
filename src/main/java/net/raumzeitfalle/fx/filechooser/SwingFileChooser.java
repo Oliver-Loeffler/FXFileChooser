@@ -38,6 +38,12 @@ import javafx.scene.Scene;
 import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
+/*
+ * TODO: Review usage schema  and assign proper mouse and keyboard actions
+ * TODO: Rework demos and show new way to select directories
+ * TODO: Add a transition for the scene change between file chooser and dir chooser.
+ *  
+ */
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
     private static final long serialVersionUID = -5879082370711306802L;

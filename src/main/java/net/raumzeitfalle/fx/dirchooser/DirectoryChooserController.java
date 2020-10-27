@@ -69,10 +69,12 @@ public class DirectoryChooserController implements Initializable {
 		directoryTree.showRootProperty().set(true);
 		root.setExpanded(true);
 		
+		// TODO: Avoid that the text field states "null" when nothing is selected.
 		selectedDirectory.textProperty().bind(selectedDirectoryProperty.asString());
 		
 		selectedDirectoryProperty.set(null);
 		
+		okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
 		okButton.setOnAction(e -> okayAction());
 		
         cancelButton.setOnAction(e -> cancelAction());
@@ -100,8 +102,9 @@ public class DirectoryChooserController implements Initializable {
 
         this.directoryTree.setOnKeyPressed(keyEvent->{
         	if (keyEvent.getCode() == KeyCode.RIGHT) {
-        		readSubDirsForSelectedItem(true);
         		keyEvent.consume();
+        		readSubDirsForSelectedItem();
+        		expandSelectedItem();
         	}
         	else if (keyEvent.getCode() == KeyCode.ENTER) {
         		okayAction();
@@ -117,12 +120,18 @@ public class DirectoryChooserController implements Initializable {
         
         this.directoryTree.setOnMouseClicked(mouseEvent->{
         	if (mouseEvent.getClickCount() == 2) {
-        		readSubDirsForSelectedItem(true);
         		mouseEvent.consume();
+        		readSubDirsForSelectedItem();
         	}
         });
         
 		this.directoryTree.getSelectionModel().selectedItemProperty().addListener((observable,oldItem,newItem)->{
+			
+			if (null == newItem)
+				selectedDirectoryProperty.set(null);
+			
+			if (null != newItem && null == ((DirectoryTreeItem) newItem).getFullPath())
+				selectedDirectoryProperty.set(null);
 			
 			if (null != newItem && null != ((DirectoryTreeItem) newItem).getFullPath()) {
 				DirectoryTreeItem item = (DirectoryTreeItem) newItem;
@@ -133,7 +142,7 @@ public class DirectoryChooserController implements Initializable {
 					selectedDirectoryProperty.set(Paths.get(item.getFullPath()));
 				
 				
-				readSubDirsForSelectedItem(false);
+				readSubDirsForSelectedItem();
 
 			}
 		});
@@ -142,20 +151,21 @@ public class DirectoryChooserController implements Initializable {
 		
 		
 	}
+
+	private void expandSelectedItem() {
+		expandItem(this.directoryTree.getSelectionModel().selectedItemProperty().get());
+	}
 	
-	private void readSubDirsForSelectedItem(boolean expandNode) {
+	private void readSubDirsForSelectedItem() {
 		DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree.getSelectionModel().selectedItemProperty().get();
-		item.setExpanded(expandNode);
-		if (null != item) {
+
+		if (null != item && null != item.getFullPath()) {
 			Path path = Paths.get(item.getFullPath());
 			if (item.getChildren().isEmpty()) {
-				
-				
-				
 				Task<Void> update = runningUpdateTasks.get(path);
 						
 				if (null == update)
-					update = createUpdateTask(path, item, expandNode);
+					update = createUpdateTask(path, item);
 				
 				startUpdate(path, update);
 			}
@@ -167,7 +177,7 @@ public class DirectoryChooserController implements Initializable {
 		executor.submit(update);		
 	}
 
-	private Task<Void> createUpdateTask(Path path, DirectoryTreeItem item, boolean expandNode) {
+	private Task<Void> createUpdateTask(Path path, DirectoryTreeItem item) {
 		
 		Node graphic = item.getGraphic();
 		
@@ -198,10 +208,11 @@ public class DirectoryChooserController implements Initializable {
 		
 		update.setOnSucceeded(event->{
 			Platform.runLater(()->{
-				item.setExpanded(expandNode);
 				item.setGraphic(graphic);
-				if (!item.getChildren().isEmpty()) 
+				if (!item.getChildren().isEmpty()) {
 					item.setGraphic(DirectoryIcons.OPEN.get(32));
+					expandItem(item);
+				}
 				runningUpdateTasks.remove(path);
 			});
 		});
@@ -218,6 +229,11 @@ public class DirectoryChooserController implements Initializable {
 		});
 		
 		return update;
+	}
+
+	private void expandItem(TreeItem<?> item) {
+		if (null != item)
+			item.setExpanded(true);
 	}
 
 	private void cancelAction() {
@@ -247,7 +263,8 @@ public class DirectoryChooserController implements Initializable {
 					 * FileStore.getAttribute("volume:isRemovable") 
 					 * 
 					 */
-				}			
+				}
+				
 				return null;
 			}
 			

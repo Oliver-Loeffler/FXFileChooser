@@ -8,6 +8,7 @@ import java.nio.file.Path;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 
 class DirectoryWalker {
 		
@@ -59,10 +60,15 @@ class DirectoryWalker {
 
 	private void addNode(Path path) {
 		if (currentDepth <= maxDepth) {
-			
 			DirectoryTreeItem leaf = new DirectoryWalker(this, path).read();
-			rootNode.getChildren().add(leaf);	
-		
+			rootNode.getChildren().add(leaf);
+			/*
+			 *  TODO: Make the directory tree sortable
+			 *  TODO: Make the directory tree filterable
+			 *  
+			 */
+			FXCollections.sort(rootNode.getChildren(), 
+					(a,b)->a.getValue().compareToIgnoreCase(b.getValue()));
 		}
 	}
 	
