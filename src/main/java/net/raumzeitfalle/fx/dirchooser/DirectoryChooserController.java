@@ -72,7 +72,7 @@ public class DirectoryChooserController implements Initializable {
 
 	private Runnable onCancel;
 	
-	private double iconSize = 32.0;
+	private double iconSize = 20.0;
 	
 	private Map<Path,Task<Void>> runningUpdateTasks = new ConcurrentHashMap<>();
 	

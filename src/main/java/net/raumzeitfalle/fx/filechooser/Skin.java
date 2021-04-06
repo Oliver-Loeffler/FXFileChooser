@@ -52,6 +52,6 @@ public enum Skin {
         String className = getClassName(parent);
         String styleName = getStyleName(skin);
 
-		return Skin.class.getResource(className + styleName + ".css");
+		return parent.getClass().getResource(className + styleName + ".css");
 	}
 }
