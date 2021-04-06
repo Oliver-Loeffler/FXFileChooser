@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx;
+package net.raumzeitfalle.fx.demos;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

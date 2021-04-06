@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx;
+package net.raumzeitfalle.fx.demos;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

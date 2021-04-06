@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx;
+package net.raumzeitfalle.fx.demos;
 
 import java.awt.GridLayout;
 import java.io.File;

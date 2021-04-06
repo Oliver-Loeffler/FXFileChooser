@@ -1,3 +1,22 @@
+/*-
+ * #%L
+ * FXFileChooser
+ * %%
+ * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package net.raumzeitfalle.fx.filechooser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -100,7 +119,7 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 		
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void clickOnCancelClosesWindow() {
 		
 		clickOn("#cancelButton", MouseButton.PRIMARY);
@@ -127,7 +146,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 		
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
 				
 		clickOn("#fileNameFilter");
@@ -144,7 +163,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 	
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_list_is_updated_after_clicking_refresh(@TempDir Path directory) throws IOException {
 		
 		ListView<?> list = lookup("#listOfFiles").query();
@@ -175,7 +194,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 		
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_selection_is_accepted_with_doubleclick() {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
@@ -196,7 +215,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 	
 	@Test
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_list_content_is_reduced_by_entering_filtertext() {
 		
 		dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
@@ -224,7 +243,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	}
 	
 	@Test
-	@EnabledOnOs({OS.WINDOWS})
+	@EnabledOnOs({OS.WINDOWS, OS.MAC})
 	void that_pathfilters_from_file_type_menu_are_applied() {
 		
 		dirChooser.setDirectory(Paths.get("./TestData/SomeFiles"));
@@ -246,7 +265,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		assertEquals(11, list.getItems().size(), "for filter 'all files' 11 files are expected.");
 	}
 	
-	@EnabledOnOs({OS.WINDOWS, OS.LINUX})
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
 	void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
 		
 		Button okay   = lookup("#okButton").query();

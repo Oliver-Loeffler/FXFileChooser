@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx;
+package net.raumzeitfalle.fx.demos;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
