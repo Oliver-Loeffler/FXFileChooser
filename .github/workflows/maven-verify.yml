@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '8.0.192+12'
-        distribution: 'adopt'
+        distribution: 'zulu'
         cache: maven
     - name: Make mvnw executable
       run: chmod +x ./mvnw
