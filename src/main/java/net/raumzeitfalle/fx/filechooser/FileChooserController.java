@@ -171,8 +171,9 @@ final class FileChooserController implements Initializable {
         	.selectedItemProperty()
         	.addListener(l -> {
         		model.setSelectedFile(selectedItem());
-        		Platform.runLater(()->this.okButton.requestFocus());
         	});
+        
+        this.listOfFiles.setOnKeyPressed(this::handleEnterKeyOnSelection);
 
         this.selectedFile.textProperty().bind(model.selectedFileNameProperty());
         this.usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
@@ -404,6 +405,13 @@ final class FileChooserController implements Initializable {
 	private void handleOkayButtonKeyEvents(KeyEvent keyEvent) {
 		if (KeyCode.ENTER.equals(keyEvent.getCode())) {
 			okButton.fire();
+		}
+	}
+
+	private void handleEnterKeyOnSelection(KeyEvent keyevent) {
+		if (KeyCode.ENTER.equals(keyevent.getCode())
+				&& !listOfFiles.getSelectionModel().isEmpty()) {
+			Platform.runLater(()->this.okButton.requestFocus());
 		}
 	}
 }
