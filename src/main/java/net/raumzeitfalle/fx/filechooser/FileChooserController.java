@@ -20,20 +20,31 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -158,7 +169,10 @@ final class FileChooserController implements Initializable {
         this.listOfFiles.setCellFactory(e->new FilesListCell());
         this.listOfFiles.getSelectionModel()
         	.selectedItemProperty()
-        	.addListener(l -> model.setSelectedFile(selectedItem()));
+        	.addListener(l -> {
+        		model.setSelectedFile(selectedItem());
+        		Platform.runLater(()->this.okButton.requestFocus());
+        	});
 
         this.selectedFile.textProperty().bind(model.selectedFileNameProperty());
         this.usersHomeCommand.setOnAction(e -> model.changeToUsersHome());
@@ -166,7 +180,7 @@ final class FileChooserController implements Initializable {
         this.showAllFilesFilter.setVisible(false);
 
         this.model.initializeFilter(fileNameFilter.getText());
-        this.fileNameFilter.setOnKeyPressed(this::handleReturnKeyPressedInFilter);
+        this.fileNameFilter.setOnKeyPressed(this::handleKeysForFileNameFilterField);
         
         // initialize PathFilter menu
 		this.model.getPathFilter()
@@ -210,45 +224,109 @@ final class FileChooserController implements Initializable {
         allPathsCount.textProperty().bind(model.allPathsSizeProperty().asString());
                 
         okButton.setOnAction(e -> okayAction());
+        okButton.setOnKeyPressed(this::handleOkayButtonKeyEvents);
         cancelButton.setOnAction(e -> cancelAction());
         
         okButton.disableProperty().bind(model.invalidSelectionProperty());
         okButton.visibleProperty().bind(showOkayCancelButtons);
         cancelButton.visibleProperty().bind(showOkayCancelButtons);
+        
+        Platform.runLater(()->fileNameFilter.requestFocus());
     }
 
-    private void handleReturnKeyPressedInFilter(KeyEvent keyEvent) {
+    private void handleKeysForFileNameFilterField(KeyEvent keyEvent) {
+    	if (this.fileNameFilter.getText().equalsIgnoreCase("")
+    			&& KeyCode.ESCAPE.equals(keyEvent.getCode())) {
+    		cancelAction();
+    	}
+    	
+    	if (KeyCode.ESCAPE.equals(keyEvent.getCode())) {
+    		this.fileNameFilter.setText("");
+    	}
+    	
         if (KeyCode.ENTER.equals(keyEvent.getCode())) {
-            Path pastedPath = this.model.pastedPathProperty().get();
-            if (null != pastedPath) {
-                model.getUpdateService().restartIn(pastedPath);
-                this.fileNameFilter.setText("");
-            }
+            handlePossiblePastedPath();
         }
     }
+
+	private void handlePossiblePastedPath() {
+		Path pastedPath = this.model.pastedPathProperty().get();
+		if (null != pastedPath) {
+		    acceptPathAndSelectFileIfValid(pastedPath); 
+		} else {
+			tryManualInputPathSelection();
+		}
+	}
+
+	private void tryManualInputPathSelection() {
+		try {
+			selectParentPathFromInput();
+		} catch (InvalidPathException anyError) {
+			/* Failed to convert text to Path
+			 * but as of now this is no problem.
+			 */
+		}
+	}
+
+	private void selectParentPathFromInput() {
+		String pastedText = fileNameFilter.getText();
+		Path pasted = Paths.get(pastedText);
+		Path parent = pasted;
+		if (!Files.exists(pasted) || !Files.isDirectory(pasted)) {
+			parent = pasted.getParent();
+		}
+		selectFirstExistingParentPath(pasted, parent);
+	}
+
+	private void selectFirstExistingParentPath(Path pasted, Path parent) {
+		boolean parentExists = false;
+		while (parent != null && !parentExists) {
+			parentExists = Files.exists(parent);
+			if (parentExists) {
+				model.getUpdateService().restartIn(parent);
+				this.fileNameFilter.setText(parent.toString());
+				fileNameFilter.positionCaret(parent.toString().length()+1);
+			} else {
+				parent = pasted.getParent();
+			}
+			model.pastedPathProperty().set(parent);
+		}
+	}
+
+	private void acceptPathAndSelectFileIfValid(Path pastedPath) {
+		model.getUpdateService().restartIn(pastedPath);
+		this.fileNameFilter.setText("");
+		if (Files.exists(pastedPath)) {
+			if (Files.isRegularFile(pastedPath)) {
+				selectEnteredFileAndRequestOkayFocus(pastedPath);
+			}
+		}
+	}
+
+	private void selectEnteredFileAndRequestOkayFocus(Path pastedPath) {
+		String fileName = pastedPath.getFileName().toString();
+		fileNameFilter.setText(fileName);
+		fileNameFilter.positionCaret(fileName.length()+1);
+		IndexedPath ip = IndexedPath.valueOf(pastedPath);
+		model.setSelectedFile(ip);
+		model.pastedPathProperty().set(pastedPath.getParent());
+		Platform.runLater(()->this.okButton.requestFocus());
+	}
 
     private void handleFileNameFilterChanges() {
 		this.listOfFiles.getSelectionModel().clearSelection();
 		this.model.updateFilterCriterion(fileNameFilter.getText());
-
         evaluateIfPathWasEntered();
-
     }
 
     private void evaluateIfPathWasEntered() {
         try {
             Path possiblePath = Paths.get(fileNameFilter.getText());
-
-            if (possiblePath.toFile().isFile()) {
-                possiblePath = possiblePath.getParent();
-            }
-
             if (null != possiblePath && possiblePath.toFile().exists()) {
                 this.model.pastedPathProperty().set(possiblePath);
             } else {
                 this.model.pastedPathProperty().set(null);
             }
-
         } catch (InvalidPathException ipe) {
             this.model.pastedPathProperty().set(null);
         }
@@ -322,6 +400,10 @@ final class FileChooserController implements Initializable {
     private IndexedPath selectedItem() {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
-    
 
+	private void handleOkayButtonKeyEvents(KeyEvent keyEvent) {
+		if (KeyCode.ENTER.equals(keyEvent.getCode())) {
+			okButton.fire();
+		}
+	}
 }

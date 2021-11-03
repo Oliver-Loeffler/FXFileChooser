@@ -147,7 +147,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 	@Test
 	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
-	void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
+	void that_parent_of_filepath_is_used_for_dirchange_in_textbox_while_filename_is_used_for_filter() {
 				
 		clickOn("#fileNameFilter");
 		write(Paths.get("TestData/SomeFiles/TestFile1.txt").toString());
@@ -157,9 +157,23 @@ class FileChooserControllerTest extends FxTestTemplate {
 		
 		ListView<?> list = lookup("#listOfFiles").query();
 		
+		// Keeps the file name as the file actually exists, hence its only 1 item
+		assertEquals(1, list.getItems().size());
+	}
+	
+	@Test
+	@EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+	void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
+				
+		clickOn("#fileNameFilter");
+		write(Paths.get("TestData/SomeFiles/").toString());
+		press(KeyCode.ENTER);
+		
+		sleep(200);
+		
+		ListView<?> list = lookup("#listOfFiles").query();
 		
 		assertEquals(11, list.getItems().size());
-
 	}
 	
 	@Test
@@ -332,4 +346,5 @@ class FileChooserControllerTest extends FxTestTemplate {
 		}
 		
 	}
+
 }
