@@ -87,7 +87,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 		model.addLocation(Locations.withName("TEST", Paths.get("TestData/SomeFiles")));
 		
 		dirChooser = new TestDirChooser(model.currentSearchPath());
-		controller = new FileChooserController(model, dirChooser, ()->stage.close(), FileChooserViewOption.STAGE);
+		controller = new FileChooserController(model, dirChooser, ()->stage.close(), FileChooserViewOption.STAGE, null);
 		
 		Class<?> thisClass = getClass();
         String fileName = "FileChooserView.fxml";

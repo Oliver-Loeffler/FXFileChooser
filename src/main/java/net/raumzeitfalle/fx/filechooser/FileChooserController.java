@@ -38,6 +38,7 @@ import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -128,6 +129,10 @@ final class FileChooserController implements Initializable {
 
     private final LocationMenuItemFactory menuItemFactory;
 
+    private final FileChooserViewOption fileChooserViewOption;
+    
+    private final Dialog<Path> dialog;
+    
     /**
      * Creates a new {@link FileChooserController} which provides all logic and functionality
      * for the {@link FXFileChooserStage}, {@link FXFileChooserDialog} and {@link SwingFileChooser} components.
@@ -137,12 +142,16 @@ final class FileChooserController implements Initializable {
      * @param window The parent window which shall be closable.
      * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the view will have its own OKAY/CANCEL buttons or if OKAY/CANCEL buttons are provided e.g. by the parent container (e.g. Dialog).
      */
-    public FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, final HideableView window, FileChooserViewOption fileChooserViewOption) {
+    public FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier, 
+                                 final HideableView window, FileChooserViewOption fileChooserViewOption,
+                                 final Dialog<Path> dialog) {
        this.model = fileChooserModel;
        this.stage = window;
+       this.fileChooserViewOption = fileChooserViewOption;
        this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));
        this.pathSupplier = pathSupplier;
        this.menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
+       this.dialog = dialog;
     }
 
     @FXML
@@ -335,11 +344,14 @@ final class FileChooserController implements Initializable {
 
     private void handleDoubleClickInFilesList(MouseEvent event) {
 		if (event.getClickCount() == 2) {
-		    model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());
+		    model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());	    
 		    event.consume();
 		    okayAction();
+		    if (FileChooserViewOption.DIALOG.equals(fileChooserViewOption)) {
+		        dialog.setResult(model.getSelectedFile());
+		    }
 		}
-	}
+    }
     
     private void okayAction() {
     	this.stage.closeView();
