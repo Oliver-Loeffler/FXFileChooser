@@ -65,7 +65,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
 
         Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
-        FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG);
+        FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG, this);
      
         getDialogPane().setContent(view);
 
@@ -83,7 +83,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         okayButton.disableProperty().bind(model.invalidSelectionProperty());
         
         setResultConverter(dialogButton -> {
-            if (dialogButton  == okay) {
+            if (dialogButton == okay) {
                 this.hide();
                 return model.getSelectedFile();
             }

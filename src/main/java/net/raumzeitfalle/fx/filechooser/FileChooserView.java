@@ -21,20 +21,25 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.AnchorPane;
 
 final class FileChooserView extends AnchorPane {
 
     public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption) throws IOException {
-
+        this(pathSupplier, window, model, skin, fileChooserViewOption, null);
+    }
+    
+    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin, FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) throws IOException {
     	 Class<?> thisClass = getClass();
          String fileName = thisClass.getSimpleName() + ".fxml";
          URL resource = thisClass.getResource(fileName);
          FXMLLoader loader = new FXMLLoader(resource);
-         FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption);
+         FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption, dialog);
          loader.setController(controller);
          Parent view = loader.load();
          this.getChildren().add(view);
