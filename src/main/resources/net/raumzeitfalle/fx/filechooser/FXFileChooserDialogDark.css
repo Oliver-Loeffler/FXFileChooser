@@ -18,6 +18,10 @@
  * #L%
  */
 
+.header-panel {
+    -fx-background: rgb(50, 50, 50);
+}
+
 .button {
     -fx-font-size: 13px;
     -fx-font-weight: bold;
@@ -54,7 +58,7 @@
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: #ffa700;
-    /* -fx-text-fill: black; */
+    -fx-text-fill: black;
 }
 
 .list-cell:filled:hover {

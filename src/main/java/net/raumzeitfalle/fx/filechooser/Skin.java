@@ -22,6 +22,7 @@ package net.raumzeitfalle.fx.filechooser;
 import java.net.URL;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Dialog;
 
 public enum Skin {
 
@@ -29,29 +30,40 @@ public enum Skin {
     DARK;
 
     public static <T extends Parent> void applyTo(T parent, Skin skin) {
-        URL url = getCssLocation(parent, skin);
-        if (null != url) {
-            parent.getStylesheets().add(url.toExternalForm());
+        String css = skin.getCssLocation(parent);
+        if (null != css) {
+            parent.getStylesheets().add(css);
             parent.applyCss();
         }
-        
     }
 
-    private static String getStyleName(Skin skin) {
-        String name = skin.name().substring(1).toLowerCase();
-        String first = new String(new char[]{skin.name().charAt(0)});
-        return first+name;
+    public static <T extends Dialog> void applyToDialog(T dialog, Skin skin) {
+        String css = skin.getCssLocation(dialog);
+        if (null != css) {
+            dialog.getDialogPane().getStylesheets().add(css);
+        }
+    }
+    private String getStyleName() {
+        String cssName = name().substring(1).toLowerCase();
+        String first = new String(new char[]{name().charAt(0)});
+        return first+cssName;
     }
 
-    private static <T extends Parent> String getClassName(T parent) {
+    private static String getClassName(Object parent) {
         return parent.getClass().getSimpleName();
     }
 
-    private static <T extends Parent> URL getCssLocation(T parent, Skin skin) {
+    private String getCssLocation(Object parent) {
 
         String className = getClassName(parent);
-        String styleName = getStyleName(skin);
+        String styleName = getStyleName();
+        String styleSheetName = className + styleName + ".css";
 
-		return parent.getClass().getResource(className + styleName + ".css");
+        URL url = parent.getClass().getResource(styleSheetName);
+
+        if (url == null) {
+            return null;
+        }
+        return url.toExternalForm();
 	}
 }
