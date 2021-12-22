@@ -1,6 +1,6 @@
 # FXFileChooser
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.7/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.7) [![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.raumzeitfalle.fx%3Afilechooser&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.raumzeitfalle.fx%3Afilechooser) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.8/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.8) [![Build Status](https://travis-ci.org/Oliver-Loeffler/FXFileChooser.svg?branch=master)](https://travis-ci.org/Oliver-Loeffler/FXFileChooser) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.raumzeitfalle.fx%3Afilechooser&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.raumzeitfalle.fx%3Afilechooser) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser)
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
@@ -21,7 +21,7 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.6</version>
+  <version>0.0.8</version>
 </dependency>
 ```
 ### Dependency for Gradle `build.gradle`
