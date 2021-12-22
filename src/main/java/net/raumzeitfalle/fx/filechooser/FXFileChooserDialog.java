@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,27 +25,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
-import org.scenicview.ScenicView;
 
 public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     
     public static FXFileChooserDialog create(Skin skin, PathFilter ...filter) throws IOException {
-    	
     	FileChooserModel model = FileChooserModel.startingInUsersHome(filter);
     	return new FXFileChooserDialog(skin,model);
-    	
     }
     
     public void addFilter(PathFilter filter) {
@@ -58,33 +51,24 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     
     private final FileChooserModel model;
 
-    private final double minWidth;
+    private final double minWidth = 700;
 
-    private final double minHeight;
+    private final double minHeight = 550;
 
     // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well but keep old API alive for JavaFX
     // TODO: Make CSS file externally configurable
     private FXFileChooserDialog(Skin skin,FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;
-        DialogPane dialogPane = getDialogPane();
-        // dialogPane.getStyleClass().add("fxFileChooser");
-        //
-        // dialogPane.getStylesheets().add(
-        //                getClass().getResource("FXFileChooserDialogDark.css").toExternalForm());
         Skin.applyToDialog(this,skin);
 
         setTitle("File Selection");
         setHeaderText("Select File from for processing:");
         headerTextProperty().bind(model.currentSearchPath().asString());
-        //initModality(Modality.APPLICATION_MODAL);
-        initModality(Modality.NONE);
+        initModality(Modality.APPLICATION_MODAL);
 
         Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
         FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG, this);
-        minWidth = 700;
-        minHeight = 550;
-
         getDialogPane().setContent(view);
         ButtonType okay = ButtonType.OK;
         getDialogPane().getButtonTypes().addAll(okay, ButtonType.CANCEL);
@@ -114,6 +98,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         stage.setMinHeight(minHeight);
         stage.setMinWidth(minWidth);
     }
+    
     public Optional<Path> showOpenDialog(Window ownerWindow) {
         if (null == this.getOwner()) {
             this.initOwner(ownerWindow);    

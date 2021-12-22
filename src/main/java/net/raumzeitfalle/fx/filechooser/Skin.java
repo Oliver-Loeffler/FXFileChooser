@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public enum Skin {
         }
     }
 
-    public static <T extends Dialog> void applyToDialog(T dialog, Skin skin) {
+    public static <T extends Dialog<?>> void applyToDialog(T dialog, Skin skin) {
         String css = skin.getCssLocation(dialog);
         if (null != css) {
             dialog.getDialogPane().getStylesheets().add(css);
