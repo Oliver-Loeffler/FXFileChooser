@@ -101,7 +101,7 @@ class FileChooserModelTest {
 	@Test
 	void usingPathFilter() {
 		classUnderTest.getUpdateService().restartIn(TEST_ROOT.resolve("SomeFiles"));
-		PathFilter filter = PathFilter.create(p->p.getFileName().toString().startsWith("Test"));
+		PathFilter filter = PathFilter.create(p->p.toString().startsWith("Test"));
 		
 		classUnderTest.updateFilterCriterion(filter, "5");
 		assertEquals(1, classUnderTest.getFilteredPaths().size());

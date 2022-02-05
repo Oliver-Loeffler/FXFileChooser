@@ -211,8 +211,8 @@ final class FileChooserController implements Initializable {
  
         assignSortAction(buttonSortAz, PathComparator.byName());
         assignSortAction(buttonSortZa, PathComparator.byName().reversed());
-        assignSortAction(buttonSortOldestFirst, PathComparator.byLastModified());
-        assignSortAction(buttonSortRecentFirst, PathComparator.byLastModified().reversed());
+        assignSortAction(buttonSortOldestFirst, PathComparator.byTimestamp());
+        assignSortAction(buttonSortRecentFirst, PathComparator.byTimestamp().reversed());
                 
         buttonSortRecentFirst.setVisible(true);
         buttonSortOldestFirst.setVisible(true);

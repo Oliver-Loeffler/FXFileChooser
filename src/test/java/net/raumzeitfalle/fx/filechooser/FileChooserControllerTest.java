@@ -72,7 +72,7 @@ class FileChooserControllerTest extends FxTestTemplate {
 	
 	protected PathFilter[] getPathFilter() { 
 		return new PathFilter[] {
-				PathFilter.create("XML", p->p.getFileName().toString().toLowerCase().endsWith(".xml")),
+				PathFilter.create("XML", p->p.toString().toLowerCase().endsWith(".xml")),
 				PathFilter.acceptAllFiles("all files")
 		};
 	}

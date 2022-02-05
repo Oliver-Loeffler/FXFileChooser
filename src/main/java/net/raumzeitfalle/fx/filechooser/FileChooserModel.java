@@ -139,7 +139,8 @@ final class FileChooserModel {
         if (null == file) {
             this.fileSelection.setValue(null);
         } else {
-            this.fileSelection.setValue(file.asPath().toAbsolutePath().normalize());
+            Path rootDir = fileUpdateService.searchPathProperty().get();
+            this.fileSelection.setValue(file.asPath(rootDir).toAbsolutePath().normalize());
         }       
         this.invalidSelection.setValue(null == file);
     }
@@ -161,11 +162,9 @@ final class FileChooserModel {
      * @param criterion {@link String} A search text such as &quot;index&quot; for &quot;index.html&quot; or &quot;index.txt&quot;.
      */
     public void updateFilterCriterion(String criterion) {
-        
-        Predicate<IndexedPath> combined = createManualListFilter(criterion).and(
-        		indexedPath -> this.effectiveFilter.getPredicate().test(indexedPath.asPath())
-        		);
-        
+        Predicate<IndexedPath> combined = createManualListFilter(criterion)
+                .and(indexedPath -> this.effectiveFilter.getPredicate()
+                        .test(indexedPath.toString()));
         this.filteredPaths.setPredicate(combined);
     }
 

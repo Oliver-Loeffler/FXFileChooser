@@ -83,7 +83,7 @@ class FileChooserModelApplicationTest extends FxTestTemplate {
 		assertFalse(classUnderTest.invalidSelectionProperty().get());
 		
 		Path selectedFile = classUnderTest.getSelectedFile();
-		assertEquals(selection.asPath().getFileName(), selectedFile.getFileName());
+		assertEquals(selection.asPath(testRoot).getFileName(), selectedFile.getFileName());
 		
 	}
 	
