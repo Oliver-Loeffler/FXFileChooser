@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,53 +28,56 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class IndexedPath {
-	
-	private final Path path;
-	
-	private final FileTime timestamp;
+final class IndexedPath {
 
-	private static final Logger LOGGER = Logger.getLogger(IndexedPath.class.getName());
-	
-	public static IndexedPath valueOf(Path path) {
-		FileTime timestamp;
-		try {
-			timestamp = getTimestamp(path);
-		} catch (IOException e) {
-			timestamp = FileTime.from(0, TimeUnit.MICROSECONDS);
-			String message = String.format("Could not determine lastModified timestamp for %s, returning %s instead.", path, timestamp);
-			LOGGER.log(Level.SEVERE, message, e);
-		}
-		return new IndexedPath(path, timestamp);
-	}
+    private static final Logger LOGGER = Logger.getLogger(IndexedPath.class.getName());
 
-	private static FileTime getTimestamp(Path path) throws IOException {
-		BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-		FileTime lastModified = attributes.lastModifiedTime();
-		FileTime created = attributes.creationTime();
-		if (lastModified.compareTo(created) > 0) {
-			return lastModified;
-		} else {
-			return created;
-		}
-	}
+    public static IndexedPath valueOf(Path path) {
+        FileTime timestamp;
+        try {
+            timestamp = getTimestamp(path);
+        } catch (IOException e) {
+            timestamp = FileTime.from(0, TimeUnit.MICROSECONDS);
+            String message = String.format("Could not determine lastModified timestamp for %s, returning %s instead.",
+                    path, timestamp);
+            LOGGER.log(Level.SEVERE, message, e);
+        }
+        return new IndexedPath(path, timestamp);
+    }
 
-	private IndexedPath(Path path, FileTime timestamp) {
-		this.path = path;
-		this.timestamp = timestamp;
-	}
-	
-	public FileTime getTimestamp() {
-		return this.timestamp;
-	}
-	
-	public Path asPath() {
-		return this.path;
-	}
-	
-	@Override
-	public String toString() {
-		return this.path.toString();
-	}
+    private static FileTime getTimestamp(Path path) throws IOException {
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+        FileTime lastModified = attributes.lastModifiedTime();
+        FileTime created = attributes.creationTime();
+        if (lastModified.compareTo(created) > 0) {
+            return lastModified;
+        } else {
+            return created;
+        }
+    }
 
+    private final byte[] fileName;
+    private final long timestamp;
+
+    IndexedPath(Path path, FileTime timestamp) {
+        this.fileName = path.getFileName().toString().getBytes();
+        this.timestamp = timestamp.to(TimeUnit.MILLISECONDS);
+    }
+
+    public final FileTime getTimestamp() {
+        return FileTime.from(timestamp, TimeUnit.MILLISECONDS);
+    }
+
+    public final Path asPath(Path location) {
+        return location.resolve(toString());
+    }
+
+    @Override
+    public final String toString() {
+        return new String(fileName);
+    }
+    
+    int compareByName(IndexedPath other) {
+        return toString().compareTo(other.toString());
+    }
 }

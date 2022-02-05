@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import java.util.Comparator;
 class PathComparator {
 
 	static Comparator<IndexedPath> byName() {
-		return (IndexedPath a, IndexedPath b)-> a.asPath().compareTo(b.asPath());
+		return (IndexedPath a, IndexedPath b)-> a.compareByName(b);
 	}
 	
-	static Comparator<IndexedPath> byLastModified() {
+	static Comparator<IndexedPath> byTimestamp() {
 		return (IndexedPath a, IndexedPath b)-> a.getTimestamp().compareTo(b.getTimestamp());
 	}
 					

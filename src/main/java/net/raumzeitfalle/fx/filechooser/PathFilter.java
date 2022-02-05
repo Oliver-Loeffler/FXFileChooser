@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ public interface PathFilter {
 	/**
 	 * @return The {@link Predicate} to match a specific file type or a group of file types. 
 	 */
-	Predicate<Path> getPredicate();
+	Predicate<String> getPredicate();
 	
 	/**
 	 * @param path {@link Path} to test
 	 * @return true in case the given {@link Path} matches with the {@link Predicate}.
 	 */
-	default boolean matches(Path path) {
-		return getPredicate().test(path);
+	default boolean matches(String pathName) {
+		return getPredicate().test(pathName);
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public interface PathFilter {
 	 * @return true in case the given {@link File} matches with the {@link Predicate}.
 	 */
 	default boolean matches(File file) {
-		return this.matches(file.toPath());
+		return this.matches(file.toString());
 	}
 	
 
@@ -62,7 +62,7 @@ public interface PathFilter {
      */
     default PathFilter combine(PathFilter other) {
     		String label = getName() + ", " + other.getName();
-    		Predicate<Path> thisOne = this.getPredicate();
+    		Predicate<String> thisOne = this.getPredicate();
     		return create(label, thisOne.or(other.getPredicate()));
     }
     
@@ -75,15 +75,15 @@ public interface PathFilter {
     		return create(name, p->true);
     }
     
-    static PathFilter create(Predicate<Path> p) {
+    static PathFilter create(Predicate<String> p) {
     		return create(String.valueOf(p), p);
     }
     
-    static PathFilter create(String label, Predicate<Path> p) {
+    static PathFilter create(String label, Predicate<String> p) {
 	    	return new PathFilter() {
 				
 				@Override
-				public Predicate<Path> getPredicate() { return p; }
+				public Predicate<String> getPredicate() { return p; }
 				
 				@Override
 				public String getName() { return label; }
@@ -107,9 +107,8 @@ public interface PathFilter {
      */
     static PathFilter forFileExtension(String label, String extension) {
     		return create(label, p->{
-    			Path filename = p.getFileName();
-        		if (null != filename) {
-        			String name = filename.toString().toLowerCase();
+        		if (null != p) {
+        			String name = p.toLowerCase();
         			int lastDot = name.lastIndexOf('.');
         			if (lastDot > 0) {
         				return name.substring(lastDot).matches("[.]"+extension+"$"); 

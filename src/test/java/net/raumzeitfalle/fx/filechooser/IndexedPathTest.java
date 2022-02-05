@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,40 +28,34 @@ import java.nio.file.attribute.FileTime;
 import org.junit.jupiter.api.Test;
 
 class IndexedPathTest {
-	
-	private IndexedPath classUnderTest;
 
-	@Test
-	void asPath() {
-		
-		Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
-		classUnderTest = IndexedPath.valueOf(source);
-		
-		assertEquals(source, classUnderTest.asPath());
-		
-	}
-	
-	@Test
-	void stringRepresentation() {
-		
-		Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
-		classUnderTest = IndexedPath.valueOf(source);
-		
-		assertEquals(source.toString(), classUnderTest.toString());
-		
-	}
-	
-	@Test
-	void getTimestamp() {
-		
-		Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
-		classUnderTest = IndexedPath.valueOf(source);
-		
-		
-		FileTime timestamp = classUnderTest.getTimestamp();
-		
-		assertNotNull(timestamp);
-		
-	}
+    private IndexedPath classUnderTest;
+
+    @Test
+    void asPath() {
+        Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
+        classUnderTest = IndexedPath.valueOf(source);
+
+        assertEquals(source, 
+                     classUnderTest.asPath(Paths.get("TestData/SomeFiles/").toAbsolutePath()));
+    }
+
+    @Test
+    void stringRepresentation() {
+        Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
+        classUnderTest = IndexedPath.valueOf(source);
+
+        assertEquals(source.getFileName().toString(), classUnderTest.toString());
+    }
+
+    @Test
+    void getTimestamp() {
+        Path source = Paths.get("TestData/SomeFiles/HorrbibleSpreadSheet.xls").toAbsolutePath();
+        classUnderTest = IndexedPath.valueOf(source);
+
+        FileTime timestamp = classUnderTest.getTimestamp();
+
+        assertNotNull(timestamp);
+    }
 
 }

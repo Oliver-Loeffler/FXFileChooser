@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
  * #L%
  */
 package net.raumzeitfalle.fx.filechooser;
-
-import java.nio.file.Path;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -53,12 +51,15 @@ enum FileIcons {
         return image;
     }
 
-    static StackPane fromFile(Path path, double fitSize) {
+    static StackPane fromFile(IndexedPath path, double fitSize) {
+        return fromFile(path.toString(), fitSize);
+    }
+
+    static StackPane fromFile(String file, double fitSize) {
        StackPane pane = new StackPane();
-       Path file = path.getFileName();
        ImageView image = null;
        if (null != file) {
-           String fileName = file.toString().toLowerCase();
+           String fileName = file.toLowerCase();
            for (FileIcons icon : FileIcons.values()) {
                String suffix = icon.suffix;
                if (null != suffix && fileName.endsWith(suffix)) {
@@ -74,7 +75,6 @@ enum FileIcons {
        pane.setMinWidth(fitSize*1.5);
        image.getStyleClass().add("file-icon");
        pane.getStyleClass().add("file-icon-pane");
-       
        return pane;
     }
 }

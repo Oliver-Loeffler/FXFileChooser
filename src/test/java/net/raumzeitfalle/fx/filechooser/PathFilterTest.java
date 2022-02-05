@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -46,14 +44,10 @@ class PathFilterTest {
 		".html,       true"
 	})
 	void criterion(String fileNameEntered, Boolean expectedPredicateResult) {
+		classUnderTest = PathFilter.create("HTML file", p->p.endsWith(".html"));
+		Predicate<String> criterion = classUnderTest.getPredicate();
 		
-		classUnderTest = PathFilter.create("HTML file", p->p.getFileName()
-															.toString()
-															.endsWith(".html"));
-		Predicate<Path> criterion = classUnderTest.getPredicate();
-		
-		assertEquals(criterion.test(Paths.get(fileNameEntered)), expectedPredicateResult);
-				
+		assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
 	}
 
 	@Test
@@ -63,9 +57,9 @@ class PathFilterTest {
 		classUnderTest = PathFilter.forFileExtension(extension);
 
 		assertEquals("*.xlsx", classUnderTest.getName());
-		assertTrue(classUnderTest.matches(Paths.get("MyFile."+extension)));
+		assertTrue(classUnderTest.matches("MyFile."+extension));
 		assertTrue(classUnderTest.matches(new File("MyFile."+extension)));
-		assertFalse(classUnderTest.matches(Paths.get("MyFile.txt")));
+		assertFalse(classUnderTest.matches("MyFile.txt"));
 		assertFalse(classUnderTest.matches(new File("MyFile.txt")));
 	}
 	
@@ -76,9 +70,9 @@ class PathFilterTest {
 		classUnderTest = PathFilter.forFileExtension("HorribleSpreadSheet", extension);
 
 		assertEquals("HorribleSpreadSheet", classUnderTest.getName());
-		assertTrue(classUnderTest.matches(Paths.get("MyFile."+extension)));
+		assertTrue(classUnderTest.matches("MyFile."+extension));
 		assertTrue(classUnderTest.matches(new File("MyFile."+extension)));
-		assertFalse(classUnderTest.matches(Paths.get("MyFile.txt")));
+		assertFalse(classUnderTest.matches("MyFile.txt"));
 		assertFalse(classUnderTest.matches(new File("MyFile.txt")));
 	}
 	
@@ -86,8 +80,8 @@ class PathFilterTest {
 	void combinedName_forExtensionWithLabel() {
 		
 		classUnderTest = PathFilter
-				.create("HTML file", p->String.valueOf(p.getFileName()).endsWith(".html"))
-				 .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
+				.create("HTML file", p->p.endsWith(".html"))
+				.combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
 
 		assertEquals("HTML file, HorribleSpreadSheet", classUnderTest.getName());
 	}
@@ -109,12 +103,12 @@ class PathFilterTest {
 	void combine(String fileNameEntered, Boolean expectedPredicateResult) {
 		
 		classUnderTest = PathFilter
-					.create("HTML file", p->String.valueOf(p.getFileName()).endsWith(".html"))
+					.create("HTML file", p->p.endsWith(".html"))
 					 .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
 		
-		Predicate<Path> criterion = classUnderTest.getPredicate();
+		Predicate<String> criterion = classUnderTest.getPredicate();
 		
-		assertEquals(criterion.test(Paths.get(fileNameEntered)), expectedPredicateResult);
+		assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
 	
 	}
 
@@ -136,8 +130,7 @@ class PathFilterTest {
 	})
 	void acceptAll(String fileNameEntered) {
 		classUnderTest = PathFilter.acceptAllFiles("all files");
-		Predicate<Path> criterion = classUnderTest.getPredicate();
-		Path path = Paths.get(fileNameEntered);
-		assertTrue(criterion.test(path));
+		Predicate<String> criterion = classUnderTest.getPredicate();
+		assertTrue(criterion.test(fileNameEntered));
 	}
 }

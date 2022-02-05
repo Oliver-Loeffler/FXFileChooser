@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,30 +32,30 @@ import javafx.scene.layout.Priority;
 
 class FilesListCell extends ListCell<IndexedPath> {
 
-	private static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd  -  HH:mm:ss";
-	
-	private static final String FILE_ICON_LABEL = "file-icon-label";
+    private static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd  -  HH:mm:ss";
 
-	@Override
-	protected void updateItem(IndexedPath item, boolean empty) {
-		super.updateItem(item, empty);
-		updateView();
-	}
-	
-	private void updateView() {
-        if (getItem() != null && getItem().asPath().getFileName() != null) {
-            
+    private static final String FILE_ICON_LABEL = "file-icon-label";
+
+    @Override
+    protected void updateItem(IndexedPath item, boolean empty) {
+        super.updateItem(item, empty);
+        updateView();
+    }
+
+    private void updateView() {
+        if (getItem() != null && getItem() != null) {
+
             GridPane gridPane = new GridPane();
-            gridPane.getStyleClass().add(FILE_ICON_LABEL);      
-                        
-            Pane icon = FileIcons.fromFile(getItem().asPath(), 32);
+            gridPane.getStyleClass().add(FILE_ICON_LABEL);
+
+            Pane icon = FileIcons.fromFile(getItem(), 32);
             icon.setId("fileListCell-fileTypeIcon");
             
             gridPane.addColumn(0, icon);
             GridPane.setHgrow(icon, Priority.SOMETIMES);
             
             
-            Label fileName = new Label(String.valueOf(getItem().asPath().getFileName()));
+            Label fileName = new Label(String.valueOf(getItem()));
             fileName.getStyleClass().add(FILE_ICON_LABEL);
             fileName.setId("fileListCell-fileName");
             
@@ -79,7 +79,5 @@ class FilesListCell extends ListCell<IndexedPath> {
             setText(null);
             setGraphic(null);
         }
-        
-        
     }
 }
