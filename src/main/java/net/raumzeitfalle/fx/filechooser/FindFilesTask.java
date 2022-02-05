@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
 final class FindFilesTask extends Task<Integer>{
-    
+
     private final ObservableList<IndexedPath> pathsToUpdate;
-    
+
     private final Path directory;
-    
+
     public FindFilesTask(Path searchFolder, ObservableList<IndexedPath> listOfPaths) {
         this.pathsToUpdate = Objects.requireNonNull(listOfPaths, "listOfPaths must not be null");
         this.directory = searchFolder;
@@ -45,31 +45,43 @@ final class FindFilesTask extends Task<Integer>{
      */
     @Override
     protected Integer call() throws Exception {
-    	Invoke.andWait(pathsToUpdate::clear);
-    	
-    	if (null == directory)
-    		return 0;
-        
-        File[] files = directory.toAbsolutePath().toFile().listFiles();
-        if (null == files) 
-        	return 0;
-        
+        Invoke.andWait(pathsToUpdate::clear);
+        if (null == directory) {
+            return 0;
+        }
+
+        File[] files = directory.toAbsolutePath()
+                                .toFile()
+                                .listFiles();
+        if (null == files) {
+            return 0;
+        }
+
         updateProgress(0, files.length);
-        
+        int progressIntervall = getProgressInterval(files.length);
         RefreshBuffer buffer = RefreshBuffer.get(this,files.length, pathsToUpdate);
         for (int f = 0; f < files.length; f++) {
-            if (isCancelled()) 
+            if (isCancelled()) {
+                updateProgress(f, files.length);
                 break;
-            
-            updateProgress(f+1, files.length);
-            if (files[f].isFile()) 
+            }
+            if (f % progressIntervall == 0) {
+                updateProgress(f+1, files.length);
+            }
+            if (files[f].isFile()) {
                 buffer.update(files[f].toPath());
-            
+            }
         }
         buffer.flush();
         updateProgress(files.length, files.length);
-          
         return files.length;
     }
 
+    protected int getProgressInterval(int length) {
+        int divider = 1;
+        if (length > 100) {
+            divider = length / 200;
+        }
+        return divider;
+    }
 }
