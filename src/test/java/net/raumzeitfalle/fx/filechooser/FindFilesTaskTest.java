@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2019 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,8 +67,7 @@ class FindFilesTaskTest extends FxTestTemplate {
 				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
 	
 		Set<String> fileNames = consumerCollection.stream()
-												  .map(IndexedPath::asPath)
-												  .map(Path::getFileName)
+												  .map(IndexedPath::toString)
 												  .map(String::valueOf)
 												  .collect(Collectors.toSet());
 
@@ -143,6 +144,21 @@ class FindFilesTaskTest extends FxTestTemplate {
 
 		assertEquals(0, consumerCollection.size());
 		
+	}
+	
+	@ParameterizedTest
+	@CsvSource({
+	    "       0,       1",
+	    "       6,       1",
+	    "     999,       4",
+	    "    1233,       6",
+	    " 1234233,    6171",
+	    "87366113,  436830"
+	})
+	void that_progress_intervall_is_reasonable(int pathsInDirectory, int interval) {
+	    Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
+        classUnderTest = new FindFilesTask(givenFile, consumerCollection);
+        assertEquals(interval, classUnderTest.getProgressInterval(pathsInDirectory));
 	}
 	
 	private Predicate<Integer> allFilesHaveBeenProcessed() {
