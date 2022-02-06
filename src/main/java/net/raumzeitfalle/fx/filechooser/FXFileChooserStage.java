@@ -25,6 +25,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -53,6 +55,20 @@ public class FXFileChooserStage extends Stage implements HideableView {
         FileChooserView view = new FileChooserView(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
         Scene scene = new Scene(view);
         this.setScene(scene);
+        StringBinding sb = Bindings.createStringBinding(()->{
+            Path current = model.currentSearchPath().get();
+            if (current != null) {
+                String path = current.normalize().toAbsolutePath().toString();
+                if (path.length() > 100) {
+                    return path.substring(0, 20) + " ... " + path.substring(path.length()-75, path.length());
+                } else {
+                    return path;
+                }
+            }
+            return "";
+        }, model.currentSearchPath());
+        
+        this.titleProperty().bind(sb);
         initModality(Modality.APPLICATION_MODAL);
     }
     
