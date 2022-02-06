@@ -27,57 +27,53 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 
-/**
- * Functionality will become internal-API.
- * 
+/*
+ * TODO: Functionality will become internal-API.
  * TODO: Remove the old style FX Directory Chooser.
  */
-@Deprecated
 public class FXDirectoryChooser implements PathSupplier {
-    
+
     public static FXDirectoryChooser createIn(ObjectProperty<Path> startLocation, Supplier<Window> ownerProvider) {
-        
+        Objects.requireNonNull(startLocation, "startLocation must not be null");
         Path location = startLocation.get();
         if (null == location) {
             location = Paths.get("./");
         }
-        
         return new FXDirectoryChooser(location, ownerProvider);
     }
-    
+
     public static FXDirectoryChooser createIn(Path startLocation, Supplier<Window> ownerProvider) {
-        
-    		Path location = Objects.requireNonNull(startLocation,"startLocation for file search must not be null.");
-        if (String.valueOf(startLocation).equals("")){
-        		location = Paths.get("./");
+        Objects.requireNonNull(ownerProvider, "ownerProvider must not be null");
+        Objects.requireNonNull(startLocation, "startLocation for file search must not be null.");
+        Path location = startLocation;
+        if (String.valueOf(startLocation).equals("")) {
+            location = Paths.get("./");
         }
-        
         return new FXDirectoryChooser(location, ownerProvider);
     }
-    
+
     private final DirectoryChooser dc;
-    
+
     private final Supplier<Window> ownerProvider;
 
     private FXDirectoryChooser(Path startLocation, Supplier<Window> ownerProvider) {
         this.dc = new DirectoryChooser();
         this.dc.setInitialDirectory(startLocation.toFile());
-        this.ownerProvider = ownerProvider;
+        this.ownerProvider = Objects.requireNonNull(ownerProvider, "ownerProvider must not be null");
     }
-    
-    public void getUpdate(Consumer<Path> update) {
-    		Window owner = ownerProvider.get();
-	    	Invoke.later(()->{
 
-	    		Optional<File> selection = Optional.ofNullable(dc.showDialog(owner));
-	            selection
-	            	.map(File::toPath)
-	            	.ifPresent(p -> Invoke.later(()->update.accept(p)));
-	    	});
+    public void getUpdate(Consumer<Path> update) {
+        Platform.runLater(() -> Optional.ofNullable(dc.showDialog(ownerProvider.get()))
+                                        .map(File::toPath)
+                                        .ifPresent(update.andThen(this::changeDir)));
     }
-    
+
+    private void changeDir(Path newLocation) {
+        this.dc.setInitialDirectory(newLocation.toFile());
+    }
 }

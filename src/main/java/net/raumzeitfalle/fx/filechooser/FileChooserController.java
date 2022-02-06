@@ -26,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -46,6 +48,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -164,24 +167,20 @@ final class FileChooserController implements Initializable {
 
         StringBinding binding = Bindings.createStringBinding(
                 ()->this.model.currentSearchPath().get().toAbsolutePath().toString(),
-                this.model.currentSearchPath());
+                    this.model.currentSearchPath());
 
-        this.selectedFile.promptTextProperty()
-                .bind(binding);
+        this.selectedFile.promptTextProperty().bind(binding);
 
         /*
          * TODO: Add Key listener to accept selected file when pressing ENTER
          * TODO: Add Key listener to perform CANCEL when pressing ESC
          */
         this.listOfFiles.setOnMouseClicked(this::handleDoubleClickInFilesList);
-
         this.listOfFiles.setCellFactory(e->new FilesListCell());
-        this.listOfFiles.getSelectionModel()
-        	.selectedItemProperty()
-        	.addListener(l -> {
-        		model.setSelectedFile(selectedItem());
-        	});
-        
+        this.listOfFiles.getSelectionModel() 
+                        .selectedItemProperty()
+                        .addListener(l -> model.setSelectedFile(selectedItem()));
+
         this.listOfFiles.setOnKeyPressed(this::handleEnterKeyOnSelection);
 
         this.selectedFile.textProperty().bind(model.selectedFileNameProperty());
@@ -191,20 +190,15 @@ final class FileChooserController implements Initializable {
 
         this.model.initializeFilter(fileNameFilter.getText());
         this.fileNameFilter.setOnKeyPressed(this::handleKeysForFileNameFilterField);
-        
-        // initialize PathFilter menu
-		this.model.getPathFilter()
-		          .forEach(this::addNewPathFilterMenuItem);
-        
-        // permit to dynamically add or remove PathFilter menu items
-        this.model.getPathFilter()
-        	      .addListener(this::handlePathFilterModelChange);
+
+        // initialize PathFilter menu and permit to dynamically 
+        // add or remove PathFilter menu items
+        this.model.getPathFilter().forEach(this::addNewPathFilterMenuItem);
+        this.model.getPathFilter().addListener(this::handlePathFilterModelChange);
+        this.model.getLocations().forEach(l->chooser.getItems().add(menuItemFactory.apply(l)));
+        this.model.getLocations().addListener(this::handleAddedLocation);
 
         this.chooser.setOnAction(e -> changeDirectory());
-
-        this.model.getLocations().forEach(l->chooser.getItems().add(menuItemFactory.apply(l)));
-
-        this.model.getLocations().addListener(this::handleAddedLocation);
 
         refreshButton.setOnAction(e -> model.refreshFiles());
         stopButton.setOnAction(e -> model.getUpdateService().cancelUpdate());
@@ -236,96 +230,135 @@ final class FileChooserController implements Initializable {
         okButton.setOnAction(e -> okayAction());
         okButton.setOnKeyPressed(this::handleOkayButtonKeyEvents);
         cancelButton.setOnAction(e -> cancelAction());
-        
+
         okButton.disableProperty().bind(model.invalidSelectionProperty());
         okButton.visibleProperty().bind(showOkayCancelButtons);
         cancelButton.visibleProperty().bind(showOkayCancelButtons);
-        
+
+        StringBinding sb = Bindings.createStringBinding(()->{
+            Path current = model.currentSearchPath().get();
+            if (current != null) {
+                return current.normalize().toAbsolutePath().toString();
+            }
+            return "";
+        }, model.currentSearchPath());
+
+        Tooltip toolTip = new Tooltip();
+        toolTip.textProperty().bind(sb);
+        chooser.setTooltip(toolTip);
         Platform.runLater(()->fileNameFilter.requestFocus());
     }
 
     private void handleKeysForFileNameFilterField(KeyEvent keyEvent) {
-    	if (this.fileNameFilter.getText().equalsIgnoreCase("")
-    			&& KeyCode.ESCAPE.equals(keyEvent.getCode())) {
-    		cancelAction();
-    	}
-    	
-    	if (KeyCode.ESCAPE.equals(keyEvent.getCode())) {
-    		this.fileNameFilter.setText("");
-    	}
-    	
+        if (this.fileNameFilter.getText().equalsIgnoreCase("") 
+            && KeyCode.ESCAPE.equals(keyEvent.getCode())) {
+            cancelAction();
+        }
+
+        if (KeyCode.ESCAPE.equals(keyEvent.getCode())) {
+            this.fileNameFilter.setText("");
+        }
+
         if (KeyCode.ENTER.equals(keyEvent.getCode())) {
             handlePossiblePastedPath();
         }
     }
 
-	private void handlePossiblePastedPath() {
-		Path pastedPath = this.model.pastedPathProperty().get();
-		if (null != pastedPath) {
-		    acceptPathAndSelectFileIfValid(pastedPath); 
-		} else {
-			tryManualInputPathSelection();
-		}
-	}
+    private void handlePossiblePastedPath() {
+        Path pastedPath = this.model.pastedPathProperty().get();
+        if (null != pastedPath) {
+            acceptPathAndSelectFileIfValid(pastedPath);
+        } else {
+            tryManualInputPathSelection();
+        }
+    }
 
-	private void tryManualInputPathSelection() {
-		try {
-			selectParentPathFromInput();
-		} catch (InvalidPathException anyError) {
-			/* Failed to convert text to Path
-			 * but as of now this is no problem.
-			 */
-		}
-	}
+    private void tryManualInputPathSelection() {
+        try {
+            selectParentPathFromInput();
+        } catch (InvalidPathException anyError) {
+            /*
+             * Failed to convert text to Path but as of now this is no problem.
+             */
+        }
+    }
 
-	private void selectParentPathFromInput() {
-		String pastedText = fileNameFilter.getText();
-		Path pasted = Paths.get(pastedText);
-		Path parent = pasted;
-		if (!Files.exists(pasted) || !Files.isDirectory(pasted)) {
-			parent = pasted.getParent();
-		}
-		selectFirstExistingParentPath(pasted, parent);
-	}
+    private void selectParentPathFromInput() {
+        String pastedText = fileNameFilter.getText();
+        if (pastedText.isEmpty())
+            return;
 
-	private void selectFirstExistingParentPath(Path pasted, Path parent) {
-		boolean parentExists = false;
-		while (parent != null && !parentExists) {
-			parentExists = Files.exists(parent);
-			if (parentExists) {
-				model.getUpdateService().restartIn(parent);
-				this.fileNameFilter.setText(parent.toString());
-				fileNameFilter.positionCaret(parent.toString().length()+1);
-			} else {
-				parent = pasted.getParent();
-			}
-			model.pastedPathProperty().set(parent);
-		}
-	}
+        Path pasted = Paths.get(pastedText);
+        Path parent = pasted;
+        if (!Files.exists(pasted) || !Files.isDirectory(pasted)) {
+            parent = pasted.getParent();
+        }
+        
+        /*
+         * Rebuild this to a while loop
+         * * while "parent" not exists & parent is not file
+         *    get parent
+         *    
+         * Ensure that already here is determined,
+         * if parent exists or not!
+         * Then call the update service.
+         * 
+         */
+        
+        selectFirstExistingParentPath(pasted, parent);
+    }
 
-	private void acceptPathAndSelectFileIfValid(Path pastedPath) {
-		model.getUpdateService().restartIn(pastedPath);
-		this.fileNameFilter.setText("");
-		if (Files.exists(pastedPath)) {
-			if (Files.isRegularFile(pastedPath)) {
-				selectEnteredFileAndRequestOkayFocus(pastedPath);
-			}
-		}
-	}
+    private void selectFirstExistingParentPath(Path pasted, Path parent) {
+        boolean parentExists = false;
+        while (parent != null && !parentExists) {
+            parentExists = Files.exists(parent);
+            if (parentExists) {
+                model.getUpdateService().restartIn(parent);
+                this.fileNameFilter.setText(parent.toString());
+                fileNameFilter.positionCaret(parent.toString().length() + 1);
+            } else {
+                parent = pasted.getParent();
+            }
+            /*
+             * This is required on Windows as in some cases a share or drive letter
+             * is listed but actually not available. In these cases File().list() will
+             * provide a null value without throwing an exception. 
+             * 
+             * Interestingly Files.notExists() blocks. But it works fine when previously
+             * (parent.toFile().list()) is called.
+             */
+            if (parent.toFile().list() == null) {
+                Logger.getLogger(FileChooserController.class.getName())
+                      .log(Level.SEVERE, "path is not accessible: {0}", parent);
+                break;
+            }
+            model.pastedPathProperty().set(parent);
+        }
+    }
 
-	private void selectEnteredFileAndRequestOkayFocus(Path pastedPath) {
-		String fileName = pastedPath.getFileName().toString();
-		fileNameFilter.setText(fileName);
-		fileNameFilter.positionCaret(fileName.length()+1);
-		IndexedPath ip = IndexedPath.valueOf(pastedPath);
-		model.setSelectedFile(ip);
-		model.pastedPathProperty().set(pastedPath.getParent());
-		Platform.runLater(()->this.okButton.requestFocus());
-	}
+    private void acceptPathAndSelectFileIfValid(Path pastedPath) {
+        model.getUpdateService().restartIn(pastedPath);
+        this.fileNameFilter.setText("");
+        if (Files.exists(pastedPath)) {
+            if (Files.isRegularFile(pastedPath)) {
+                selectEnteredFileAndRequestOkayFocus(pastedPath);
+            }
+        }
+    }
+
+    private void selectEnteredFileAndRequestOkayFocus(Path pastedPath) {
+        String fileName = pastedPath.getFileName().toString();
+        fileNameFilter.setText(fileName);
+        fileNameFilter.positionCaret(fileName.length() + 1);
+        IndexedPath ip = IndexedPath.valueOf(pastedPath);
+        model.setSelectedFile(ip);
+        model.pastedPathProperty().set(pastedPath.getParent());
+        Platform.runLater(() -> this.okButton.requestFocus());
+    }
 
     private void handleFileNameFilterChanges() {
-		this.listOfFiles.getSelectionModel().clearSelection();
-		this.model.updateFilterCriterion(fileNameFilter.getText());
+        this.listOfFiles.getSelectionModel().clearSelection();
+        this.model.updateFilterCriterion(fileNameFilter.getText());
         evaluateIfPathWasEntered();
     }
 
@@ -343,38 +376,38 @@ final class FileChooserController implements Initializable {
     }
 
     private void handleDoubleClickInFilesList(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-		    model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());	    
-		    event.consume();
-		    okayAction();
-		    if (FileChooserViewOption.DIALOG.equals(fileChooserViewOption)) {
-		        dialog.setResult(model.getSelectedFile());
-		    }
-		}
+        if (event.getClickCount() == 2) {
+            model.setSelectedFile(listOfFiles.getSelectionModel().getSelectedItem());
+            event.consume();
+            okayAction();
+            if (FileChooserViewOption.DIALOG.equals(fileChooserViewOption)) {
+                dialog.setResult(model.getSelectedFile());
+            }
+        }
     }
-    
+
     private void okayAction() {
-    	this.stage.closeView();
-    }
-    
-    private void cancelAction() {
-    	this.model.setSelectedFile(null);
         this.stage.closeView();
     }
-    
+
+    private void cancelAction() {
+        this.model.setSelectedFile(null);
+        this.stage.closeView();
+    }
+
     private void changeDirectory() {
-    	Invoke.later(()->{
-    		fileChooserView.setDisable(true);
-            pathSupplier.getUpdate(value->model.getUpdateService().restartIn(value));
+        Platform.runLater(() -> {
+            fileChooserView.setDisable(true);
+            pathSupplier.getUpdate(value -> model.getUpdateService().restartIn(value));
             fileChooserView.setDisable(false);
-    	});
+        });
     }
     
     private void handlePathFilterModelChange(Change<? extends PathFilter> change) {
-    	if (change.next()) {
-    		change.getAddedSubList().forEach(this::addNewPathFilterMenuItem);
-    		change.getRemoved().forEach(this::removePathFilterMenuItem);
-    	}
+        if (change.next()) {
+            change.getAddedSubList().forEach(this::addNewPathFilterMenuItem);
+            change.getRemoved().forEach(this::removePathFilterMenuItem);
+        }
     }
 
     private void handleAddedLocation(SetChangeListener.Change<? extends Location> change) {
@@ -384,23 +417,24 @@ final class FileChooserController implements Initializable {
         }
     }
 
-	private void addNewPathFilterMenuItem(PathFilter p) {
-		Invoke.later(()->{
-			MenuItem item = new MenuItem(p.getName());
-			item.setOnAction(e -> this.model.updateFilterCriterion(p, fileNameFilter.getText()));
-			this.fileExtensionFilter.getItems().add(item);
-		});
-	}
-	
-	private void removePathFilterMenuItem(PathFilter filterToRemove) {
-		Invoke.later(()->this.fileExtensionFilter
-			.getItems()
-			.removeIf(mi->mi.getText().equalsIgnoreCase(filterToRemove.getName())));
-	}
+    private void addNewPathFilterMenuItem(PathFilter p) {
+        Platform.runLater(() -> {
+            MenuItem item = new MenuItem(p.getName());
+            item.setOnAction(e -> this.model.updateFilterCriterion(p, fileNameFilter.getText()));
+            this.fileExtensionFilter.getItems().add(item);
+        });
+    }
+
+    private void removePathFilterMenuItem(PathFilter filterToRemove) {
+        Platform.runLater(() -> this.fileExtensionFilter
+                               .getItems()
+                               .removeIf(mi -> mi.getText()
+                                                 .equalsIgnoreCase(filterToRemove.getName())));
+    }
 
     private void assignSortAction(MenuItem menuItem, Comparator<IndexedPath> comparator) {
         menuItem.setOnAction(e -> 
-            Invoke.later(()->{
+        Platform.runLater(()->{
                 model.sort(comparator);
                 SVGPath svgPath = new SVGPath();
                 svgPath.getStyleClass().add("tool-bar-icon");
@@ -414,16 +448,15 @@ final class FileChooserController implements Initializable {
         return listOfFiles.getSelectionModel().selectedItemProperty().getValue();
     }
 
-	private void handleOkayButtonKeyEvents(KeyEvent keyEvent) {
-		if (KeyCode.ENTER.equals(keyEvent.getCode())) {
-			okButton.fire();
-		}
-	}
+    private void handleOkayButtonKeyEvents(KeyEvent keyEvent) {
+        if (KeyCode.ENTER.equals(keyEvent.getCode())) {
+            okButton.fire();
+        }
+    }
 
-	private void handleEnterKeyOnSelection(KeyEvent keyevent) {
-		if (KeyCode.ENTER.equals(keyevent.getCode())
-				&& !listOfFiles.getSelectionModel().isEmpty()) {
-			Platform.runLater(()->this.okButton.requestFocus());
-		}
-	}
+    private void handleEnterKeyOnSelection(KeyEvent keyevent) {
+        if (KeyCode.ENTER.equals(keyevent.getCode()) && !listOfFiles.getSelectionModel().isEmpty()) {
+            Platform.runLater(() -> this.okButton.requestFocus());
+        }
+    }
 }

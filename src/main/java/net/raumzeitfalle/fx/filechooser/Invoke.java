@@ -22,6 +22,8 @@ package net.raumzeitfalle.fx.filechooser;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javafx.application.Platform;
 
@@ -31,10 +33,14 @@ class Invoke {
         
     }
     
-    static void later(Runnable r) {
-        Platform.runLater(r);    
+    static void later(Supplier<Void> action) {
+        Platform.runLater(action::get);
     }
     
+    static <T> void later(T value, Consumer<T> consumingAction) {
+        Platform.runLater(()->consumingAction.accept(value));
+    }
+
     static void laterWithDelay(Duration duration, Runnable r) {
         Platform.runLater(()->{
             try {

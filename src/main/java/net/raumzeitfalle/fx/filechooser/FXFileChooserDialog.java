@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
@@ -63,7 +66,16 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
 
         setTitle("File Selection");
         setHeaderText("Select File from for processing:");
-        headerTextProperty().bind(model.currentSearchPath().asString());
+
+        StringBinding sb = Bindings.createStringBinding(()->{
+            Path current = model.currentSearchPath().get();
+            if (current != null) {
+                return current.normalize().toAbsolutePath().toString();
+            }
+            return "";
+        }, model.currentSearchPath());
+
+        headerTextProperty().bind(sb);
         initModality(Modality.APPLICATION_MODAL);
 
         Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
@@ -89,7 +101,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     }
 
     private void configureMinWindowSize(Event evt) {
-        Invoke.later(this::setMinWinSize);
+        Platform.runLater(this::setMinWinSize);
     }
 
     private void setMinWinSize() {
