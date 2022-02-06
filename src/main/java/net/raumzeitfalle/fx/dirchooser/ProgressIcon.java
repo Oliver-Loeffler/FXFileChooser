@@ -36,7 +36,7 @@ class ProgressIcon extends AnchorPane {
 	 * 
 	 */
 	public ProgressIcon(double iconSize, javafx.event.EventHandler<ActionEvent> cancelHandler) {
-	
+
 		progressBar = new ProgressBar();
 		progressBar.setProgress(-1);
 		progressBar.setMaxSize(iconSize, iconSize);
