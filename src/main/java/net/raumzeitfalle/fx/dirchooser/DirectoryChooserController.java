@@ -221,10 +221,8 @@ public class DirectoryChooserController implements Initializable {
 		/*
 		 * TODO: Progress can be determined as per file system entry, 
 		 * 		 so that indeterminate state is not needed for update icon.
-		 * TODO: Make task cancellable 
 		 */
-		Task<Void> update = new DirectoryTreeUpdateTask(path, item, runningUpdateTasks::remove);
-		return update;
+		return new DirectoryTreeUpdateTask(path, item, runningUpdateTasks::remove);
 	}
 
 	private void expandItem(TreeItem<?> item) {
@@ -262,7 +260,6 @@ public class DirectoryChooserController implements Initializable {
             }
         };
         executor.submit(init);
-
     }
 
     private String getHostName() {
@@ -316,6 +313,10 @@ public class DirectoryChooserController implements Initializable {
         }
     }
 
+    /*
+     * TODO: When a network location is added, group all directories which belong to
+     * the same "share" below the "shares" node.
+     */
     private void updateSharesIfNeeded(DirectoryTreeItem share) {
         List<TreeItem<String>> knownShares = networkRoot.getChildren();
         Optional<DirectoryTreeItem> optionalShare = knownShares.stream()

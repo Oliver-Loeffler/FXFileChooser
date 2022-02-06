@@ -32,7 +32,8 @@ class ProgressIcon extends AnchorPane {
 	
 	/*
 	 * TODO:
-	 * Figure out how to offer the cancel action to the user.
+	 * Decorate the progress counter with an [X] to allow the user to cancel an operation.
+	 * 
 	 */
 	public ProgressIcon(double iconSize, javafx.event.EventHandler<ActionEvent> cancelHandler) {
 	
