@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 
 final class RefreshBuffer {
@@ -69,7 +70,7 @@ final class RefreshBuffer {
         this.lock.lock();
         try {
             IndexedPath[] update = this.atomicCache.get().toArray(new IndexedPath[0]);
-            Invoke.later(() -> target.addAll(update));
+            Platform.runLater(() -> target.addAll(update));
             this.atomicCache.get().clear();
         } finally {
             this.lock.unlock();
