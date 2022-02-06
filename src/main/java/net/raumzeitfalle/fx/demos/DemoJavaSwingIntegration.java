@@ -112,6 +112,14 @@ public class DemoJavaSwingIntegration {
 
 		addExample(stageInsideSwingDialogDark);
 
+		JFileChooser swingFc = new JFileChooser();
+        title = "<html><center><h3>Java Swing FileChooser</h3>" + JFileChooser.class.getName() + "<br>"
+                  + "<font color=#0000FF></font>" + "</center></html>";
+		Example swingWay = new Example(title, 
+		                            ()->swingFc.showOpenDialog(frame),
+		                            ()->swingFc.getSelectedFile());
+		addExample(swingWay);
+		
 		frame.getContentPane().add(buttonHolder);
 		frame.pack();
 		frame.setSize(900, 700);
