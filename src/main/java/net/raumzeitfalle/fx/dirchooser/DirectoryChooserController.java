@@ -20,6 +20,7 @@
 package net.raumzeitfalle.fx.dirchooser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -28,13 +29,17 @@ import java.net.UnknownHostException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.filechooser.FileSystemView;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -43,6 +48,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -63,11 +69,18 @@ public class DirectoryChooserController implements Initializable {
     private Button okButton;
 
     @FXML
-    private Button cancelButton;
-
+    private Button cancelButton;    
+    
+    @FXML
+    private TextField goToTextField;
+     
     private ObjectProperty<Path> selectedDirectoryProperty = new SimpleObjectProperty<Path>(null);
-
+    
     private DirectoryTreeItem root;
+    
+    private DirectoryTreeItem localRoot;
+    
+    private DirectoryTreeItem networkRoot;
 
     private Runnable onSelect;
 
@@ -83,23 +96,38 @@ public class DirectoryChooserController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         registerShutdownHook();
         String hostName = getHostName();
-        root = new DirectoryTreeItem(hostName);
-        root.setGraphic(DirectoryIcons.HOST.get(iconSize));
+        root = new DirectoryTreeItem("root");
+        localRoot = new DirectoryTreeItem(hostName);
+        localRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
+        
+        networkRoot = new DirectoryTreeItem("Network");
+        networkRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
+        
+        root.getChildren().add(localRoot);
+        
         directoryTree.setRoot(root);
-        directoryTree.showRootProperty().set(true);
-        root.setExpanded(true);
-
+        directoryTree.showRootProperty().set(false);
+        
+        localRoot.setExpanded(true);
+        networkRoot.setExpanded(false);
+        
         StringBinding sb = Bindings.createStringBinding(()->{
             Path selection = selectedDirectoryProperty.get();
             return (selection == null) ? "" : selection.toAbsolutePath().toString();
         }, selectedDirectoryProperty);
         selectedDirectory.textProperty().bind(sb);
         selectedDirectoryProperty.set(null);
-
         okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
         okButton.setOnAction(e -> okayAction());
-
         cancelButton.setOnAction(e -> cancelAction());
+        
+        goToTextField.setOnAction(this::handleGotoAction);
+        this.goToTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                handleGotoAction(null);
+                keyEvent.consume();
+            }
+        });
         
         this.okButton.setOnKeyPressed(keyEvent->{
         	if (keyEvent.getCode() == KeyCode.ESCAPE) {
@@ -183,7 +211,7 @@ public class DirectoryChooserController implements Initializable {
             }
         }
     }
-	
+    	
 	private void startUpdate(Path path, Task<Void> update) {
 		runningUpdateTasks.put(path, update);
 		executor.submit(update);		
@@ -220,7 +248,7 @@ public class DirectoryChooserController implements Initializable {
                 for (Path path : rootDirectories) {
                     // DirectoryTreeItem dirItem = new DirectoryWalker(path).read();
                     DirectoryTreeItem dirItem = new DirectoryTreeItem(path);
-                    root.getChildren().add(dirItem);
+                    localRoot.getChildren().add(dirItem);
                     /*
                      * Possible useful API classes and functions:
                      * FileSystemView.getSystemTypeDescription 
@@ -276,6 +304,81 @@ public class DirectoryChooserController implements Initializable {
 
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
+
+    private void handleGotoAction(ActionEvent event) {
+        File possibleLocation = getPathFromText();
+        if (possibleLocation.exists()) {
+            Path location = possibleLocation.toPath();
+            DirectoryTreeItem share = new DirectoryTreeItem(location);
+            share.setGraphic(DirectoryIcons.HOST.get(iconSize));
+            updateSharesIfNeeded(share);            
+        }
+    }
+
+    private void updateSharesIfNeeded(DirectoryTreeItem share) {
+        List<TreeItem<String>> knownShares = networkRoot.getChildren();
+        Optional<DirectoryTreeItem> optionalShare = knownShares.stream()
+                                                   .filter(h->h.getValue().equalsIgnoreCase(share.getFullPath()))
+                                                   .map(i->(DirectoryTreeItem)i)
+                                                   .findAny();
+        if (!optionalShare.isPresent()) {
+            Path path = Paths.get(share.getFullPath());
+            File file = path.getRoot().toFile();
+            FileSystemView fsView = FileSystemView.getFileSystemView();
+            boolean isFsRoot = fsView.isFileSystemRoot(file); 
+            if (!isFsRoot) {
+                Platform.runLater(()->{
+                    if (!root.getChildren().contains(networkRoot)) {
+                        root.getChildren().add(networkRoot);
+                    }
+                    localRoot.setExpanded(false);
+                    networkRoot.getChildren().add(share);
+                    networkRoot.setExpanded(true);
+                });
+            } else {
+                expandTreeFor(path);
+            }
+        }        
+    }
+
+    private void expandTreeFor(Path path) {
+        System.out.println("expanding for: " + path);
+        Platform.runLater(()->{
+            localRoot.setExpanded(false);
+            expandAll(path, 0, localRoot);
+            System.out.println(path);
+        });
+    }
+
+    private void expandAll(Path path, int depth, DirectoryTreeItem treeItem) {
+        Path full = resolvePath(path, depth);
+        for (TreeItem<String> d : treeItem.getChildren()) {
+            DirectoryTreeItem child = (DirectoryTreeItem) d;
+            Path other = Paths.get(child.getFullPath());
+            if (full.equals(other)) {
+                Platform.runLater(()->{
+                    directoryTree.getSelectionModel().select(child);
+                    directoryTree.scrollTo(directoryTree.getTreeItemLevel(child)+1);
+                });
+                child.setExpanded(true);
+                if (depth < path.getNameCount()) {   
+                    expandAll(path, depth+=1, child);
+                }
+            }
+        }
+    }
+
+    private Path resolvePath(Path path, int depth) {
+        if (depth == 0) {
+            return path.getRoot();
+        }
+        return path.getRoot().resolve(path.subpath(0, depth));
+    }
+
+    private File getPathFromText() {
+        String value = goToTextField.getText().replace("\"", "");
+        return new File(value);
     }
 
 }
