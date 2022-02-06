@@ -19,12 +19,12 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import javafx.scene.control.MenuItem;
-import net.raumzeitfalle.fx.filechooser.locations.Location;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import javafx.scene.control.MenuItem;
+import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 class LocationMenuItemFactory implements Function<Location,LocationMenuItem> {
 
@@ -37,7 +37,7 @@ class LocationMenuItemFactory implements Function<Location,LocationMenuItem> {
     @Override
     public LocationMenuItem apply(Location location) {
         LocationMenuItem item = new LocationMenuItem(location);
-        item.setOnAction(e -> Invoke.later(()->pathConsumer.accept(location)));
+        item.setOnAction(e -> Invoke.later(location, pathConsumer));
         return item;
     }
 }
