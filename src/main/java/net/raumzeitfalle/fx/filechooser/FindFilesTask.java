@@ -64,6 +64,9 @@ final class FindFilesTask extends Task<Integer>{
         if (null == files) {
             return 0;
         }
+        
+        if (files.length == 0)
+        	return 0;
 
         updateProgress(0, files.length);
         int progressIntervall = getProgressInterval(files.length);
@@ -121,7 +124,7 @@ final class FindFilesTask extends Task<Integer>{
 
     protected int getProgressInterval(int length) {
         int divider = 1;
-        if (length > 100) {
+        if (length >= 200) {
             divider = length / 200;
         }
         return divider;
