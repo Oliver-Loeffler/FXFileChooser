@@ -20,17 +20,10 @@
 package net.raumzeitfalle.fx.dirchooser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javafx.event.Event;
 import javafx.scene.control.TreeItem;
-
 /*
  * TODO: if an item has been updated is currently checked using getChildren, 
  *       but for some large directories with many files, this is the wrong 
@@ -49,8 +42,12 @@ public class DirectoryTreeItem extends TreeItem<String> {
     }
 
     private boolean isDirectory;
-
+    
+    private boolean isDrive;
+    
     private double iconSize = 32.0;
+    
+    private int size = 0;
 
     public boolean isDirectory() {
         return (this.isDirectory);
@@ -64,15 +61,12 @@ public class DirectoryTreeItem extends TreeItem<String> {
         super(file.toString());
         this.fullPath = file.toString();
         this.isDirectory = file.toFile().isDirectory();
-
-        Path path = Paths.get(this.fullPath);
-
-        long subDirs = countSubDirs(path);
-        if (subDirs > 0) {
-            this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize));
-        } else {
-            this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
+        this.isDrive = determineIfIsDrive();
+        String[] contents = new File(fullPath).list();
+        if (contents != null) {
+            size = contents.length;
         }
+        configureIcon();
 
         if (!fullPath.endsWith(File.separator)) {
             String value = file.toString();
@@ -83,37 +77,88 @@ public class DirectoryTreeItem extends TreeItem<String> {
                 this.setValue(value);
             }
         }
-
         this.addEventHandler(TreeItem.branchExpandedEvent(), this::handleExpansion);
         this.addEventHandler(TreeItem.branchCollapsedEvent(), this::handleCollapse);
-
     }
 
-    private long countSubDirs(Path path) {
-        try (Stream<Path> paths = Files.list(path)) {
-            List<Path> subDirs = paths.filter(p -> p.toFile().isDirectory()).collect(Collectors.toList());
-            return subDirs.size();
-        } catch (IOException e) {
-            return 0;
+    public void configureIcon() {
+        if (isExpanded()) {
+            configureExpandedIcon();
+            return;
+        } else {
+            configureCollapsedIcon();
         }
+    }
+
+    private void configureCollapsedIcon() {
+        if (isDrive && getChildren().size() > 0) {
+            this.setGraphic(DirectoryIcons.DRIVE_PLUS.get(iconSize));
+        } else if (isDrive && size == 0) {
+            this.setGraphic(DirectoryIcons.DRIVE_EMPTY.get(iconSize));
+        } else if (isDrive && size > 1000) {
+            this.setGraphic(DirectoryIcons.DRIVE_XL.get(iconSize));
+        } else if (isDrive) {
+            this.setGraphic(DirectoryIcons.DRIVE.get(iconSize));
+        } else if (getChildren().isEmpty() && size > 1000) {
+            this.setGraphic(DirectoryIcons.NO_SUBDIRS_XL.get(iconSize));
+        } else if (size == 0) {
+            this.setGraphic(DirectoryIcons.EMPTY.get(iconSize));
+        } else if (getChildren().size() > 1000) {
+            this.setGraphic(DirectoryIcons.CLOSED_XL.get(iconSize));
+        } else if (getChildren().size() > 0) {
+            this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize));
+        } else {
+            this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
+        }
+    }
+
+    private void configureExpandedIcon() {
+        if (!isDrive) {
+            this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
+        }
+    }
+
+    public boolean isDrive() {
+        return this.isDrive;
+    }
+
+    private boolean determineIfIsDrive() {
+        if (fullPath.length() != 3) {
+            return false;
+        }
+        if (!Character.isAlphabetic(fullPath.charAt(0))) {
+            return false;
+        }
+        if (fullPath.charAt(1) != ':') {
+            return false;
+        }
+        if (fullPath.charAt(2) == '\\' || fullPath.charAt(2) == '/') {
+            return true;
+        }
+        return false;
     }
 
     private void handleExpansion(Event e) {
         DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
-        if (null != item) {
-            item.setGraphic(DirectoryIcons.OPEN.get(iconSize));
-        }
+        item.configureIcon();
     }
 
     private void handleCollapse(Event e) {
         DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
         if (null != item) {
-            if (item.getChildren().isEmpty()) {
-                this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
-            } else {
-                this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
-            }
+            item.configureIcon();
         }
     }
 
+    boolean isHuge() {
+        return size > 1000L;
+    }
+
+    public int size() {
+        return this.size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }

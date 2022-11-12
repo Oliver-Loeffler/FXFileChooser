@@ -64,7 +64,10 @@ public class DirectoryChooserView extends AnchorPane {
 
     public void onCancel(Runnable action) {
         controller.setOnCancel(action);
-
+    }
+    
+    public void shutdown() {
+        controller.shutdown();
     }
 
 }

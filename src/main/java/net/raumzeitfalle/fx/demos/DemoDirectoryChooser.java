@@ -32,13 +32,19 @@ public class DemoDirectoryChooser extends Application {
         Application.launch();
     }
 
+    private DirectoryChooserView view; 
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DirectoryChooserView view = new DirectoryChooserView(Skin.DARK);
+        view = new DirectoryChooserView(Skin.DARK);
         Scene scene = new Scene(view);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
         primaryStage.show();
     }
 
+    @Override
+    public void stop() {
+        view.shutdown();
+    }
 }

@@ -28,7 +28,14 @@ enum DirectoryIcons {
     CLOSED("icons/folder-closed-32.png"),
     OPEN_WITH_FILE("icons/folder-file-open-32.png"),
     CLOSED_PLUS("icons/folder-closed-plus-32.png"),
-    HOST("icons/host-computer-32.png");
+    CLOSED_XL("icons/folder-closed-xl-32.png"),
+    HOST("icons/host-computer-32.png"),
+    EMPTY("icons/folder-empty-32.png"),
+    NO_SUBDIRS_XL("icons/folder-closed-unknown-xl-32.png"),
+    DRIVE("icons/windows-drive-32.png"),
+    DRIVE_PLUS("icons/windows-drive-plus-32.png"),
+    DRIVE_XL("icons/windows-drive-xl-32.png"),
+    DRIVE_EMPTY("icons/windows-drive-empty-32.png");
   
     private final String iconFileName;
     

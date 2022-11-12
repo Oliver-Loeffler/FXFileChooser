@@ -51,7 +51,10 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -92,6 +95,8 @@ public class DirectoryChooserController implements Initializable {
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
+    private boolean dontExpandOnSelect;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         registerShutdownHook();
@@ -184,8 +189,12 @@ public class DirectoryChooserController implements Initializable {
                     selectedDirectoryProperty.set(null);
                 else
                     selectedDirectoryProperty.set(Paths.get(item.getFullPath()));
-
-                readSubDirsForSelectedItem();
+                
+                if (!dontExpandOnSelect) {                    
+                    readSubDirsForSelectedItem();
+                }
+                
+                goToTextField.textProperty().setValue(item.getFullPath());
             }
         });
 
@@ -197,9 +206,21 @@ public class DirectoryChooserController implements Initializable {
         expandItem(this.directoryTree.getSelectionModel().selectedItemProperty().get());
     }
 
-    private void readSubDirsForSelectedItem() {
-        DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree.getSelectionModel().selectedItemProperty()
-                .get();
+    private void readSubDirsForSelectedItem() {           
+        DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree
+                                                         .getSelectionModel()
+                                                         .selectedItemProperty()
+                                                         .get();
+        if (null != item && item.isHuge()) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Huge directory");
+            alert.setHeaderText("Scanning for subdirs may take a while!");
+            alert.setContentText(String.format("This directory holds %s items.",Integer.toString(item.size())));
+            Optional<ButtonType> userResponse = alert.showAndWait();
+            if (userResponse.get() == ButtonType.CANCEL) {
+                return;
+            }
+        }
         if (null != item && null != item.getFullPath()) {
             Path path = Paths.get(item.getFullPath());
             if (item.getChildren().isEmpty()) {
@@ -290,7 +311,7 @@ public class DirectoryChooserController implements Initializable {
         this.onCancel = action;
     }
 
-    private void shutdown() {
+    void shutdown() {
         Logger.getLogger(DirectoryChooserController.class.getName()).log(Level.INFO,
                 "shutting down tasks and executors");
         executor.shutdown();
@@ -307,7 +328,17 @@ public class DirectoryChooserController implements Initializable {
             DirectoryTreeItem share = new DirectoryTreeItem(location);
             share.setGraphic(DirectoryIcons.HOST.get(iconSize));
             updateSharesIfNeeded(share);
+            scrollToItem(share);
         }
+    }
+
+    private void scrollToItem(DirectoryTreeItem share) {
+        int index = directoryTree.getRow(share);
+        directoryTree.scrollTo(index);
+        Platform.runLater(()->{
+            int i = directoryTree.getRow(share);
+            directoryTree.scrollTo(i);
+        });
     }
 
     /*
@@ -341,29 +372,54 @@ public class DirectoryChooserController implements Initializable {
 
     private void expandTreeFor(Path path) {
         System.out.println("expanding for: " + path);
+        collapseAll();
         Platform.runLater(() -> {
             localRoot.setExpanded(false);
-            expandAll(path, 0, localRoot);
-            System.out.println(path);
+            networkRoot.setExpanded(false);
+            root.setExpanded(false);
+            DirectoryTreeItem item = expandAll(path, 0, localRoot);
+            if (item != null) {               
+                Platform.runLater(()->{
+                    selectButNotExpand(item);
+                    scrollToItem(item);
+                });
+            }
         });
     }
 
-    private void expandAll(Path path, int depth, DirectoryTreeItem treeItem) {
+    private void selectButNotExpand(DirectoryTreeItem item) {
+        dontExpandOnSelect = true;
+        directoryTree.getSelectionModel().select(item);
+        dontExpandOnSelect = false;
+    }
+
+    private void collapseAll() {
+        collapse(root);
+    }
+
+    private void collapse(TreeItem<String> treeItem) {
+        for (TreeItem<String> d : treeItem.getChildren()) {
+            if (d.isExpanded()) {
+                d.setExpanded(false);
+                collapse(d);
+            }
+        }
+    }
+
+    private DirectoryTreeItem expandAll(Path path, int depth, DirectoryTreeItem treeItem) {
         Path full = resolvePath(path, depth);
         for (TreeItem<String> d : treeItem.getChildren()) {
             DirectoryTreeItem child = (DirectoryTreeItem) d;
             Path other = Paths.get(child.getFullPath());
             if (full.equals(other)) {
-                Platform.runLater(() -> {
-                    directoryTree.getSelectionModel().select(child);
-                    directoryTree.scrollTo(directoryTree.getTreeItemLevel(child) + 1);
-                });
                 child.setExpanded(true);
                 if (depth < path.getNameCount()) {
-                    expandAll(path, depth += 1, child);
+                    return expandAll(path, depth += 1, child);
                 }
+                return child;
             }
         }
+        return null;
     }
 
     private Path resolvePath(Path path, int depth) {
@@ -375,7 +431,9 @@ public class DirectoryChooserController implements Initializable {
 
     private File getPathFromText() {
         String value = goToTextField.getText().replace("\"", "");
+        if (value.length() == 2 && value.charAt(1) == ':') {
+            return new File(value+"\\");
+        }
         return new File(value);
     }
-
 }

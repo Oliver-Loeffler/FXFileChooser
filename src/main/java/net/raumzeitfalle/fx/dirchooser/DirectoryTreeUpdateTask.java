@@ -79,17 +79,17 @@ class DirectoryTreeUpdateTask extends Task<Void> {
         removable.accept(path);
         Platform.runLater(()->item.setGraphic(itemGraphic));
     }
-    
+
     @Override
     protected void succeeded() {
         super.succeeded();
         Platform.runLater(()->{
             item.setGraphic(itemGraphic);
-            if (!item.getChildren().isEmpty()) {
-                item.setGraphic(DirectoryIcons.OPEN.get(32));
+            if (!item.getChildren().isEmpty() && item.isDirectory()) {
                 item.setExpanded(true);
+                item.configureIcon();
             }
-           removable.accept(path);
+            removable.accept(path);
         });
     }
 }

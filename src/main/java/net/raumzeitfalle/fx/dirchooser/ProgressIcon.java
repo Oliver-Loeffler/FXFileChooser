@@ -20,15 +20,13 @@
 package net.raumzeitfalle.fx.dirchooser;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 
 class ProgressIcon extends AnchorPane {
 
     private ProgressBar progressBar;
-
-    private Button cancel;
 
     /*
      * TODO: Decorate the progress counter with an [X] to allow the user to cancel
@@ -41,9 +39,11 @@ class ProgressIcon extends AnchorPane {
         progressBar.setProgress(-1);
         progressBar.setMaxSize(iconSize, iconSize);
         progressBar.setPrefSize(iconSize, iconSize);
-        cancel = new Button("X");
-        cancel.setOnAction(cancelHandler);
-
+        progressBar.setOnMouseClicked(clickEvent->{
+            if (clickEvent.getClickCount() == 2) {
+                cancelHandler.handle(null);
+            }
+        });
         getChildren().add(progressBar);
 
         AnchorPane.setLeftAnchor(progressBar, 0d);
@@ -55,7 +55,9 @@ class ProgressIcon extends AnchorPane {
 
         progressBar.getStyleClass().add("directory-progress-icon");
         getStyleClass().add("directory-icon-pane");
-
+        
+        Tooltip tooltip = new Tooltip("Double click to abort directory search!");
+        Tooltip.install(progressBar, tooltip);
     }
 
 }
