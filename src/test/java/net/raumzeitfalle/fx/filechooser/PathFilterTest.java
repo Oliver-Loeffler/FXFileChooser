@@ -31,106 +31,92 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-
 class PathFilterTest {
-	
-	private PathFilter classUnderTest;
 
-	@ParameterizedTest
-	@CsvSource({
-		"index.html,  true",
-		"index.php,  false",
-		"index,      false",
-		".html,       true"
-	})
-	void criterion(String fileNameEntered, Boolean expectedPredicateResult) {
-		classUnderTest = PathFilter.create("HTML file", p->p.endsWith(".html"));
-		Predicate<String> criterion = classUnderTest.getPredicate();
-		
-		assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
-	}
+    private PathFilter classUnderTest;
 
-	@Test
-	void matches_forExtension() {
-		
-		String extension = "xlsx";
-		classUnderTest = PathFilter.forFileExtension(extension);
+    @ParameterizedTest
+    @CsvSource({
+        "index.html,  true", 
+        "index.php,  false", 
+        "index,      false", 
+        ".html,       true"})
+    void criterion(String fileNameEntered, Boolean expectedPredicateResult) {
+        classUnderTest = PathFilter.create("HTML file", p -> p.endsWith(".html"));
+        Predicate<String> criterion = classUnderTest.getPredicate();
 
-		assertEquals("*.xlsx", classUnderTest.getName());
-		assertTrue(classUnderTest.matches("MyFile."+extension));
-		assertTrue(classUnderTest.matches(new File("MyFile."+extension)));
-		assertFalse(classUnderTest.matches("MyFile.txt"));
-		assertFalse(classUnderTest.matches(new File("MyFile.txt")));
-	}
-	
-	@Test
-	void matches_forExtensionWithLabel() {
-		
-		String extension = "xlsx";
-		classUnderTest = PathFilter.forFileExtension("HorribleSpreadSheet", extension);
+        assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
+    }
 
-		assertEquals("HorribleSpreadSheet", classUnderTest.getName());
-		assertTrue(classUnderTest.matches("MyFile."+extension));
-		assertTrue(classUnderTest.matches(new File("MyFile."+extension)));
-		assertFalse(classUnderTest.matches("MyFile.txt"));
-		assertFalse(classUnderTest.matches(new File("MyFile.txt")));
-	}
-	
-	@Test
-	void combinedName_forExtensionWithLabel() {
-		
-		classUnderTest = PathFilter
-				.create("HTML file", p->p.endsWith(".html"))
-				.combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
+    @Test
+    void matches_forExtension() {
+        String extension = "xlsx";
+        classUnderTest = PathFilter.forFileExtension(extension);
 
-		assertEquals("HTML file, HorribleSpreadSheet", classUnderTest.getName());
-	}
-	
-	
-	@ParameterizedTest
-	@CsvSource({
-		"textfile.,                      false",
-		"index.html,                      true",
-		"spreadSheet.XlSx,                true",
-		".xlsx,                          false",
-		"fileNameWithoutExtension,       false",
-		"textfile.txt,                   false",
-		"./,                             false",
-		"/test/share,                    false",
-		"/,                              false",
-		"//volume/share/spreadheet.xlsx,  true"
-	})
-	void combine(String fileNameEntered, Boolean expectedPredicateResult) {
-		
-		classUnderTest = PathFilter
-					.create("HTML file", p->p.endsWith(".html"))
-					 .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
-		
-		Predicate<String> criterion = classUnderTest.getPredicate();
-		
-		assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
-	
-	}
+        assertEquals("*.xlsx", classUnderTest.getName());
+        assertTrue(classUnderTest.matches("MyFile." + extension));
+        assertTrue(classUnderTest.matches(new File("MyFile." + extension)));
+        assertFalse(classUnderTest.matches("MyFile.txt"));
+        assertFalse(classUnderTest.matches(new File("MyFile.txt")));
+    }
 
-	@ParameterizedTest
-	@ValueSource(strings= {
-			"textfile.",
-			"index.html",
-			"spreadSheet.XlSx",
-			".xlsx",
-			"fileNameWithoutExtension",
-			"textfile.txt",
-			"./",
-			"/test/share",
-			"/",
-			"",
-			"//volume/share/spreadheet.xlsx",
-			"ABC",
-			"ABC.txt"
-	})
-	void acceptAll(String fileNameEntered) {
-		classUnderTest = PathFilter.acceptAllFiles("all files");
-		Predicate<String> criterion = classUnderTest.getPredicate();
-		assertTrue(criterion.test(fileNameEntered));
-	}
+    @Test
+    void matches_forExtensionWithLabel() {
+        String extension = "xlsx";
+        classUnderTest = PathFilter.forFileExtension("HorribleSpreadSheet", extension);
+        
+        assertEquals("HorribleSpreadSheet", classUnderTest.getName());
+        assertTrue(classUnderTest.matches("MyFile." + extension));
+        assertTrue(classUnderTest.matches(new File("MyFile." + extension)));
+        assertFalse(classUnderTest.matches("MyFile.txt"));
+        assertFalse(classUnderTest.matches(new File("MyFile.txt")));
+    }
+
+    @Test
+    void combinedName_forExtensionWithLabel() {
+        classUnderTest = PathFilter.create("HTML file", p -> p.endsWith(".html"))
+                .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
+
+        assertEquals("HTML file, HorribleSpreadSheet", classUnderTest.getName());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "textfile.,                      false",
+        "index.html,                      true",
+        "spreadSheet.XlSx,                true",
+        ".xlsx,                          false",
+        "fileNameWithoutExtension,       false",
+        "textfile.txt,                   false",
+        "./,                             false",
+        "/test/share,                    false",
+        "/,                              false",
+        "//volume/share/spreadheet.xlsx,  true"})
+    void combine(String fileNameEntered, Boolean expectedPredicateResult) {
+
+        classUnderTest = PathFilter.create("HTML file", p -> p.endsWith(".html"))
+                .combine(PathFilter.forFileExtension("HorribleSpreadSheet", "xlsx"));
+
+        Predicate<String> criterion = classUnderTest.getPredicate();
+        assertEquals(criterion.test(fileNameEntered), expectedPredicateResult);
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "textfile.", "index.html",
+            "spreadSheet.XlSx", ".xlsx",
+            "fileNameWithoutExtension",
+            "textfile.txt",
+            "./",
+            "/test/share",
+            "/",
+            "",
+            "//volume/share/spreadheet.xlsx",
+            "ABC", "ABC.txt"})
+    void acceptAll(String fileNameEntered) {
+        classUnderTest = PathFilter.acceptAllFiles("all files");
+        Predicate<String> criterion = classUnderTest.getPredicate();
+        assertTrue(criterion.test(fileNameEntered));
+    }
 }

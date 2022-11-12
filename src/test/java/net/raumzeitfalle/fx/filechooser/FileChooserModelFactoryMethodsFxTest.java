@@ -29,42 +29,40 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 
 class FileChooserModelFactoryMethodsFxTest extends FxTestTemplate {
-	
-	private FileChooserModel classUnderTest;
-	
-	private Path testRoot = Paths.get("./TestData/SomeFiles");
 
-	@Override
-	public void init() throws Exception {
-		classUnderTest = FileChooserModel.startingInUsersHome();
-	}
-	
-	@Test
-	void startingInUsersHome() {
-		
-		
-		
-		Path searchPath = classUnderTest.currentSearchPath().get();
-		Path usersHome = Paths.get(System.getProperty("user.home"));
-		
-		assertEquals(usersHome.toAbsolutePath(), searchPath.toAbsolutePath());
-	}
-	
-	@Test
-	void changingDirectory_updateFilesIn() throws InterruptedException, ExecutionException {
-		
-	
-		assertNotEquals(testRoot.isAbsolute(), 
-					    classUnderTest.currentSearchPath().get().toAbsolutePath(),
-					    "search path before directory change");
-		
-		// Consider moving the service into the controller out of the model
-		Invoke.andWait(()->classUnderTest.getUpdateService().restartIn(testRoot));
-			
-		assertEquals(testRoot.toAbsolutePath(), 
-					 classUnderTest.currentSearchPath().get().toAbsolutePath(),
-					 "search path after directory change");
+    private FileChooserModel classUnderTest;
 
-	}
-	
+    private Path testRoot = Paths.get("./TestData/SomeFiles");
+
+    @Override
+    public void init() throws Exception {
+        classUnderTest = FileChooserModel.startingInUsersHome();
+    }
+
+    @Test
+    void startingInUsersHome() {
+        Path searchPath = classUnderTest.currentSearchPath().get();
+        Path usersHome = Paths.get(System.getProperty("user.home"));
+
+        assertEquals(usersHome.toAbsolutePath(), searchPath.toAbsolutePath());
+    }
+
+    @Test
+    void changingDirectory_updateFilesIn() throws InterruptedException, ExecutionException {
+        assertNotEquals(testRoot.isAbsolute(),
+                classUnderTest.currentSearchPath()
+                              .get()
+                              .toAbsolutePath(),
+                "search path before directory change");
+
+        // Consider moving the service into the controller out of the model
+        Invoke.andWait(() -> classUnderTest.getUpdateService().restartIn(testRoot));
+
+        assertEquals(testRoot.toAbsolutePath(),
+                classUnderTest.currentSearchPath()
+                              .get()
+                              .toAbsolutePath(),
+                "search path after directory change");
+    }
+
 }

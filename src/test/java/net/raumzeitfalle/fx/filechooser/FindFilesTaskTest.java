@@ -43,126 +43,112 @@ import javafx.collections.ObservableList;
 
 class FindFilesTaskTest extends FxTestTemplate {
 
-	private final Path searchLocation = Paths.get("TestData/SomeFiles");
+    private final Path searchLocation = Paths.get("TestData/SomeFiles");
 
-	private ObservableList<IndexedPath> consumerCollection;
+    private ObservableList<IndexedPath> consumerCollection;
 
-	private FindFilesTask classUnderTest;
-	
-	@BeforeEach
-	void prepareConsumer() {
-		consumerCollection = FXCollections.observableArrayList();
-		consumerCollection.add(IndexedPath.valueOf(Paths.get("/notexisting")));
-	}
+    private FindFilesTask classUnderTest;
 
-	@Test
-	void runningTheTask_inPopulatedFolder() throws Exception {
+    @BeforeEach
+    void prepareConsumer() {
+        consumerCollection = FXCollections.observableArrayList();
+        consumerCollection.add(IndexedPath.valueOf(Paths.get("/notexisting")));
+    }
 
-		classUnderTest = new FindFilesTask(searchLocation, consumerCollection);
-		
-		
-		
-		Awaitility.await()
-				  .atMost(Duration.ofSeconds(30))
-				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
-	
-		Set<String> fileNames = consumerCollection.stream()
-												  .map(IndexedPath::toString)
-												  .map(String::valueOf)
-												  .collect(Collectors.toSet());
+    @Test
+    void runningTheTask_inPopulatedFolder() throws Exception {
+        classUnderTest = new FindFilesTask(searchLocation, consumerCollection);
 
-		assertAll(
-				() -> assertEquals(11, consumerCollection.size(), "files found"),
-				() -> assertTrue(fileNames.contains("HorrbibleSpreadSheet.xls")),
-				() -> assertTrue(fileNames.contains("JustNumbers.csv")),
-				() -> assertTrue(fileNames.contains("NewerDocument.docx")),
-				() -> assertTrue(fileNames.contains("OldDocument.doc")),
-				() -> assertTrue(fileNames.contains("SupposedToBeXtensible.xml")),
-				() -> assertTrue(fileNames.contains("TestFile1.txt")),
-				() -> assertTrue(fileNames.contains("TestFile2.txt")),
-				() -> assertTrue(fileNames.contains("TestFile3.txt")),
-				() -> assertTrue(fileNames.contains("TestFile4.txt")),
-				() -> assertTrue(fileNames.contains("TestFile5.txt")),
-				() -> assertTrue(fileNames.contains("XtremeHorrbibleSpreadSheet.xlsx")));
-	}
+        Awaitility.await()
+                  .atMost(Duration.ofSeconds(30))
+                  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+
+        Set<String> fileNames = consumerCollection.stream()
+                                                  .map(IndexedPath::toString)
+                                                  .map(String::valueOf)
+                                                  .collect(Collectors.toSet());
+
+        assertAll(
+                () -> assertEquals(11, consumerCollection.size(), "files found"),
+                () -> assertTrue(fileNames.contains("HorrbibleSpreadSheet.xls")),
+                () -> assertTrue(fileNames.contains("JustNumbers.csv")),
+                () -> assertTrue(fileNames.contains("NewerDocument.docx")),
+                () -> assertTrue(fileNames.contains("OldDocument.doc")),
+                () -> assertTrue(fileNames.contains("SupposedToBeXtensible.xml")),
+                () -> assertTrue(fileNames.contains("TestFile1.txt")),
+                () -> assertTrue(fileNames.contains("TestFile2.txt")),
+                () -> assertTrue(fileNames.contains("TestFile3.txt")),
+                () -> assertTrue(fileNames.contains("TestFile4.txt")),
+                () -> assertTrue(fileNames.contains("TestFile5.txt")),
+                () -> assertTrue(fileNames.contains("XtremeHorrbibleSpreadSheet.xlsx")));
+    }
 
 
-	@Test
-	void runningTheTask_inEmptyFolder(@TempDir Path emptyDirectory) throws Exception {
+    @Test
+    void runningTheTask_inEmptyFolder(@TempDir Path emptyDirectory) throws Exception {
+        classUnderTest = new FindFilesTask(emptyDirectory, consumerCollection);
+        Awaitility.await()
+                  .atMost(Duration.ofSeconds(30))
+                  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+        assertEquals(0, consumerCollection.size());
+    }
 
-		classUnderTest = new FindFilesTask(emptyDirectory, consumerCollection);
+    @Test
+    void that_null_for_listOfPaths_causes_exception() {
+        Path path = Paths.get("./");
+        Throwable t = assertThrows(NullPointerException.class,
+                ()->new FindFilesTask(path, null));
+        assertEquals("listOfPaths must not be null", t.getMessage());
+    }
 
-		Awaitility.await()
-				  .atMost(Duration.ofSeconds(30))
-				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
-		  
-		assertEquals(0, consumerCollection.size());
-	}
-	
-	@Test
-	void that_null_for_listOfPaths_causes_exception() {
-		
-		Path path = Paths.get("./");
-		Throwable t = assertThrows(NullPointerException.class,
-				()->new FindFilesTask(path, null));
-		
-		assertEquals("listOfPaths must not be null", t.getMessage());
-		
-	}
-	
-	@Test
-	void that_null_for_searchDirectory_works() {
-		
-		classUnderTest = new FindFilesTask(null, consumerCollection);
-		assertEquals(1, consumerCollection.size());
-		
-		Awaitility.await()
-		  .atMost(Duration.ofSeconds(30))
-		  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+    @Test
+    void that_null_for_searchDirectory_works() {
+        classUnderTest = new FindFilesTask(null, consumerCollection);
+        assertEquals(1, consumerCollection.size());
 
-		assertEquals(0, consumerCollection.size());
-		
-	}
-	
-	@Test
-	void that_files_are_not_processed_as_directory() {
-		
-		/*
-		 * 
-		 * The test if a file is given or a directory is not performed in FindFilesTask.
-		 * If a file is provided instead of a directory, then task will not search 
-		 * the parent directory yet.
-		 * 
-		 */
-		Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
-		
-		classUnderTest = new FindFilesTask(givenFile, consumerCollection);
-		
-		Awaitility.await()
-				  .atMost(Duration.ofSeconds(30))
-				  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+        Awaitility.await()
+          .atMost(Duration.ofSeconds(30))
+          .until(classUnderTest::call, allFilesHaveBeenProcessed());
+        assertEquals(0, consumerCollection.size());
+    }
 
-		assertEquals(0, consumerCollection.size());
-		
-	}
-	
-	@ParameterizedTest
-	@CsvSource({
-	    "       0,       1",
-	    "       6,       1",
-	    "     999,       4",
-	    "    1233,       6",
-	    " 1234233,    6171",
-	    "87366113,  436830"
-	})
-	void that_progress_intervall_is_reasonable(int pathsInDirectory, int interval) {
-	    Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
+    @Test
+    void that_files_are_not_processed_as_directory() {
+        /*
+         * 
+         * The test if a file is given or a directory is not performed in FindFilesTask.
+         * If a file is provided instead of a directory, then task will not search 
+         * the parent directory yet.
+         * 
+         */
+        Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
+
+        classUnderTest = new FindFilesTask(givenFile, consumerCollection);
+
+        Awaitility.await()
+                  .atMost(Duration.ofSeconds(30))
+                  .until(classUnderTest::call, allFilesHaveBeenProcessed());
+
+        assertEquals(0, consumerCollection.size());
+        
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "       0,       1",
+        "       6,       1",
+        "     999,       4",
+        "    1233,       6",
+        " 1234233,    6171",
+        "87366113,  436830"
+    })
+    void that_progress_intervall_is_reasonable(int pathsInDirectory, int interval) {
+        Path givenFile = Paths.get("TestData/SomeFiles/TestFile5.txt");
         classUnderTest = new FindFilesTask(givenFile, consumerCollection);
         assertEquals(interval, classUnderTest.getProgressInterval(pathsInDirectory));
-	}
-	
-	private Predicate<Integer> allFilesHaveBeenProcessed() {
-		return v->v>=0;
-	}
+    }
 
+    private Predicate<Integer> allFilesHaveBeenProcessed() {
+        return v->v>=0;
+    }
 }

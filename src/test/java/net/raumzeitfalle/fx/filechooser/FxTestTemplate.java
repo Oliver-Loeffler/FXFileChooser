@@ -25,11 +25,11 @@ import javafx.stage.Stage;
 
 abstract class FxTestTemplate extends ApplicationTest {
 
-	protected Stage primaryStage = null;
-	
-	@Override
-	public void start(Stage stage) throws Exception {
-		/* please override when needed */
-	}
+    protected Stage primaryStage = null;
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        /* please override when needed */
+    }
 
 }

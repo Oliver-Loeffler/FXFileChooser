@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
 @Deprecated
 public final class RandomFileCreator {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Path start = Paths.get("/Volumes/Daten/Temp/ManyFiles/");
         try {
-			Files.createDirectories(start);
-		} catch (IOException e) {
-			/* just ignore what happens here */
-		}
+            Files.createDirectories(start);
+        } catch (IOException e) {
+            /* just ignore what happens here */
+        }
         RandomFileCreator rfc = new RandomFileCreator(start);
         rfc.run(1_046_446);
     }
@@ -51,7 +51,7 @@ public final class RandomFileCreator {
 
     private final Random random;
 
-    public RandomFileCreator(Path startIn){
+    public RandomFileCreator(Path startIn) {
         this.root = startIn;
         this.sillables = getSillables();
         this.extensions = getExtensions();
@@ -60,48 +60,39 @@ public final class RandomFileCreator {
     }
 
     private String[] getSeparators() {
-        return new String[] {
-                ".","-",""
-        };
+        return new String[] { ".", "-", "" };
     }
 
     private String[] getExtensions() {
-        return new String[]{
-                "kms", "lms", "job", "sf3", ",sf4", "md5", "crc", "xls", "xlsx",
-                "xlsm", "docx", "doc", "docm", "html", "htm", "css", "sass",
-                "txt", "na0", "na1", "na2", "na3", "nb1", "jpeg", "jpg", "bmp",
-                "tiff", "jasc", "mdp", "pdf", "java", "cpp", "h", "exe", "com",
-                "md", "adoc", "xml", "py", "xhtml", "groovy", "gradle","properties",
-                "config","cfg","prefs", "url", "rdp", "rest", "fxml", "settings", "kt",
-                "js", "ts", "go", "sphinx", "thumbdb" 
-        };
+        return new String[] { "kms", "lms", "job", "sf3", ",sf4", "md5", "crc", "xls", "xlsx", "xlsm", "docx", "doc",
+                "docm", "html", "htm", "css", "sass", "txt", "na0", "na1", "na2", "na3", "nb1", "jpeg", "jpg", "bmp",
+                "tiff", "jasc", "mdp", "pdf", "java", "cpp", "h", "exe", "com", "md", "adoc", "xml", "py", "xhtml",
+                "groovy", "gradle", "properties", "config", "cfg", "prefs", "url", "rdp", "rest", "fxml", "settings",
+                "kt", "js", "ts", "go", "sphinx", "thumbdb" };
     }
 
     private String getRandomExt() {
-        return this.extensions[this.random.nextInt(this.extensions.length-1)];
+        return this.extensions[this.random.nextInt(this.extensions.length - 1)];
     }
 
     private String[] getSillables() {
-        return new String[]{
-            "metro", "device", "layer", "customer", "special", "auto", "line",
-            "Space", "clear", "dark", "yellow", "green", "orange", "duv", "iline",
-            "ltem", "bim", "report", "statistics", "documentation", "architecture",
-            "diagrams", "shares", "earning", "returns", "complaints", "worksheet",
-            "workbook", "table", "workdocument", "calculation", "summary", "index", 
-            "letter", "templates", "toc", "overview", "projects", "BuildFile", "make",
-            "draft", "final", "collection", "archive", "gallery", "mappings"
-        };
+        return new String[] { "metro", "device", "layer", "customer", "special", "auto", "line", "Space", "clear",
+                "dark", "yellow", "green", "orange", "duv", "iline", "ltem", "bim", "report", "statistics",
+                "documentation", "architecture", "diagrams", "shares", "earning", "returns", "complaints", "worksheet",
+                "workbook", "table", "workdocument", "calculation", "summary", "index", "letter", "templates", "toc",
+                "overview", "projects", "BuildFile", "make", "draft", "final", "collection", "archive", "gallery",
+                "mappings" };
     }
 
     private String createRandomFileName() {
         List<String> baseElements = Arrays.stream(this.sillables).collect(Collectors.toList());
         int randomElements = this.random.nextInt(6);
         int numberOfElement = randomElements == 0 ? 1 : randomElements;
-        int separator = this.random.nextInt(this.separators.length-1);
+        int separator = this.random.nextInt(this.separators.length - 1);
 
         StringBuilder nameBuilder = new StringBuilder();
         for (int x = numberOfElement; x > 0; x--) {
-            String y = baseElements.get(this.random.nextInt(baseElements.size()-1));
+            String y = baseElements.get(this.random.nextInt(baseElements.size() - 1));
             baseElements.remove(x);
             nameBuilder.append(y);
             if (x > 1) {
@@ -112,36 +103,36 @@ public final class RandomFileCreator {
     };
 
     public void run(long max) {
-    	long createdFiles = 0;
-    	long divider = 1000;
-    	if (max <= 1000)
-    		divider = 100;
-    	if (max <= 500)
-    		divider = 50;
-    	if (max <= 100)
-    		divider = 10;
-    	if (max >= 100_000)
-    		divider = 10_000;
-    	if (max >= 500_000)
-    		divider = 50_000;
-    	if (max >= 1_000_000)
-    		divider = 100_000;
-    	while (createdFiles < max) {
-    		String newFile = createRandomFileName() + "." + getRandomExt();
-    		Path toWrite = root.resolve(newFile);
-    		if (Files.notExists(toWrite)) {        		
-    			writeFile(toWrite, newFile);
-    			createdFiles += 1;
-    		}    		
-    		if (createdFiles % divider == 0) {
-    			System.out.println(createdFiles);
-    		}
-    	}
+        long createdFiles = 0;
+        long divider = 1000;
+        if (max <= 1000)
+            divider = 100;
+        if (max <= 500)
+            divider = 50;
+        if (max <= 100)
+            divider = 10;
+        if (max >= 100_000)
+            divider = 10_000;
+        if (max >= 500_000)
+            divider = 50_000;
+        if (max >= 1_000_000)
+            divider = 100_000;
+        while (createdFiles < max) {
+            String newFile = createRandomFileName() + "." + getRandomExt();
+            Path toWrite = root.resolve(newFile);
+            if (Files.notExists(toWrite)) {
+                writeFile(toWrite, newFile);
+                createdFiles += 1;
+            }
+            if (createdFiles % divider == 0) {
+                System.out.println(createdFiles);
+            }
+        }
     }
 
     private void writeFile(Path fileToWrite, String fileName) {
         try {
-            Files.write(fileToWrite,fileName.getBytes(StandardCharsets.UTF_8));
+            Files.write(fileToWrite, fileName.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             System.out.println("Could not write " + root.resolve(fileName).toAbsolutePath());
         }
