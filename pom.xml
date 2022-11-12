@@ -132,6 +132,9 @@
                     <excludes>
                         <exclude>**/fireworks/</exclude>
                         <exclude>**/demos/</exclude>
+                        <exclude>**/filechooser.properties</exclude>
+                        <exclude>**/directorychooser.properties</exclude>
+                        <exclude>**/*.svg</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -163,6 +166,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <sourceFileExcludes>module-info.java</sourceFileExcludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
