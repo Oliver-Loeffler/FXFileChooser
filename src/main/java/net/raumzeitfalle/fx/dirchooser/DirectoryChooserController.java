@@ -69,17 +69,17 @@ public class DirectoryChooserController implements Initializable {
     private Button okButton;
 
     @FXML
-    private Button cancelButton;    
-    
+    private Button cancelButton;
+
     @FXML
     private TextField goToTextField;
-     
+
     private ObjectProperty<Path> selectedDirectoryProperty = new SimpleObjectProperty<Path>(null);
-    
+
     private DirectoryTreeItem root;
-    
+
     private DirectoryTreeItem localRoot;
-    
+
     private DirectoryTreeItem networkRoot;
 
     private Runnable onSelect;
@@ -99,19 +99,19 @@ public class DirectoryChooserController implements Initializable {
         root = new DirectoryTreeItem("root");
         localRoot = new DirectoryTreeItem(hostName);
         localRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
-        
+
         networkRoot = new DirectoryTreeItem("Network");
         networkRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
-        
+
         root.getChildren().add(localRoot);
-        
+
         directoryTree.setRoot(root);
         directoryTree.showRootProperty().set(false);
-        
+
         localRoot.setExpanded(true);
         networkRoot.setExpanded(false);
-        
-        StringBinding sb = Bindings.createStringBinding(()->{
+
+        StringBinding sb = Bindings.createStringBinding(() -> {
             Path selection = selectedDirectoryProperty.get();
             return (selection == null) ? "" : selection.toAbsolutePath().toString();
         }, selectedDirectoryProperty);
@@ -120,7 +120,7 @@ public class DirectoryChooserController implements Initializable {
         okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
         okButton.setOnAction(e -> okayAction());
         cancelButton.setOnAction(e -> cancelAction());
-        
+
         goToTextField.setOnAction(this::handleGotoAction);
         this.goToTextField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -128,14 +128,14 @@ public class DirectoryChooserController implements Initializable {
                 keyEvent.consume();
             }
         });
-        
-        this.okButton.setOnKeyPressed(keyEvent->{
-        	if (keyEvent.getCode() == KeyCode.ESCAPE) {
-        		cancelAction();
-        		keyEvent.consume();
-        	}
+
+        this.okButton.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                cancelAction();
+                keyEvent.consume();
+            }
         });
-        
+
         this.cancelButton.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ESCAPE) {
                 cancelAction();
@@ -198,9 +198,8 @@ public class DirectoryChooserController implements Initializable {
     }
 
     private void readSubDirsForSelectedItem() {
-        DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree
-                                                         .getSelectionModel()
-                                                         .selectedItemProperty().get();
+        DirectoryTreeItem item = (DirectoryTreeItem) this.directoryTree.getSelectionModel().selectedItemProperty()
+                .get();
         if (null != item && null != item.getFullPath()) {
             Path path = Paths.get(item.getFullPath());
             if (item.getChildren().isEmpty()) {
@@ -211,32 +210,32 @@ public class DirectoryChooserController implements Initializable {
             }
         }
     }
-    	
-	private void startUpdate(Path path, Task<Void> update) {
-		runningUpdateTasks.put(path, update);
-		executor.submit(update);		
-	}
 
-	private Task<Void> createUpdateTask(Path path, DirectoryTreeItem item) {
-		/*
-		 * TODO: Progress can be determined as per file system entry, 
-		 * 		 so that indeterminate state is not needed for update icon.
-		 */
-		return new DirectoryTreeUpdateTask(path, item, runningUpdateTasks::remove);
-	}
+    private void startUpdate(Path path, Task<Void> update) {
+        runningUpdateTasks.put(path, update);
+        executor.submit(update);
+    }
 
-	private void expandItem(TreeItem<?> item) {
-		if (null != item)
-			item.setExpanded(true);
-	}
+    private Task<Void> createUpdateTask(Path path, DirectoryTreeItem item) {
+        /*
+         * TODO: Progress can be determined as per file system entry, so that
+         * indeterminate state is not needed for update icon.
+         */
+        return new DirectoryTreeUpdateTask(path, item, runningUpdateTasks::remove);
+    }
 
-	private void cancelAction() {
-		Platform.runLater(onCancel);
-	}
+    private void expandItem(TreeItem<?> item) {
+        if (null != item)
+            item.setExpanded(true);
+    }
 
-	private void okayAction() {
-		Platform.runLater(onSelect);
-	}
+    private void cancelAction() {
+        Platform.runLater(onCancel);
+    }
+
+    private void okayAction() {
+        Platform.runLater(onSelect);
+    }
 
     public void initDirTree() {
         Task<Void> init = new Task<Void>() {
@@ -249,10 +248,8 @@ public class DirectoryChooserController implements Initializable {
                     localRoot.getChildren().add(dirItem);
                     /*
                      * Possible useful API classes and functions:
-                     * FileSystemView.getSystemTypeDescription 
-                     * FileSystemView.getSystemDisplayName
-                     * Files.getFileStore 
-                     * FileStore.getAttribute("volume:isRemovable")
+                     * FileSystemView.getSystemTypeDescription FileSystemView.getSystemDisplayName
+                     * Files.getFileStore FileStore.getAttribute("volume:isRemovable")
                      * 
                      */
                 }
@@ -294,8 +291,8 @@ public class DirectoryChooserController implements Initializable {
     }
 
     private void shutdown() {
-        Logger.getLogger(DirectoryChooserController.class.getName())
-              .log(Level.INFO, "shutting down tasks and executors");
+        Logger.getLogger(DirectoryChooserController.class.getName()).log(Level.INFO,
+                "shutting down tasks and executors");
         executor.shutdown();
     }
 
@@ -309,7 +306,7 @@ public class DirectoryChooserController implements Initializable {
             Path location = possibleLocation.toPath();
             DirectoryTreeItem share = new DirectoryTreeItem(location);
             share.setGraphic(DirectoryIcons.HOST.get(iconSize));
-            updateSharesIfNeeded(share);            
+            updateSharesIfNeeded(share);
         }
     }
 
@@ -320,16 +317,15 @@ public class DirectoryChooserController implements Initializable {
     private void updateSharesIfNeeded(DirectoryTreeItem share) {
         List<TreeItem<String>> knownShares = networkRoot.getChildren();
         Optional<DirectoryTreeItem> optionalShare = knownShares.stream()
-                                                   .filter(h->h.getValue().equalsIgnoreCase(share.getFullPath()))
-                                                   .map(i->(DirectoryTreeItem)i)
-                                                   .findAny();
+                .filter(h -> h.getValue().equalsIgnoreCase(share.getFullPath())).map(i -> (DirectoryTreeItem) i)
+                .findAny();
         if (!optionalShare.isPresent()) {
             Path path = Paths.get(share.getFullPath());
             File file = path.getRoot().toFile();
             FileSystemView fsView = FileSystemView.getFileSystemView();
-            boolean isFsRoot = fsView.isFileSystemRoot(file); 
+            boolean isFsRoot = fsView.isFileSystemRoot(file);
             if (!isFsRoot) {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     if (!root.getChildren().contains(networkRoot)) {
                         root.getChildren().add(networkRoot);
                     }
@@ -340,12 +336,12 @@ public class DirectoryChooserController implements Initializable {
             } else {
                 expandTreeFor(path);
             }
-        }        
+        }
     }
 
     private void expandTreeFor(Path path) {
         System.out.println("expanding for: " + path);
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             localRoot.setExpanded(false);
             expandAll(path, 0, localRoot);
             System.out.println(path);
@@ -358,13 +354,13 @@ public class DirectoryChooserController implements Initializable {
             DirectoryTreeItem child = (DirectoryTreeItem) d;
             Path other = Paths.get(child.getFullPath());
             if (full.equals(other)) {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     directoryTree.getSelectionModel().select(child);
-                    directoryTree.scrollTo(directoryTree.getTreeItemLevel(child)+1);
+                    directoryTree.scrollTo(directoryTree.getTreeItemLevel(child) + 1);
                 });
                 child.setExpanded(true);
-                if (depth < path.getNameCount()) {   
-                    expandAll(path, depth+=1, child);
+                if (depth < path.getNameCount()) {
+                    expandAll(path, depth += 1, child);
                 }
             }
         }

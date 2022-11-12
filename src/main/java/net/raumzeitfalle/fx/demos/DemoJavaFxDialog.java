@@ -40,56 +40,56 @@ import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
 public class DemoJavaFxDialog extends Application {
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		
-		PathFilter all = PathFilter.acceptAllFiles("all files");
-    	
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        PathFilter all = PathFilter.acceptAllFiles("all files");
+
         PathFilter exe = PathFilter.forFileExtension("Program", "exe");
         PathFilter xml = PathFilter.forFileExtension("XML", "xml");
         PathFilter txt = PathFilter.forFileExtension("Text", "txt");
-        
+
         PathFilter xls = PathFilter.forFileExtension("Excel 2003", "xls");
         PathFilter xlsx = PathFilter.forFileExtension("Excel 2007+", "xlsx").combine(xls);
-        
-		FXFileChooserDialog darkfc = FXFileChooserDialog.create(Skin.DARK,all,exe,xml,txt,xlsx);
 
-		List<Location> locations = new ArrayList<>();
-		locations.add(Locations.withName("Configs: /etc", Paths.get("/etc")));
-		locations.add(Locations.withName("User Homes: /Users",Paths.get("/Users")));
-		locations.add(Locations.withName("C-Drive: C:\\",Paths.get("C:/")));
+        FXFileChooserDialog darkfc = FXFileChooserDialog.create(Skin.DARK, all, exe, xml, txt, xlsx);
 
-		darkfc.addLocations(locations);
+        List<Location> locations = new ArrayList<>();
+        locations.add(Locations.withName("Configs: /etc", Paths.get("/etc")));
+        locations.add(Locations.withName("User Homes: /Users", Paths.get("/Users")));
+        locations.add(Locations.withName("C-Drive: C:\\", Paths.get("C:/")));
 
-		Logger logger = Logger.getLogger(DemoJavaFxDialog.class.getSimpleName());
-		
-		Button showDarkDialog = new Button("Show dark JavaFX Dialog (FXFileChooserDialog.class)");
-		showDarkDialog.setOnAction(a -> {
+        darkfc.addLocations(locations);
 
-			Optional<Path> path = darkfc.showOpenDialog(primaryStage);
-			logger.log(Level.INFO, path.map(String::valueOf).orElse("Nothing selected"));
+        Logger logger = Logger.getLogger(DemoJavaFxDialog.class.getSimpleName());
 
-		});
-		
-		FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.MODENA,all,exe,xml,txt,xlsx);
-		Button showDialog = new Button("Show default JavaFX Dialog (FXFileChooserDialog.class)");
-		showDialog.setOnAction(a -> {
+        Button showDarkDialog = new Button("Show dark JavaFX Dialog (FXFileChooserDialog.class)");
+        showDarkDialog.setOnAction(a -> {
 
-			Optional<Path> path = fc.showOpenDialog(primaryStage);
-			logger.log(Level.INFO, path.map(String::valueOf).orElse("Nothing selected"));
+            Optional<Path> path = darkfc.showOpenDialog(primaryStage);
+            logger.log(Level.INFO, path.map(String::valueOf).orElse("Nothing selected"));
 
-		});
+        });
 
-		VBox vbox = new VBox(showDarkDialog, showDialog);
-		Scene scene = new Scene(vbox);
-		primaryStage.setScene(scene);
-		primaryStage.setWidth(400);
-		primaryStage.setHeight(200);
-		primaryStage.show();
-	}
+        FXFileChooserDialog fc = FXFileChooserDialog.create(Skin.MODENA, all, exe, xml, txt, xlsx);
+        Button showDialog = new Button("Show default JavaFX Dialog (FXFileChooserDialog.class)");
+        showDialog.setOnAction(a -> {
 
-	public static void main(String[] args) {
-	     launch(new String[0]);
-	}
+            Optional<Path> path = fc.showOpenDialog(primaryStage);
+            logger.log(Level.INFO, path.map(String::valueOf).orElse("Nothing selected"));
+
+        });
+
+        VBox vbox = new VBox(showDarkDialog, showDialog);
+        Scene scene = new Scene(vbox);
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(400);
+        primaryStage.setHeight(200);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(new String[0]);
+    }
 
 }

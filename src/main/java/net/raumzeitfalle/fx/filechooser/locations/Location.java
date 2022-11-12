@@ -24,37 +24,36 @@ import java.util.Objects;
 
 public abstract class Location implements Comparable<Location> {
 
-	public abstract String getName();
+    public abstract String getName();
 
-	public abstract boolean exists();
-	
-	public abstract Path getPath();
+    public abstract boolean exists();
 
-	@Override
-	public int compareTo(Location o) {
-		return this.getName().compareToIgnoreCase(o.getName());
-	}
+    public abstract Path getPath();
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(getPath(), getName());
-	}
+    @Override
+    public int compareTo(Location o) {
+        return this.getName().compareToIgnoreCase(o.getName());
+    }
 
-	@Override
-	public boolean equals(Object obj) {
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPath(), getName());
+    }
 
-		if (null == obj) 
-			return false;
+    @Override
+    public boolean equals(Object obj) {
 
-		if (this == obj)
-			return true;
+        if (null == obj)
+            return false;
 
-		if (!(obj instanceof Location))
-			return false;
+        if (this == obj)
+            return true;
 
-		Location other = (Location) obj;
+        if (!(obj instanceof Location))
+            return false;
 
-		return     Objects.equals(getPath(), other.getPath())
-				&& Objects.equals(getName(), other.getName());
-	}
+        Location other = (Location) obj;
+
+        return Objects.equals(getPath(), other.getPath()) && Objects.equals(getName(), other.getName());
+    }
 }
