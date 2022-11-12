@@ -23,10 +23,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -57,6 +62,28 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      */
     public static final int APPROVE_OPTION = 0;
 
+    static final String PROPERTIES_FILE = "swingfilechooser.properties";
+    static final String PROPERTY_USE_JAVAFX_DIRCHOOSER = "use.javafx.platform.directory.chooser";
+    
+    private static boolean useJavaFXPlatformDirectoryChooser = false; 
+    
+    static {
+        URL resource = SwingFileChooser.class.getClassLoader().getResource(PROPERTIES_FILE);
+        if (resource != null) {           
+            try (FileInputStream fis = new FileInputStream(new File(resource.toURI()))) {
+                Properties props = new Properties();
+                props.load(fis);
+                String value = props.getProperty(PROPERTY_USE_JAVAFX_DIRCHOOSER, "false");
+                useJavaFXPlatformDirectoryChooser = Boolean.parseBoolean(value);
+            } catch (Exception error) {
+                String message = String.format("Failed to read icon size from %s (via resource: %s)",
+                                        new Object[] {PROPERTIES_FILE, resource});
+                Logger.getLogger(SwingFileChooser.class.getName())
+                      .log(Level.WARNING, message, error);
+            }
+        }
+    }
+    
     public static SwingFileChooser create(Skin skin, PathFilter... filter) {
         return create(skin, "Choose file:", "", filter);
     }
@@ -76,44 +103,46 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
 
         // do all JavaFX work
         Platform.runLater(() -> {
-             boolean useOldSchoolDirChooser = false;
-            PathSupplier pathSupplier = null;
-            if (useOldSchoolDirChooser) {
-                pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
-            } else {
-                DirectoryChooser dirChooser = new DirectoryChooser(skin);
-                Scene dirChooserScene = new Scene(dirChooser);
-                pathSupplier = new PathSupplier() {
-                    @Override
-                    public void getUpdate(Consumer<Path> update) {
-                        fc.setTitle("Choose directory:");
-                        Scene previousScene = fc.getScene();
-                        String previousTitle = fc.title;
-                        fc.setScene(dirChooserScene);
-
-                        dirChooser.onSelect(() -> {
-                            Path selectedDir = dirChooser.selectedDirectoryProperty().get();
-                            if (null != selectedDir) {
-                                fc.setTitle(selectedDir.toString());
-                                update.accept(selectedDir);
-                            } else {
-                                fc.setTitle(previousTitle);
-                            }
-                            fc.setScene(previousScene);
-                        });
-
-                        dirChooser.onCancel(() -> fc.setScene(previousScene));
-
-                    }
-                };
-            }
-
+            PathSupplier pathSupplier = configureDirectoryChooser(skin, startHere, fc);
             FileChooser view = new FileChooser(pathSupplier, fc, fc.model, skin, FileChooserViewOption.STAGE);
             Scene fileChooserScene = new Scene(view);
             fc.setScene(fileChooserScene);
         });
 
         return fc;
+    }
+
+    private static PathSupplier configureDirectoryChooser(Skin skin, Path startHere, SwingFileChooser fc) {
+        PathSupplier pathSupplier = null;
+        if (useJavaFXPlatformDirectoryChooser) {
+            pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
+        } else {
+            DirectoryChooser dirChooser = new DirectoryChooser(skin);
+            Scene dirChooserScene = new Scene(dirChooser);
+            pathSupplier = new PathSupplier() {
+                @Override
+                public void getUpdate(Consumer<Path> update) {
+                    fc.setTitle("Choose directory:");
+                    Scene previousScene = fc.getScene();
+                    String previousTitle = fc.title;
+                    fc.setScene(dirChooserScene);
+                    
+                    dirChooser.onSelect(() -> {
+                        Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+                        if (null != selectedDir) {
+                            fc.setTitle(selectedDir.toString());
+                            update.accept(selectedDir);
+                        } else {
+                            fc.setTitle(previousTitle);
+                        }
+                        fc.setScene(previousScene);
+                    });
+                    
+                    dirChooser.onCancel(() -> fc.setScene(previousScene));
+                }
+            };
+        }
+        return pathSupplier;
     }
 
     private static Path startPath(String pathToBrowse) {

@@ -67,6 +67,9 @@ public class DirectoryChooserController implements Initializable {
 
     @FXML
     private TreeView<String> directoryTree;
+    
+    @FXML
+    private Button chooseFiles;
 
     @FXML
     private Button okButton;
@@ -123,12 +126,19 @@ public class DirectoryChooserController implements Initializable {
         okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
         okButton.setOnAction(e -> okayAction());
         cancelButton.setOnAction(e -> cancelAction());
-
         goToTextField.setOnAction(this::handleGotoAction);
         this.goToTextField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 handleGotoAction(null);
                 keyEvent.consume();
+            }
+        });
+        
+        chooseFiles.setOnAction(e->{
+            if (okButton.isDisable()) {
+                cancelAction();
+            } else {
+                okayAction();
             }
         });
 
