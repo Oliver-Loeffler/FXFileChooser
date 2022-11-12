@@ -27,7 +27,7 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
 
 public class DemoSwing {
-    public static void main(String ... args) {
+    public static void main(String... args) {
 
         JFrame frame = new JFrame("Window");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

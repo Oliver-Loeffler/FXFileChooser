@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
-public class DemoFxDialog extends Application  {
+public class DemoFxDialog extends Application {
     public static void main(String[] args) {
         Application.launch();
     }
@@ -38,7 +38,7 @@ public class DemoFxDialog extends Application  {
     public void start(Stage primaryStage) throws Exception {
         Button button = new Button("Show File Chooser");
         FXFileChooserDialog dialog = FXFileChooserDialog.create(Skin.DARK);
-        button.setOnAction(evt-> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+        button.setOnAction(evt -> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
 
         Scene scene = new Scene(button);
         primaryStage.setScene(scene);
