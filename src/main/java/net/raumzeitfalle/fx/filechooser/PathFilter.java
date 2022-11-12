@@ -39,7 +39,7 @@ public interface PathFilter {
 	Predicate<String> getPredicate();
 	
 	/**
-	 * @param path {@link Path} to test
+	 * @param pathName {@link Path} to test
 	 * @return true in case the given {@link Path} matches with the {@link Predicate}.
 	 */
 	default boolean matches(String pathName) {
