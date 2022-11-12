@@ -44,9 +44,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
     private boolean isDirectory;
     
     private boolean isDrive;
-    
-    private double iconSize = 32.0;
-    
+        
     private int size = 0;
 
     public boolean isDirectory() {
@@ -92,29 +90,29 @@ public class DirectoryTreeItem extends TreeItem<String> {
 
     private void configureCollapsedIcon() {
         if (isDrive && getChildren().size() > 0) {
-            this.setGraphic(DirectoryIcons.DRIVE_PLUS.get(iconSize));
+            this.setGraphic(DirectoryIcons.DRIVE_PLUS.get());
         } else if (isDrive && size == 0) {
-            this.setGraphic(DirectoryIcons.DRIVE_EMPTY.get(iconSize));
+            this.setGraphic(DirectoryIcons.DRIVE_EMPTY.get());
         } else if (isDrive && size > 1000) {
-            this.setGraphic(DirectoryIcons.DRIVE_XL.get(iconSize));
+            this.setGraphic(DirectoryIcons.DRIVE_XL.get());
         } else if (isDrive) {
-            this.setGraphic(DirectoryIcons.DRIVE.get(iconSize));
+            this.setGraphic(DirectoryIcons.DRIVE.get());
         } else if (getChildren().isEmpty() && size > 1000) {
-            this.setGraphic(DirectoryIcons.NO_SUBDIRS_XL.get(iconSize));
+            this.setGraphic(DirectoryIcons.NO_SUBDIRS_XL.get());
         } else if (size == 0) {
-            this.setGraphic(DirectoryIcons.EMPTY.get(iconSize));
+            this.setGraphic(DirectoryIcons.EMPTY.get());
         } else if (getChildren().size() > 1000) {
-            this.setGraphic(DirectoryIcons.CLOSED_XL.get(iconSize));
+            this.setGraphic(DirectoryIcons.CLOSED_XL.get());
         } else if (getChildren().size() > 0) {
-            this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize));
+            this.setGraphic(DirectoryIcons.CLOSED_PLUS.get());
         } else {
-            this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
+            this.setGraphic(DirectoryIcons.CLOSED.get());
         }
     }
 
     private void configureExpandedIcon() {
         if (!isDrive) {
-            this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
+            this.setGraphic(DirectoryIcons.OPEN.get());
         }
     }
 

@@ -48,7 +48,7 @@ class FilesListCell extends ListCell<IndexedPath> {
             GridPane gridPane = new GridPane();
             gridPane.getStyleClass().add(FILE_ICON_LABEL);
 
-            Pane icon = FileIcons.fromFile(getItem(), 32);
+            Pane icon = FileIcons.fromFile(getItem());
             icon.setId("fileListCell-fileTypeIcon");
             
             gridPane.addColumn(0, icon);

@@ -89,8 +89,6 @@ public class DirectoryChooserController implements Initializable {
 
     private Runnable onCancel;
 
-    private double iconSize = 20.0;
-
     private Map<Path, Task<Void>> runningUpdateTasks = new ConcurrentHashMap<>();
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -103,10 +101,10 @@ public class DirectoryChooserController implements Initializable {
         String hostName = getHostName();
         root = new DirectoryTreeItem("root");
         localRoot = new DirectoryTreeItem(hostName);
-        localRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
+        localRoot.setGraphic(DirectoryIcons.HOST.get());
 
         networkRoot = new DirectoryTreeItem("Network");
-        networkRoot.setGraphic(DirectoryIcons.HOST.get(iconSize));
+        networkRoot.setGraphic(DirectoryIcons.HOST.get());
 
         root.getChildren().add(localRoot);
 
@@ -326,7 +324,7 @@ public class DirectoryChooserController implements Initializable {
         if (possibleLocation.exists()) {
             Path location = possibleLocation.toPath();
             DirectoryTreeItem share = new DirectoryTreeItem(location);
-            share.setGraphic(DirectoryIcons.HOST.get(iconSize));
+            share.setGraphic(DirectoryIcons.HOST.get());
             updateSharesIfNeeded(share);
             scrollToItem(share);
         }

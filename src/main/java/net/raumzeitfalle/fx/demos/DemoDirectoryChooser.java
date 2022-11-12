@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ package net.raumzeitfalle.fx.demos;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
+import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoDirectoryChooser extends Application {
@@ -32,11 +31,11 @@ public class DemoDirectoryChooser extends Application {
         Application.launch();
     }
 
-    private DirectoryChooserView view; 
+    private DirectoryChooser view; 
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        view = new DirectoryChooserView(Skin.DARK);
+        view = new DirectoryChooser(Skin.DARK);
         Scene scene = new Scene(view);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");

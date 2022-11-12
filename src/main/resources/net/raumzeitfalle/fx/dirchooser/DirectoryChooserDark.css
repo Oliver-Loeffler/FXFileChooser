@@ -1,0 +1,143 @@
+/*-
+ * #%L
+ * FXFileChooser
+ * %%
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+.button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
+
+.progress-indicator {
+   -fx-text-fill: white;
+}
+
+.progress-bar .track{
+    -fx-accent: #ffa700;
+    -fx-background-color: black;
+    -fx-background-insets: 1;
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.progress-bar .bar {
+    -fx-accent: #ffa700;  
+    -fc-background-color: #ffa700;
+    -fx-background-insets: 1, 0, 1, 0; 
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.menu-button {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+}
+
+.tree-view .tree-view {
+   -fx-blend-mode: screen;
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.tree-cell:filled:selected:focused, .tree-cell:filled:selected {
+    -fx-background-color: #ffa700;
+    -fx-text-fill: black;
+}
+
+.tree-cell:filled:hover {
+    -fx-background-color: #212121;
+    -fx-text-fill: white;
+}
+
+.text-field {
+   -fx-blend-mode: screen;
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-prompt-text-fill: black;
+
+   -fx-focus-color : transparent;
+   -fx-faint-focus-color : transparent;
+   -fx-highlight-fill: #ffa700;
+   -fx-highlight-text-fill: black;
+}
+
+.counter-label {
+   -fx-font-size: 13px;
+   -fx-font-weight: bold;
+   -fx-text-fill: black;
+}
+
+.split-menu-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.filter-icon {
+    -fx-fill: rgba(255,167,0,0.53);
+    -fx-stroke-width: 1px;
+    -fx-stroke: black;
+}
+
+.root {
+    -fx-base: rgb(50, 50, 50);
+    -fx-background: rgb(50, 50, 50);
+    -fx-control-inner-background:  rgb(50, 50, 50);
+
+    -fx-accent: transparent;
+/*  -fx-focus-color: #ffa700;
+    -fx-faint-focus-color: #ffa70066;  */
+
+   -fx-focus-color: transparent; 
+   -fx-faint-focus-color:transparent; 
+}
+
+.tool-bar-icon {
+    -fx-fill: #ffa700;
+    -fx-highlight-text-fill: #000000;
+}
+
+.menu-item {
+    /* -fx-accent: #ffa700; */
+    -fx-accent: rgba(255,167,0,0.8); 
+    -fx-fill: #ffa700;
+}
+
+.menu-item-icon {
+    -fx-fill: #ffa700;
+}
+
+.scroll-bar .thumb {
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-color:derive(black, 5%);
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color:derive(black, 10%);
+}
+
+.scroll-bar .increment-button,.scroll-bar .decrement-button {
+    -fx-background-color:derive(black, 5%);
+    -fx-padding: 5;
+}
+
+.scroll-bar .increment-button:hover,.scroll-bar .decrement-button:hover {
+    -fx-background-color:derive(black, 10%);
+    -fx-padding: 5;
+}
+
+.scroll-bar .corner {
+    -fx-background-color:transparent;
+}

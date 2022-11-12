@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -35,7 +34,7 @@ import javax.swing.JOptionPane;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import net.raumzeitfalle.fx.dirchooser.DirectoryChooserView;
+import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 /*
@@ -77,46 +76,41 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
 
         // do all JavaFX work
         Platform.runLater(() -> {
-            try {
-                boolean useOldSchoolDirChooser = false;
-                PathSupplier pathSupplier = null;
-                if (useOldSchoolDirChooser) {
-                    pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
-                } else {
-                    DirectoryChooserView dirChooser = new DirectoryChooserView(skin);
-                    Scene dirChooserScene = new Scene(dirChooser);
-                    pathSupplier = new PathSupplier() {
-                        @Override
-                        public void getUpdate(Consumer<Path> update) {
-                            fc.setTitle("Choose directory:");
-                            Scene previousScene = fc.getScene();
-                            String previousTitle = fc.title;
-                            fc.setScene(dirChooserScene);
+             boolean useOldSchoolDirChooser = false;
+            PathSupplier pathSupplier = null;
+            if (useOldSchoolDirChooser) {
+                pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
+            } else {
+                DirectoryChooser dirChooser = new DirectoryChooser(skin);
+                Scene dirChooserScene = new Scene(dirChooser);
+                pathSupplier = new PathSupplier() {
+                    @Override
+                    public void getUpdate(Consumer<Path> update) {
+                        fc.setTitle("Choose directory:");
+                        Scene previousScene = fc.getScene();
+                        String previousTitle = fc.title;
+                        fc.setScene(dirChooserScene);
 
-                            dirChooser.onSelect(() -> {
-                                Path selectedDir = dirChooser.selectedDirectoryProperty().get();
-                                if (null != selectedDir) {
-                                    fc.setTitle(selectedDir.toString());
-                                    update.accept(selectedDir);
-                                } else {
-                                    fc.setTitle(previousTitle);
-                                }
-                                fc.setScene(previousScene);
-                            });
+                        dirChooser.onSelect(() -> {
+                            Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+                            if (null != selectedDir) {
+                                fc.setTitle(selectedDir.toString());
+                                update.accept(selectedDir);
+                            } else {
+                                fc.setTitle(previousTitle);
+                            }
+                            fc.setScene(previousScene);
+                        });
 
-                            dirChooser.onCancel(() -> fc.setScene(previousScene));
+                        dirChooser.onCancel(() -> fc.setScene(previousScene));
 
-                        }
-                    };
-                }
-
-                FileChooserView view = new FileChooserView(pathSupplier, fc, fc.model, skin,
-                        FileChooserViewOption.STAGE);
-                Scene fileChooserScene = new Scene(view);
-                fc.setScene(fileChooserScene);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                    }
+                };
             }
+
+            FileChooser view = new FileChooser(pathSupplier, fc, fc.model, skin, FileChooserViewOption.STAGE);
+            Scene fileChooserScene = new Scene(view);
+            fc.setScene(fileChooserScene);
         });
 
         return fc;

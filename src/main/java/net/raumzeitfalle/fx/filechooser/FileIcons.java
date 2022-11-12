@@ -19,6 +19,13 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
@@ -34,46 +41,69 @@ enum FileIcons {
     XML(".xml", "icons/file-xml.png");
         
     private final String suffix;
+    private final String iconResource;
+    private static int iconSize = 32;
+    private static double paneSize = iconSize*1.5;
     
-    private final String iconFileName;
+    static final String PROPERTIES_FILE = "filechooser.properties";
+    static final String PROPERTY_ICON_SIZE = "file.chooser.icon.size";
+    
+    static {
+        URL resource = FileIcons.class.getClassLoader().getResource(PROPERTIES_FILE);
+        if (resource != null) {           
+            try (FileInputStream fis = new FileInputStream(new File(resource.toURI()))) {
+                Properties props = new Properties();
+                props.load(fis);
+                String value = props.getProperty(PROPERTY_ICON_SIZE, "24");
+                iconSize = Integer.parseInt(value);
+                paneSize = iconSize * 1.5;
+            } catch (Exception error) {
+                String message = String.format("Failed to read icon size from %s (via resource: %s)",
+                                        new Object[] {PROPERTIES_FILE, resource});
+                Logger.getLogger(FileIcons.class.getName())
+                      .log(Level.WARNING, message, error);
+            }
+        }
+    }
     
     private FileIcons(String suffix, String iconFileName) {
         this.suffix = suffix;
-        this.iconFileName = iconFileName;
+        this.iconResource = FileIcons.class
+                                     .getResource(iconFileName)
+                                     .toExternalForm();
     }
     
-    
-    private static ImageView create(String iconFileName, double fitSize) {
-        String img = FileIcons.class.getResource(iconFileName).toExternalForm();
-        ImageView image = new ImageView(img);
+    ImageView create() {
+        ImageView image = new ImageView(iconResource);
         image.preserveRatioProperty().set(true);
-        image.setFitHeight(fitSize);
+        image.setFitHeight(iconSize);
+        image.getStyleClass().add("file-icon");
         return image;
     }
-
-    static StackPane fromFile(IndexedPath path, double fitSize) {
-        return fromFile(path.toString(), fitSize);
+    
+    private static ImageView create(String file) {
+        if (null == file) {
+            return FileIcons.UNKNOWN.create();
+        }
+        String fileName = file.toLowerCase();
+        for (FileIcons icon : FileIcons.values()) {
+            String suffix = icon.suffix;
+            if (null != icon.suffix && fileName.endsWith(suffix)) {
+                return icon.create();
+            }
+        }
+        return FileIcons.UNKNOWN.create();
     }
 
-    static StackPane fromFile(String file, double fitSize) {
+    static StackPane fromFile(IndexedPath path) {
+        return fromFile(path.toString());
+    }
+
+    static StackPane fromFile(String file) {
        StackPane pane = new StackPane();
-       ImageView image = null;
-       if (null != file) {
-           String fileName = file.toLowerCase();
-           for (FileIcons icon : FileIcons.values()) {
-               String suffix = icon.suffix;
-               if (null != suffix && fileName.endsWith(suffix)) {
-                       image = create(icon.iconFileName,fitSize);
-               }
-           }    
-       }
-       if (null == image) {
-           image = create(FileIcons.UNKNOWN.iconFileName,fitSize);
-       }
-       
+       ImageView image = create(file);
        pane.getChildren().add(image);
-       pane.setMinWidth(fitSize*1.5);
-       image.getStyleClass().add("file-icon");
+       pane.setMinWidth(paneSize);
        pane.getStyleClass().add("file-icon-pane");
        return pane;
     }

@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2020 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,67 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 /**
- * A configurable file chooser view.
- * 
- * @deprecated As this class is not compatible with JavaFX Scene Builder, this is going to be
- *             removed in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
+ * A configurable file chooser for browsing directories with thousands of files. Some platform file
+ * choosers and also file choosers provided by JavaFX and Java Swing will block when attempting to
+ * browse directories with significant numbers of files within (&gt; 10k ... 500k files). In such
+ * cases the GUI appears to freeze and often the operating system offers to kill the task.
+ * <p>
+ * To avoid this behavior, this {@link FileChooser} indexes a given directory in the background and
+ * keeps the list of found files in memory. The background task continues to run until all files
+ * have been indexed. The file chooser will not index the folder automatically, instead the user
+ * needs to request a refresh.
+ * <p>
+ * To make finding the desired files easy, one can type a search string into the search box above
+ * the file list. All files containing the provided text will be listed. One can also start sorting
+ * (which will also run in a separate task) and apply filtering at same time. Sorting and filtering
+ * operations are available even during directory indexing.
  */
-@Deprecated
-final class FileChooserView extends AnchorPane {
+public class FileChooser extends AnchorPane {
+
+    private HideableView window = () -> this.getScene().getWindow();
+    private FileChooserModel model = FileChooserModel.startingInUsersHome(PathFilter.acceptAllFiles("all files"));
+    private PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this.getScene().getWindow());
+    private FileChooserViewOption viewOption = FileChooserViewOption.STAGE;
+    private Skin skin = Skin.MODENA;
+    private Dialog<Path> dialog = null;
+
+    /**
+     * Creates a file chooser view. This view only shows contents of a single directory where it allows
+     * live filtering searching by typing text into a file search bar. Creates a new file chooser with
+     * following default configuration:
+     * <ul>
+     * <li>the view assumes that it is operated from a JavaFX stage</li>
+     * <li>the model starts in user home directory accepting all files</li>
+     * <li>dark skin is used</li>
+     * <li>the default JavaFX directory chooser is used</li>
+     * </ul>
+     * 
+     */
+    public FileChooser() {
+        FileChooserController controller = new FileChooserController(model, pathSupplier, window, viewOption, dialog);
+        loadControl(controller);
+    }
 
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
      * live filtering searching by typing text into a file search bar.
-     * 
-     * @deprecated As this class is not compatible with JavaFX Scene Builder, it is going to be removed
-     *             in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
+     * <p>
+     * In case of error during FXML loading, the view is replaced by a {@link TextArea} showing the
+     * cause and stack trace of the error.
      * 
      * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
      *                              this supplier is called to provide the directory where the user
@@ -70,21 +107,18 @@ final class FileChooserView extends AnchorPane {
      *                              inside a JavaFX stage / Swing JFrame where OKAY and CANCEL buttons
      *                              will be provided by the {@link FileChooserView}.
      * 
-     * @throws IOException The control is defined as FXML file and in any case of error during FXML
-     *                     reading an exception will be thrown.
      */
-    @Deprecated
-    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
-            FileChooserViewOption fileChooserViewOption) throws IOException {
+    public FileChooser(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
+            FileChooserViewOption fileChooserViewOption) {
         this(pathSupplier, window, model, skin, fileChooserViewOption, null);
     }
 
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
      * live filtering searching by typing text into a file search bar.
-     * 
-     * @deprecated As this class is not compatible with JavaFX Scene Builder, it is going to be removed
-     *             in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
+     * <p>
+     * In case of error during FXML loading, the view is replaced by a {@link TextArea} showing the
+     * cause and stack trace of the error.
      * 
      * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
      *                              this supplier is called to provide the directory where the user
@@ -116,20 +150,31 @@ final class FileChooserView extends AnchorPane {
      *                              class will provide the user selection to the dialog. Hence the
      *                              dialog where the {@link FileChooserView} is used within must be
      *                              known up front.
-     * 
-     * @throws IOException The control is defined as FXML file and in any case of error during FXML
-     *                     reading an exception will be thrown.
      */
-    @Deprecated
-    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
-            FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) throws IOException {
+    public FileChooser(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
+            FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
+        this.pathSupplier = pathSupplier;
+        this.window = window;
+        this.model = model;
+        this.skin = skin;
+        this.viewOption = fileChooserViewOption;
+        FileChooserController controller = new FileChooserController(this.model, this.pathSupplier, this.window, this.viewOption,
+                this.dialog);
+        loadControl(controller);
+    }
+
+    private void loadControl(FileChooserController controller) {
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
         FXMLLoader loader = new FXMLLoader(resource);
-        FileChooserController controller = new FileChooserController(model, pathSupplier, window, fileChooserViewOption, dialog);
         loader.setController(controller);
-        Parent view = loader.load();
+        Parent view;
+        try {
+            view = loader.load();
+        } catch (Exception e) {
+            view = handleErrorOnLoad(fileName, resource, controller, e);
+        }
         this.getChildren().add(view);
         AnchorPane.setLeftAnchor(view, 0.0);
         AnchorPane.setRightAnchor(view, 0.0);
@@ -138,4 +183,17 @@ final class FileChooserView extends AnchorPane {
         Skin.applyTo(this, skin);
     }
 
+    private VBox handleErrorOnLoad(String fileName, URL resource, Object controller, Exception e) {
+        StringWriter errors = new StringWriter();
+        PrintWriter writer = new PrintWriter(errors);
+        writer.println("FXML: " + String.valueOf(fileName));
+        writer.println("Controller: " + controller.getClass().getName());
+        e.printStackTrace(writer);
+        TextArea text = new TextArea();
+        text.setText(errors.toString());
+        VBox.setVgrow(text, Priority.ALWAYS);
+        VBox box = new VBox();
+        box.getChildren().add(text);
+        return box;
+    }
 }

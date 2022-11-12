@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2021 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2022 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,54 +19,61 @@
  */
 package net.raumzeitfalle.fx.dirchooser;
 
-import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
-/**
- * Creates a Directory Chooser control.
- * 
- * @deprecated
- * As this class is not compatible with JavaFX Scene Builder, this is going to be removed in later
- * versions of FXFileChhooser.
- */
-@Deprecated
-public class DirectoryChooserView extends AnchorPane {
+public class DirectoryChooser extends AnchorPane {
 
     private final DirectoryChooserController controller;
 
-    /**
-     * Creates a new {@link DirectoryChooserView} with the given {@link Skin}.
-     * 
-     * @param skin {@link Skin}, controls the appearance of the control
-     * @throws IOException
-     */
-    @Deprecated
-    public DirectoryChooserView(Skin skin) throws IOException {
-
+    public DirectoryChooser() {
+        this(Skin.DARK);
+    }
+    
+    public DirectoryChooser(Skin skin) {
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
         FXMLLoader loader = new FXMLLoader(resource);
-
         controller = new DirectoryChooserController();
         loader.setController(controller);
-        Parent view = loader.load();
+        Parent view;
+        try {
+            view = loader.load();
+        } catch (Exception e) {
+            view = handleErrorOnLoad(fileName, resource, e);
+        }
         this.getChildren().add(view);
-
         AnchorPane.setLeftAnchor(view, 0.0);
         AnchorPane.setRightAnchor(view, 0.0);
         AnchorPane.setTopAnchor(view, 0.0);
         AnchorPane.setBottomAnchor(view, 0.0);
-
         Skin.applyTo(this, skin);
+    }
 
+    private VBox handleErrorOnLoad(String fileName, URL resource, Exception e) {
+        StringWriter errors = new StringWriter();
+        PrintWriter writer = new PrintWriter(errors);
+        writer.println("FXML: "+ String.valueOf(fileName));
+        writer.println("Controller: " + controller.getClass().getName());
+        e.printStackTrace(writer);
+        TextArea text = new TextArea();
+        text.setText(errors.toString());        
+        VBox.setVgrow(text, Priority.ALWAYS);
+        VBox box = new VBox();
+        box.getChildren().add(text);
+        return box;
     }
 
     public ReadOnlyObjectProperty<Path> selectedDirectoryProperty() {

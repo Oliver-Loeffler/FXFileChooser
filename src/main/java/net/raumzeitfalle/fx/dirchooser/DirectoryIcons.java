@@ -19,6 +19,15 @@
  */
 package net.raumzeitfalle.fx.dirchooser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
@@ -37,30 +46,52 @@ enum DirectoryIcons {
     DRIVE_XL("icons/windows-drive-xl-32.png"),
     DRIVE_EMPTY("icons/windows-drive-empty-32.png");
   
-    private final String iconFileName;
+    private final String iconResource;
+    private static int iconSize = 24;
+    private static double paneSize = iconSize*1.5;
+    
+    static final String PROPERTIES_FILE = "directorychooser.properties";
+    static final String PROPERTY_ICON_SIZE = "directory.chooser.icon.size";
+    
+    static {
+        URL resource = DirectoryIcons.class.getClassLoader().getResource(PROPERTIES_FILE);
+        if (resource != null) {           
+            try (FileInputStream fis = new FileInputStream(new File(resource.toURI()))) {
+                Properties props = new Properties();
+                props.load(fis);
+                String value = props.getProperty(PROPERTY_ICON_SIZE, "24");
+                iconSize = Integer.parseInt(value);
+                paneSize = iconSize * 1.5; 
+            } catch (Exception error) {
+                String message = String.format("Failed to read icon size from %s (via resource: %s)",
+                                        new Object[] {PROPERTIES_FILE, resource});
+                Logger.getLogger(DirectoryIcons.class.getName())
+                      .log(Level.WARNING, message, error);
+            }
+        }
+    }
     
     private DirectoryIcons(String iconFileName) {
-        this.iconFileName = iconFileName;
+        this.iconResource = DirectoryIcons.class
+                                          .getResource(iconFileName)
+                                          .toExternalForm();
     }
     
-    private static ImageView create(String iconFileName, double fitSize) {
-        String img = DirectoryIcons.class.getResource(iconFileName).toExternalForm();
-        ImageView image = new ImageView(img);
+    ImageView create() {
+        ImageView image = new ImageView(iconResource);
         image.preserveRatioProperty().set(true);
-        image.setFitHeight(fitSize);
+        image.setFitHeight(iconSize);
+        image.getStyleClass().add("directory-icon");
         return image;
     }
-
-    protected StackPane get(double fitSize) {
+    
+    protected StackPane get() {
        StackPane pane = new StackPane();
-       ImageView image = create(iconFileName,fitSize);
-       
-       pane.getChildren().add(image);
-       pane.setMinWidth(fitSize*1.5);
-       image.getStyleClass().add("directory-icon");
-       pane.getStyleClass().add("directory-icon-pane");
-       
+       pane.getChildren().add(create());
+       pane.setMinWidth(paneSize);
+       pane.getStyleClass().add("directory-icon-pane");       
        return pane;
     }
+
     
 }
