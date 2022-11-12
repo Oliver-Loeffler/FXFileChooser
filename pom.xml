@@ -113,7 +113,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>net/raumzeitfalle/fx/demos/**.*</exclude>
+                        <exclude>**/demos/</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -131,8 +131,7 @@
                     </archive>
                     <excludes>
                         <exclude>**/fireworks/</exclude>
-                        <exclude>net/raumzeitfalle/fx/Demo*.*</exclude>
-                        <exclude>net/raumzeitfalle/swing/*.*</exclude>
+                        <exclude>**/demos/</exclude>
                     </excludes>
                 </configuration>
             </plugin>
