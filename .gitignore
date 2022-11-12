@@ -1,8 +1,10 @@
 .classpath
 .DS_Store
+.idea/
 .mvn/wrapper/maven-wrapper.jar
 .project
+.project/
 .settings/
-target/
-.idea/
 filechooser.iml
+target/
+build/
