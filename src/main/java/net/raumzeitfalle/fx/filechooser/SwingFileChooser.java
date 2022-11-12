@@ -47,7 +47,7 @@ import net.raumzeitfalle.fx.filechooser.locations.Location;
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
     private static final long serialVersionUID = -5879082370711306802L;
-    
+
     /**
      * Return value if cancel is chosen.
      */
@@ -57,17 +57,16 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      * Return value if approve (yes, ok) is chosen.
      */
     public static final int APPROVE_OPTION = 0;
-    
-    public static SwingFileChooser create(Skin skin,PathFilter ...filter) {
-    		return create(skin,"Choose file:", "", filter);
+
+    public static SwingFileChooser create(Skin skin, PathFilter... filter) {
+        return create(skin, "Choose file:", "", filter);
     }
-    
-    public static SwingFileChooser create(Skin skin,String title, PathFilter ...filter) {
-    		return create(skin,title, "", filter);
+
+    public static SwingFileChooser create(Skin skin, String title, PathFilter... filter) {
+        return create(skin, title, "", filter);
     }
-       
-    public static SwingFileChooser create(Skin skin,String title, String pathToBrowse, PathFilter ...filter)  {
-        
+
+    public static SwingFileChooser create(Skin skin, String title, String pathToBrowse, PathFilter... filter) {
         Path startHere = startPath(pathToBrowse);
         SwingFileChooser fc = new SwingFileChooser(title);
 
@@ -76,55 +75,50 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
             fc.model.addOrRemoveFilter(f);
         }
 
-        
-        
         // do all JavaFX work
-        Platform.runLater(()->{
-            try {           	
-            	boolean useOldSchoolDirChooser = false;
-            	
-            	PathSupplier pathSupplier = null;
-            	if (useOldSchoolDirChooser) {            		
-            		pathSupplier = FXDirectoryChooser.createIn(startHere, ()->fc.getScene().getWindow());
-            	} else {
-            		DirectoryChooserView dirChooser = new DirectoryChooserView(skin);
-                	Scene dirChooserScene = new Scene(dirChooser);
-                                	
-            		pathSupplier = new PathSupplier() {
-    					
-    					@Override
-    					public void getUpdate(Consumer<Path> update) {
-    						fc.setTitle("Choose directory:");
-    						Scene previousScene = fc.getScene();
-    						String previousTitle = fc.title;
-    						fc.setScene(dirChooserScene);
-    						
-    						dirChooser.onSelect(()->{
-    							Path selectedDir = dirChooser.selectedDirectoryProperty().get();
-    							if (null != selectedDir) {
-    								fc.setTitle(selectedDir.toString());
-    								update.accept(selectedDir);
-    							} else {
-    								fc.setTitle(previousTitle);    								
-    							}
-        						fc.setScene(previousScene);	
-    						});
-    						
-    						dirChooser.onCancel(()->fc.setScene(previousScene));
-    						
-    					}
-    				};	
-            	}
-            	
-                FileChooserView view = new FileChooserView(pathSupplier,fc,fc.model,skin,FileChooserViewOption.STAGE);
+        Platform.runLater(() -> {
+            try {
+                boolean useOldSchoolDirChooser = false;
+                PathSupplier pathSupplier = null;
+                if (useOldSchoolDirChooser) {
+                    pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
+                } else {
+                    DirectoryChooserView dirChooser = new DirectoryChooserView(skin);
+                    Scene dirChooserScene = new Scene(dirChooser);
+                    pathSupplier = new PathSupplier() {
+                        @Override
+                        public void getUpdate(Consumer<Path> update) {
+                            fc.setTitle("Choose directory:");
+                            Scene previousScene = fc.getScene();
+                            String previousTitle = fc.title;
+                            fc.setScene(dirChooserScene);
+
+                            dirChooser.onSelect(() -> {
+                                Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+                                if (null != selectedDir) {
+                                    fc.setTitle(selectedDir.toString());
+                                    update.accept(selectedDir);
+                                } else {
+                                    fc.setTitle(previousTitle);
+                                }
+                                fc.setScene(previousScene);
+                            });
+
+                            dirChooser.onCancel(() -> fc.setScene(previousScene));
+
+                        }
+                    };
+                }
+
+                FileChooserView view = new FileChooserView(pathSupplier, fc, fc.model, skin,
+                        FileChooserViewOption.STAGE);
                 Scene fileChooserScene = new Scene(view);
                 fc.setScene(fileChooserScene);
             } catch (IOException e) {
-               throw new RuntimeException(e);
-            } ;
-
+                throw new RuntimeException(e);
+            }
         });
-        
+
         return fc;
     }
 
@@ -135,18 +129,17 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         }
         return startHere;
     }
-    
+
     private transient FileChooserModel model;
-    
-    private JDialog dialog;   
-    
+
+    private JDialog dialog;
+
     private String title;
-    
+
     private SwingFileChooser(String title) {
-    		this.title = (null != title) ? title : "Choose file:";
+        this.title = (null != title) ? title : "Choose file:";
     }
-      
-    
+
     public int showOpenDialog(Component parent) {
         if (null == this.dialog) {
             Frame frame = JOptionPane.getFrameForComponent(parent);
@@ -156,10 +149,9 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
             this.setPreferredSize(size);
             this.setMinimumSize(size);
             dialog.pack();
-            dialog.setResizable(true);   
+            dialog.setResizable(true);
         }
-       
-        
+
         this.dialog.setVisible(true);
         if (this.model.invalidSelectionProperty().getValue()) {
             return CANCEL_OPTION;
@@ -170,7 +162,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
 
     public File getSelectedFile() {
         if (null != this.model.getSelectedFile()) {
-            return this.model.getSelectedFile().toFile();    
+            return this.model.getSelectedFile().toFile();
         } else {
             return null;
         }
@@ -184,9 +176,9 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
     public void addLocations(List<Location> locations) {
         locations.forEach(model::addLocation);
     }
-    
+
     protected void setTitle(String newTitle) {
-    	this.title = newTitle;
-    	this.dialog.setTitle(title);
+        this.title = newTitle;
+        this.dialog.setTitle(title);
     }
 }

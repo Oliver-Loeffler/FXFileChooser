@@ -23,48 +23,47 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 class NamedLocation extends Location {
-	
-	private final String name;
-	
-	private final Path directory;
-	
-	protected NamedLocation(Path parent) {
-		this(createName(parent), parent);
-	}
-	
-	private static String createName(Path location) {
-		Objects.requireNonNull(location, "location must not be null");
-		return location.toString();
-	}
 
-	protected NamedLocation(String name, Path path) {
-		this.name = Objects.requireNonNull(name, "name must not be null");
-		this.directory = Objects.requireNonNull(path, "path must not be null");
-	}
+    private final String name;
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    private final Path directory;
 
-	@Override
-	public boolean exists() {
-		return directory.toFile().exists();
-	}
+    protected NamedLocation(Path parent) {
+        this(createName(parent), parent);
+    }
 
-	@Override
-	public Path getPath() {
-		return this.directory;
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		return super.equals(other);
-	}
-	
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
+    private static String createName(Path location) {
+        Objects.requireNonNull(location, "location must not be null");
+        return location.toString();
+    }
 
+    protected NamedLocation(String name, Path path) {
+        this.name = Objects.requireNonNull(name, "name must not be null");
+        this.directory = Objects.requireNonNull(path, "path must not be null");
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public boolean exists() {
+        return directory.toFile().exists();
+    }
+
+    @Override
+    public Path getPath() {
+        return this.directory;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

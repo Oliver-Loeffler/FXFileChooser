@@ -38,36 +38,37 @@ import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
-    
-    public static FXFileChooserDialog create(Skin skin, PathFilter ...filter) throws IOException {
-    	FileChooserModel model = FileChooserModel.startingInUsersHome(filter);
-    	return new FXFileChooserDialog(skin,model);
-    }
-    
-    public void addFilter(PathFilter filter) {
-    	model.addOrRemoveFilter(filter);
-	}
 
-	public static FXFileChooserDialog create(Skin skin,FileChooserModel model) throws IOException {
-        return new FXFileChooserDialog(skin,model);
+    public static FXFileChooserDialog create(Skin skin, PathFilter... filter) throws IOException {
+        FileChooserModel model = FileChooserModel.startingInUsersHome(filter);
+        return new FXFileChooserDialog(skin, model);
     }
-    
+
+    public void addFilter(PathFilter filter) {
+        model.addOrRemoveFilter(filter);
+    }
+
+    public static FXFileChooserDialog create(Skin skin, FileChooserModel model) throws IOException {
+        return new FXFileChooserDialog(skin, model);
+    }
+
     private final FileChooserModel model;
 
     private final double minWidth = 700;
 
     private final double minHeight = 550;
 
-    // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well but keep old API alive for JavaFX
+    // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well
+    // but keep old API alive for JavaFX
     // TODO: Make CSS file externally configurable
-    private FXFileChooserDialog(Skin skin,FileChooserModel fileChooserModel) throws IOException {
+    private FXFileChooserDialog(Skin skin, FileChooserModel fileChooserModel) throws IOException {
         this.model = fileChooserModel;
-        Skin.applyToDialog(this,skin);
+        Skin.applyToDialog(this, skin);
 
         setTitle("File Selection");
         setHeaderText("Select File from for processing:");
 
-        StringBinding sb = Bindings.createStringBinding(()->{
+        StringBinding sb = Bindings.createStringBinding(() -> {
             Path current = model.currentSearchPath().get();
             if (current != null) {
                 return current.normalize().toAbsolutePath().toString();
@@ -78,13 +79,13 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         headerTextProperty().bind(sb);
         initModality(Modality.APPLICATION_MODAL);
 
-        Supplier<Window> ownerProvider = ()->getDialogPane().getScene().getWindow();
+        Supplier<Window> ownerProvider = () -> getDialogPane().getScene().getWindow();
         PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
-        FileChooserView view = new FileChooserView(pathSupplier,this,model, skin,FileChooserViewOption.DIALOG, this);
+        FileChooserView view = new FileChooserView(pathSupplier, this, model, skin, FileChooserViewOption.DIALOG, this);
         getDialogPane().setContent(view);
         ButtonType okay = ButtonType.OK;
         getDialogPane().getButtonTypes().addAll(okay, ButtonType.CANCEL);
-        
+
         Node okayButton = getDialogPane().lookupButton(okay);
         okayButton.disableProperty().bind(model.invalidSelectionProperty());
 
@@ -110,10 +111,10 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         stage.setMinHeight(minHeight);
         stage.setMinWidth(minWidth);
     }
-    
+
     public Optional<Path> showOpenDialog(Window ownerWindow) {
         if (null == this.getOwner()) {
-            this.initOwner(ownerWindow);    
+            this.initOwner(ownerWindow);
         }
         return this.showAndWait();
     }

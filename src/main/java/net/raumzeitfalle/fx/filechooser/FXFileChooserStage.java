@@ -34,53 +34,53 @@ import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class FXFileChooserStage extends Stage implements HideableView {
-    
+
     public static FXFileChooserStage create(Skin skin) throws IOException {
-        return create(skin, Paths.get("."),new PathFilter[0]);
+        return create(skin, Paths.get("."), new PathFilter[0]);
     }
-    
-    public static FXFileChooserStage create(Skin skin,PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(filter),skin);
+
+    public static FXFileChooserStage create(Skin skin, PathFilter... filter) throws IOException {
+        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(filter), skin);
     }
-    
-    public static FXFileChooserStage create(Skin skin, Path inLocation, PathFilter ...filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation, filter),skin);
+
+    public static FXFileChooserStage create(Skin skin, Path inLocation, PathFilter... filter) throws IOException {
+        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation, filter), skin);
     }
-    
+
     private final FileChooserModel model;
-    
+
     private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
         this.model = model;
-        FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), ()->this);
+        FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this);
         FileChooserView view = new FileChooserView(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
         Scene scene = new Scene(view);
         this.setScene(scene);
-        StringBinding sb = Bindings.createStringBinding(()->{
+        StringBinding sb = Bindings.createStringBinding(() -> {
             Path current = model.currentSearchPath().get();
             if (current != null) {
                 String path = current.normalize().toAbsolutePath().toString();
                 if (path.length() > 100) {
-                    return path.substring(0, 20) + " ... " + path.substring(path.length()-75, path.length());
+                    return path.substring(0, 20) + " ... " + path.substring(path.length() - 75, path.length());
                 } else {
                     return path;
                 }
             }
             return "";
         }, model.currentSearchPath());
-        
+
         this.titleProperty().bind(sb);
         initModality(Modality.APPLICATION_MODAL);
     }
-    
+
     public Optional<Path> showOpenDialog(Window ownerWindow) {
         if (null == this.getOwner()) {
-            this.initOwner(ownerWindow);    
+            this.initOwner(ownerWindow);
         }
-        
+
         this.showAndWait();
         return this.getSelectedPath();
     }
-    
+
     private Optional<Path> getSelectedPath() {
         return Optional.ofNullable(this.model.getSelectedFile());
     }

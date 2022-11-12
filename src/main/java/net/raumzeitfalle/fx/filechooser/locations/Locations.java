@@ -25,24 +25,23 @@ import java.util.Objects;
 
 public class Locations {
 
-	public static Location at(Path path) {
-		File file = Objects.requireNonNull(path, "path must not be null").toFile();
-		if (null != path.getParent() && file.isFile()) {
-			Path parent = path.getParent();
-			return new NamedLocation(parent);
-		}
-		return withName(path.toString(), path);
-	}
+    public static Location at(Path path) {
+        File file = Objects.requireNonNull(path, "path must not be null").toFile();
+        if (null != path.getParent() && file.isFile()) {
+            Path parent = path.getParent();
+            return new NamedLocation(parent);
+        }
+        return withName(path.toString(), path);
+    }
 
-	public static Location withName(String name, Path path) {
-		return new NamedLocation(name, path);
-	}
+    public static Location withName(String name, Path path) {
+        return new NamedLocation(name, path);
+    }
 
-	private Locations() {
-		/*
-		 * Collection of static factory methods, 
-		 * not intended for instantiation.
-		 * 
-		 */
-	}
+    private Locations() {
+        /*
+         * Collection of static factory methods, not intended for instantiation.
+         * 
+         */
+    }
 }
