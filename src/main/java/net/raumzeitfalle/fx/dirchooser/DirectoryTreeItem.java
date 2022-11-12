@@ -41,80 +41,79 @@ import javafx.scene.control.TreeItem;
  * 
  */
 public class DirectoryTreeItem extends TreeItem<String> {
-	
-	private String fullPath;
 
-	public String getFullPath() {
-		return (this.fullPath);
-	}
+    private String fullPath;
 
-	private boolean isDirectory;
+    public String getFullPath() {
+        return (this.fullPath);
+    }
 
-	private double iconSize = 32.0;
+    private boolean isDirectory;
 
-	public boolean isDirectory() {
-		return (this.isDirectory);
-	}
-	
-	public DirectoryTreeItem(String root) {
-		super(root);
-	}
+    private double iconSize = 32.0;
 
-	public DirectoryTreeItem(Path file) {
-		super(file.toString());
-		this.fullPath = file.toString();
-		this.isDirectory = file.toFile().isDirectory();
-		
-		Path path = Paths.get(this.fullPath);
-		
-		long subDirs = countSubDirs(path);
-		if (subDirs > 0) {
-			this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize ));
-		} else {
-			this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
-		}
-		
+    public boolean isDirectory() {
+        return (this.isDirectory);
+    }
 
-		if (!fullPath.endsWith(File.separator)) {
-			String value = file.toString();
-			int indexOf = value.lastIndexOf(File.separator);
-			if (indexOf > -1) {
-				this.setValue(value.substring(indexOf + 1));
-			} else {
-				this.setValue(value);
-			}
-		}
-		
-		this.addEventHandler(TreeItem.branchExpandedEvent(), this::handleExpansion);
-		this.addEventHandler(TreeItem.branchCollapsedEvent(), this::handleCollapse);
-		
-	}
-	
-	private long countSubDirs(Path path) {
-		try (Stream<Path> paths = Files.list(path)) {
-			List<Path> subDirs = paths.filter(p->p.toFile().isDirectory()).collect(Collectors.toList()); 
-			return subDirs.size();
-		} catch (IOException e) {			
-			return 0;
-		}
-	}
-	
-	private void handleExpansion(Event e) {
-		DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
-		if (null != item) {
-			item.setGraphic(DirectoryIcons.OPEN.get(iconSize));
-		}
-	}
-	
-	private void handleCollapse(Event e) {
-		DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
-		if (null != item) {
-			if (item.getChildren().isEmpty()) {
-				this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
-			} else {
-				this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
-			}
-		}
-	}
+    public DirectoryTreeItem(String root) {
+        super(root);
+    }
+
+    public DirectoryTreeItem(Path file) {
+        super(file.toString());
+        this.fullPath = file.toString();
+        this.isDirectory = file.toFile().isDirectory();
+
+        Path path = Paths.get(this.fullPath);
+
+        long subDirs = countSubDirs(path);
+        if (subDirs > 0) {
+            this.setGraphic(DirectoryIcons.CLOSED_PLUS.get(iconSize));
+        } else {
+            this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
+        }
+
+        if (!fullPath.endsWith(File.separator)) {
+            String value = file.toString();
+            int indexOf = value.lastIndexOf(File.separator);
+            if (indexOf > -1) {
+                this.setValue(value.substring(indexOf + 1));
+            } else {
+                this.setValue(value);
+            }
+        }
+
+        this.addEventHandler(TreeItem.branchExpandedEvent(), this::handleExpansion);
+        this.addEventHandler(TreeItem.branchCollapsedEvent(), this::handleCollapse);
+
+    }
+
+    private long countSubDirs(Path path) {
+        try (Stream<Path> paths = Files.list(path)) {
+            List<Path> subDirs = paths.filter(p -> p.toFile().isDirectory()).collect(Collectors.toList());
+            return subDirs.size();
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
+    private void handleExpansion(Event e) {
+        DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
+        if (null != item) {
+            item.setGraphic(DirectoryIcons.OPEN.get(iconSize));
+        }
+    }
+
+    private void handleCollapse(Event e) {
+        DirectoryTreeItem item = (DirectoryTreeItem) e.getSource();
+        if (null != item) {
+            if (item.getChildren().isEmpty()) {
+                this.setGraphic(DirectoryIcons.CLOSED.get(iconSize));
+            } else {
+                this.setGraphic(DirectoryIcons.OPEN.get(iconSize));
+            }
+        }
+    }
 
 }

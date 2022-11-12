@@ -27,16 +27,16 @@ import java.util.Comparator;
  */
 class PathComparator {
 
-	static Comparator<IndexedPath> byName() {
-		return (IndexedPath a, IndexedPath b)-> a.compareByName(b);
-	}
-	
-	static Comparator<IndexedPath> byTimestamp() {
-		return (IndexedPath a, IndexedPath b)-> a.getTimestamp().compareTo(b.getTimestamp());
-	}
-					
-	private PathComparator() {
-		// provides short cuts for commonly used comparators
-	}
+    static Comparator<IndexedPath> byName() {
+        return (IndexedPath a, IndexedPath b) -> a.compareByName(b);
+    }
+
+    static Comparator<IndexedPath> byTimestamp() {
+        return (IndexedPath a, IndexedPath b) -> a.getTimestamp().compareTo(b.getTimestamp());
+    }
+
+    private PathComparator() {
+        // provides short cuts for commonly used comparators
+    }
 
 }

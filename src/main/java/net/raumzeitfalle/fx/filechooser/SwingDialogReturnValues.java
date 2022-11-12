@@ -38,14 +38,14 @@ public enum SwingDialogReturnValues {
      */
     ERROR_OPTION(JFileChooser.ERROR_OPTION);
 
-	private final int returnValue;
-	
-	private SwingDialogReturnValues(int returnValue) {
-		this.returnValue = returnValue;
-	}
-	
-	public int getValue() {
-		return this.returnValue;
-	}
-    
+    private final int returnValue;
+
+    private SwingDialogReturnValues(int returnValue) {
+        this.returnValue = returnValue;
+    }
+
+    public int getValue() {
+        return this.returnValue;
+    }
+
 }

@@ -43,10 +43,11 @@ public enum Skin {
             dialog.getDialogPane().getStylesheets().add(css);
         }
     }
+
     private String getStyleName() {
         String cssName = name().substring(1).toLowerCase();
-        String first = new String(new char[]{name().charAt(0)});
-        return first+cssName;
+        String first = new String(new char[] {name().charAt(0)});
+        return first + cssName;
     }
 
     private static String getClassName(Object parent) {
@@ -65,5 +66,5 @@ public enum Skin {
             return null;
         }
         return url.toExternalForm();
-	}
+    }
 }

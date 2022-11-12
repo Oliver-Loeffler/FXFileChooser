@@ -28,43 +28,42 @@ import java.util.function.Supplier;
 import javafx.application.Platform;
 
 class Invoke {
-    
+
     private Invoke() {
-        
+
     }
-    
+
     static void later(Supplier<Void> action) {
         Platform.runLater(action::get);
     }
-    
+
     static <T> void later(T value, Consumer<T> consumingAction) {
-        Platform.runLater(()->consumingAction.accept(value));
+        Platform.runLater(() -> consumingAction.accept(value));
     }
 
     static void laterWithDelay(Duration duration, Runnable r) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             try {
                 Thread.sleep(duration.toMillis());
             } catch (InterruptedException e) {
-            	Thread.currentThread().interrupt(); 
+                Thread.currentThread().interrupt();
             }
             r.run();
         });
     }
-    
+
     static void andWaitWithoutException(Runnable r) {
         try {
             andWait(r);
         } catch (InterruptedException | ExecutionException e) {
-        	Thread.currentThread().interrupt();
-        } 
+            Thread.currentThread().interrupt();
+        }
     }
-    
+
     static void andWait(Runnable r) throws InterruptedException, ExecutionException {
         FutureTask<?> task = new FutureTask<>(r, null);
         Platform.runLater(task);
         task.get();
     }
-    
-    
+
 }
