@@ -28,7 +28,6 @@ module filechooser {
 
     exports net.raumzeitfalle.fx.filechooser;
     exports net.raumzeitfalle.fx.dirchooser;
-    exports net.raumzeitfalle.fx.demos;
 
     opens net.raumzeitfalle.fx.filechooser to javafx.fxml;
     opens net.raumzeitfalle.fx.dirchooser to javafx.fxml;
