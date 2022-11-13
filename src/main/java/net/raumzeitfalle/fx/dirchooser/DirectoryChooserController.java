@@ -322,7 +322,7 @@ public class DirectoryChooserController implements Initializable {
     void shutdown() {
         Logger.getLogger(DirectoryChooserController.class.getName()).log(Level.INFO,
                 "shutting down tasks and executors");
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
     private void registerShutdownHook() {

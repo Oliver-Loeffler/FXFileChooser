@@ -13,12 +13,12 @@ public class DemoFileChooser extends Application {
         Application.launch();
     }
 
-    private FileChooser view; 
+    private FileChooser fileChooser; 
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        view = new FileChooser(Skin.DARK, DirectoryChooserOption.CUSTOM);
-        Scene scene = new Scene(view);
+        fileChooser = new FileChooser(Skin.DARK, DirectoryChooserOption.CUSTOM);
+        Scene scene = new Scene(fileChooser);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
         primaryStage.show();
@@ -26,6 +26,6 @@ public class DemoFileChooser extends Application {
 
     @Override
     public void stop() {
-        Runtime.getRuntime().exit(0);
+        fileChooser.shutdown();
     }
 }

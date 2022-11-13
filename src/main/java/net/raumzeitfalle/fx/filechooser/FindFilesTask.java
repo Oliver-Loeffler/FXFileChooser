@@ -74,7 +74,8 @@ final class FindFilesTask extends Task<Integer> {
                 updateProgress(f, files.length);
                 duration.set((System.currentTimeMillis() - start) / 1E3);
                 buffer.flush();
-                break;
+                return f;
+                // formerly: break;
             }
             if (f % progressIntervall == 0) {
                 updateProgress(f + 1, files.length);

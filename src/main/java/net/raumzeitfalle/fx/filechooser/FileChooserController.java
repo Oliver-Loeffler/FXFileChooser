@@ -458,4 +458,8 @@ final class FileChooserController implements Initializable {
             Platform.runLater(() -> this.okButton.requestFocus());
         }
     }
+    
+    void stopServices() {
+        this.model.getUpdateService().cancelUpdate();
+    }
 }

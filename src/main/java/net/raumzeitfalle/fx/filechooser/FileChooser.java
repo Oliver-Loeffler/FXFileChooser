@@ -60,6 +60,7 @@ public class FileChooser extends StackPane {
     private Skin skin = Skin.MODENA;
     private Dialog<Path> dialog = null;
     private AnchorPane fileChooserView;
+    private final FileChooserController controller;
     
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
@@ -108,7 +109,7 @@ public class FileChooser extends StackPane {
             pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
         }
         
-        FileChooserController controller = new FileChooserController(model, pathSupplier, window, viewOption, dialog);
+        controller = new FileChooserController(model, pathSupplier, window, viewOption, dialog);
         loadControl(controller);
         
         Skin.applyTo(this, this.skin);
@@ -197,11 +198,11 @@ public class FileChooser extends StackPane {
         this.model = model;
         this.skin = skin;
         this.viewOption = fileChooserViewOption;
-        FileChooserController controller = new FileChooserController(this.model,
-                                                                     pathSupplier,
-                                                                     this.window,
-                                                                     this.viewOption,
-                                                                     this.dialog);
+        controller = new FileChooserController(this.model,
+                                                    pathSupplier,
+                                                    this.window,
+                                                    this.viewOption,
+                                                    this.dialog);
         loadControl(controller);
         Skin.applyTo(this, this.skin);
     }
@@ -256,6 +257,6 @@ public class FileChooser extends StackPane {
     }
 
     public void shutdown() {
-           
+        this.controller.stopServices();
     }
 }
