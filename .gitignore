@@ -1,5 +1,6 @@
 .classpath
 .DS_Store
+Screenshot*.png
 .idea/
 .mvn/wrapper/maven-wrapper.jar
 .project
