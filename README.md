@@ -296,4 +296,4 @@ In some cases a non-programmatic configuration can be quite helpful. The configu
 |-|-|-|
 | `directorychooser.properties` | `directory.chooser.icon.size` | Configures the size of directory and drive icons (24px by default) |
 | `filechooser.properties`     | `directory.chooser.icon.size` | Configures the size of icons in file chooser (usually 32px) |
-| `swingfilechooser.properties` | `use.javafx.platform.directory.chooser`` | Configures if the JavaFX platform directory chooser is used or not. Defaults to false |
+| `swingfilechooser.properties` | `use.javafx.platform.directory.chooser` | Configures if the JavaFX platform directory chooser is used or not. Defaults to false |
