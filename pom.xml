@@ -128,7 +128,6 @@
                     </archive>
                     <excludes>
                         <exclude>**/fireworks/</exclude>
-                        <exclude>**/demos/</exclude>
                         <exclude>**/filechooser.properties</exclude>
                         <exclude>**/directorychooser.properties</exclude>
                         <exclude>**/swingfilechooser.properties</exclude>
