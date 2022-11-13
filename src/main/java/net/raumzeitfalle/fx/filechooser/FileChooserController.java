@@ -146,6 +146,29 @@ final class FileChooserController implements Initializable {
      *                              Chooser or Directory Chooser component. This
      *                              component is called when clicked on Choose
      *                              Directory button.
+     * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the
+     *                              view will have its own OKAY/CANCEL buttons or if
+     *                              OKAY/CANCEL buttons are provided e.g. by the
+     *                              parent container (e.g. Dialog).
+     */
+    public FileChooserController(final FileChooserModel fileChooserModel, 
+                                 final PathSupplier pathSupplier,
+                                 FileChooserViewOption fileChooserViewOption, 
+                                 final Dialog<Path> dialog) {
+        
+        this(fileChooserModel, pathSupplier, null, fileChooserViewOption, dialog);
+    }
+    
+    /**
+     * Creates a new {@link FileChooserController} which provides all logic and
+     * functionality for the {@link FXFileChooserStage}, {@link FXFileChooserDialog}
+     * and {@link SwingFileChooser} components.
+     *
+     * @param fileChooserModel      The data model.
+     * @param pathSupplier          Provides a path on demand, e.g. can be File
+     *                              Chooser or Directory Chooser component. This
+     *                              component is called when clicked on Choose
+     *                              Directory button.
      * @param window                The parent window which shall be closable.
      * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the
      *                              view will have its own OKAY/CANCEL buttons or if
@@ -403,12 +426,20 @@ final class FileChooserController implements Initializable {
     }
 
     private void okayAction() {
-        this.stage.closeView();
+        if (this.stage == null) {
+            okButton.getScene().getWindow().hide();
+        } else {
+            this.stage.closeView();
+        }
     }
 
     private void cancelAction() {
         this.model.setSelectedFile(null);
-        this.stage.closeView();
+        if (this.stage == null) {
+            cancelButton.getScene().getWindow().hide();
+        } else {
+            this.stage.closeView();
+        }
     }
 
     private void changeDirectory() {

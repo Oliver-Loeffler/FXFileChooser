@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2020 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,40 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx.demos;
+package net.raumzeitfalle.fx.filechooser.demos;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import net.raumzeitfalle.fx.filechooser.DirectoryChooserOption;
-import net.raumzeitfalle.fx.filechooser.FileChooser;
+import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
-public class DemoFileChooser extends Application {
+import java.nio.file.Path;
 
+public class DemoFxStage extends Application {
     public static void main(String[] args) {
         Application.launch();
     }
 
-    private FileChooser fileChooser; 
-    
     @Override
     public void start(Stage primaryStage) throws Exception {
-        fileChooser = new FileChooser(Skin.DARK, DirectoryChooserOption.CUSTOM);
-        Scene scene = new Scene(fileChooser);
+        Button button = new Button("Show File Chooser");
+        FXFileChooserStage fc = FXFileChooserStage.create(Skin.DARK);
+        button.setOnAction(evt -> fc.showOpenDialog(primaryStage)
+                                    .ifPresent(this::showSelection));
+
+        Scene scene = new Scene(button);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
         primaryStage.show();
     }
 
-    @Override
-    public void stop() {
-        fileChooser.shutdown();
+    private void showSelection(Path selectedPath) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("File Selection");
+        alert.setContentText(selectedPath.toString());
+        alert.show();
     }
 }

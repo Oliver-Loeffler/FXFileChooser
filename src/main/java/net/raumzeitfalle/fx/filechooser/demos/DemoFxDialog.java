@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2020 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,54 +17,39 @@
  * limitations under the License.
  * #L%
  */
-package net.raumzeitfalle.fx.demos;
+package net.raumzeitfalle.fx.filechooser.demos;
 
 import java.nio.file.Path;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
+import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
-public class DemoDirectoryChooser extends Application {
+public class DemoFxDialog extends Application {
     public static void main(String[] args) {
         Application.launch();
     }
 
-    private DirectoryChooser dirChooser;
-    
-    private Scene scene;
-    
     @Override
     public void start(Stage primaryStage) throws Exception {
-        dirChooser = new DirectoryChooser(Skin.DARK);
-        dirChooser.useCancelButtonProperty().setValue(true);
-        dirChooser.onSelect(()->{
-            Path selectedDir = dirChooser.selectedDirectoryProperty().get();
-            showMessage("Selected:", selectedDir.normalize().toAbsolutePath().toString());
-        });
-        dirChooser.onCancel(()->{
-            showMessage("Cancelled:", "One can hide the cancel button if not needed.");
-        });
-        scene = new Scene(dirChooser);
+        Button button = new Button("Show File Chooser");
+        FXFileChooserDialog dialog = FXFileChooserDialog.create(Skin.DARK);
+        button.setOnAction(evt -> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+
+        Scene scene = new Scene(button);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
         primaryStage.show();
     }
 
-    @Override
-    public void stop() {
-        dirChooser.shutdown();
-    }
-
-    private void showMessage(String action, String message) {
+    private void showSelection(Path selectedPath) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.initOwner(scene.getWindow());
-        alert.setTitle("DirectoryChooser");
-        alert.setHeaderText(action);
-        alert.setContentText(message);
+        alert.setHeaderText("File Selection");
+        alert.setContentText(selectedPath.toString());
         alert.show();
     }
 }

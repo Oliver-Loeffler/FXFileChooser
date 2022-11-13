@@ -144,11 +144,11 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         for (PathFilter f : filters) {
             fc.model.addOrRemoveFilter(f);
         }
-
         // do all JavaFX work
         Platform.runLater(() -> {
             PathSupplier pathSupplier = configureDirectoryChooser(skin, startHere, fc);
             FileChooser view = new FileChooser(pathSupplier, fc, fc.model, skinToUse, FileChooserViewOption.STAGE);
+                               
             Scene fileChooserScene = new Scene(view);
             fc.setScene(fileChooserScene);
         });

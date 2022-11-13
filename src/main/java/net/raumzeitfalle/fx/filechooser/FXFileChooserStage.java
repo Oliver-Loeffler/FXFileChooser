@@ -154,7 +154,7 @@ public class FXFileChooserStage extends Stage implements HideableView {
     
     FXFileChooserStage(FileChooserModel model, Skin skin, DirectoryChooserOption dirChooserOption) {
         this.model = Objects.requireNonNull(model);
-        FileChooser view = new FileChooser(this.model, skin, dirChooserOption, FileChooserViewOption.STAGE);
+        FileChooser view = new FileChooser(this.model, skin, dirChooserOption, FileChooserViewOption.STAGE, this);
         Scene scene = new Scene(view);
         this.setScene(scene);
         StringBinding sb = Bindings.createStringBinding(() -> {
@@ -177,7 +177,7 @@ public class FXFileChooserStage extends Stage implements HideableView {
         if (null == this.getOwner()) {
             this.initOwner(ownerWindow);
         }
-
+        
         this.showAndWait();
         return this.getSelectedPath();
     }

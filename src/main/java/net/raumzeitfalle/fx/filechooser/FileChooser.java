@@ -55,7 +55,6 @@ import javafx.stage.Window;
  */
 public class FileChooser extends StackPane {
 
-    private HideableView window = () -> this.getScene().getWindow();
     private FileChooserModel model = FileChooserModel.startingInUsersHome(PathFilter.acceptAllFiles("all files"));
     private FileChooserViewOption viewOption = FileChooserViewOption.STAGE;
     private Skin skin = Skin.MODENA;
@@ -106,18 +105,20 @@ public class FileChooser extends StackPane {
         } else {
             pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
         }
-        
-        controller = new FileChooserController(model, pathSupplier, window, viewOption, dialog);
+
+        controller = new FileChooserController(model, pathSupplier, viewOption, dialog);
         loadControl(controller);
         
         Skin.applyTo(this, this.skin);
     }
-    
+
     FileChooser(@NamedArg("model") FileChooserModel model,
                 @NamedArg("skin") Skin skin, 
                 @NamedArg("directoryChooserOption") DirectoryChooserOption directoryChooserOption,
-                @NamedArg("viewOption") FileChooserViewOption viewOption) {
-        
+                @NamedArg("viewOption") FileChooserViewOption viewOption,
+                @NamedArg("hideableWindow") HideableView hideableWindow) {
+
+        HideableView window = Objects.requireNonNull(hideableWindow);
         this.model = Objects.requireNonNull(model);
         
         if (skin != null) {
@@ -217,13 +218,12 @@ public class FileChooser extends StackPane {
     FileChooser(PathSupplier pathSupplier, HideableView window, FileChooserModel model, 
                 Skin skin, FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
 
-        this.window = window;
         this.model = model;
         this.skin = skin;
         this.viewOption = fileChooserViewOption;
         controller = new FileChooserController(this.model,
                                                     pathSupplier,
-                                                    this.window,
+                                                    window,
                                                     this.viewOption,
                                                     this.dialog);
         loadControl(controller);
