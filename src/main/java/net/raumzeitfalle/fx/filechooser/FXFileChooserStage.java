@@ -19,7 +19,6 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -33,64 +32,125 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
+/**
+ * A {@link FileChooser} placed into its own {@link Stage}.
+ * 
+ * @see FileChooser
+ */
 public class FXFileChooserStage extends Stage implements HideableView {
 
-    public static FXFileChooserStage create(Skin skin) throws IOException {
-        return create(skin, Paths.get("."), new PathFilter[0]);
-    }
+	/**
+	 * Creates a new FileChooser placed into its own stage. The new stage will be
+	 * application modal by default. It will start inside current directory and
+	 * accept all files with (*.*). To change modality call the
+	 * {@code initModality(...)} method.
+	 * 
+	 * @param skin {@link Skin} Defines the visual appearance of FileChooser.
+	 * 
+	 * @return {@link FXFileChooserStage} A file chooser in its own window.
+	 */
+	public static FXFileChooserStage create(Skin skin) {
+		return create(skin, Paths.get("."), PathFilter.acceptAllFiles("*.*"));
+	}
 
-    public static FXFileChooserStage create(Skin skin, PathFilter... filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingInUsersHome(filter), skin);
-    }
+	/**
+	 * Creates a new FileChooser placed into its own stage. The new stage will be
+	 * application modal by default. To change modality call the
+	 * {@code initModality(...)} method.
+	 * <p>
+	 * This instance will start browsing in user home directory accepting the
+	 * provided {@link PathFilter}.
+	 * 
+	 * @param skin    {@link Skin} Defines the visual appearance of FileChooser. In
+	 *                case no Skin is provided, MODENA will be used.
+	 * @param filters {@link PathFilter} argument of variable length, accepts all
+	 *                path filters as needed. In case no filter is provided, a
+	 *                filter accepting all files will be used.
+	 * 
+	 * @return {@link FXFileChooserStage} A file chooser in its own window.
+	 */
+	public static FXFileChooserStage create(Skin skin, PathFilter... filters) {
+		PathFilter[] filter2use = filters;
+		if (filters.length == 0) {
+			filter2use = new PathFilter[] { PathFilter.acceptAllFiles("*.*") };
+		}
+		Skin skinToUse = skin == null ? Skin.MODENA : skin;
+		return new FXFileChooserStage(FileChooserModel.startingInUsersHome(filter2use), skinToUse);
+	}
 
-    public static FXFileChooserStage create(Skin skin, Path inLocation, PathFilter... filter) throws IOException {
-        return new FXFileChooserStage(FileChooserModel.startingIn(inLocation, filter), skin);
-    }
+	/**
+	 * Creates a new FileChooser placed into its own stage. The new stage will be
+	 * application modal by default. To change modality call the
+	 * {@code initModality(...)} method.
+	 * <p>
+	 * This instance will start browsing in the provided directory accepting files
+	 * matching the provided {@link PathFilter}.
+	 * 
+	 * @param skin     {@link Skin} Defines the visual appearance of FileChooser. In
+	 *                 case no Skin is provided, MODENA will be used.
+	 * @param startsIn {@link Path} Location where file browsing starts. If not
+	 *                 provided, the file chooser will start browsing in the current
+	 *                 working directory.
+	 * @param filters  {@link PathFilter} argument of variable length, accepts all
+	 *                 path filters as needed. In case no filter is provided, a
+	 *                 filter accepting all files will be used.
+	 * 
+	 * @return {@link FXFileChooserStage} A file chooser in its own window.
+	 */
+	public static FXFileChooserStage create(Skin skin, Path startsIn, PathFilter... filters) {
+		PathFilter[] filter2use = filters;
+		if (filters.length == 0) {
+			filter2use = new PathFilter[] { PathFilter.acceptAllFiles("*.*") };
+		}
+		Skin skinToUse = skin == null ? Skin.MODENA : skin;
+		Path location = startsIn == null ? Paths.get(".") : startsIn;
+		return new FXFileChooserStage(FileChooserModel.startingIn(location, filter2use), skinToUse);
+	}
 
-    private final FileChooserModel model;
+	private final FileChooserModel model;
 
-    private FXFileChooserStage(FileChooserModel model, Skin skin) throws IOException {
-        this.model = model;
-        FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this);
-        FileChooser view = new FileChooser(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
-        Scene scene = new Scene(view);
-        this.setScene(scene);
-        StringBinding sb = Bindings.createStringBinding(() -> {
-            Path current = model.currentSearchPath().get();
-            if (current != null) {
-                String path = current.normalize().toAbsolutePath().toString();
-                if (path.length() > 100) {
-                    return path.substring(0, 20) + " ... " + path.substring(path.length() - 75, path.length());
-                } else {
-                    return path;
-                }
-            }
-            return "";
-        }, model.currentSearchPath());
+	private FXFileChooserStage(FileChooserModel model, Skin skin) {
+		this.model = model;
+		FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this);
+		FileChooser view = new FileChooser(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
+		Scene scene = new Scene(view);
+		this.setScene(scene);
+		StringBinding sb = Bindings.createStringBinding(() -> {
+			Path current = model.currentSearchPath().get();
+			if (current != null) {
+				String path = current.normalize().toAbsolutePath().toString();
+				if (path.length() > 100) {
+					return path.substring(0, 20) + " ... " + path.substring(path.length() - 75, path.length());
+				} else {
+					return path;
+				}
+			}
+			return "";
+		}, model.currentSearchPath());
 
-        this.titleProperty().bind(sb);
-        initModality(Modality.APPLICATION_MODAL);
-    }
+		this.titleProperty().bind(sb);
+		initModality(Modality.APPLICATION_MODAL);
+	}
 
-    public Optional<Path> showOpenDialog(Window ownerWindow) {
-        if (null == this.getOwner()) {
-            this.initOwner(ownerWindow);
-        }
+	public Optional<Path> showOpenDialog(Window ownerWindow) {
+		if (null == this.getOwner()) {
+			this.initOwner(ownerWindow);
+		}
 
-        this.showAndWait();
-        return this.getSelectedPath();
-    }
+		this.showAndWait();
+		return this.getSelectedPath();
+	}
 
-    private Optional<Path> getSelectedPath() {
-        return Optional.ofNullable(this.model.getSelectedFile());
-    }
+	private Optional<Path> getSelectedPath() {
+		return Optional.ofNullable(this.model.getSelectedFile());
+	}
 
-    @Override
-    public void closeView() {
-        this.hide();
-    }
+	@Override
+	public void closeView() {
+		this.hide();
+	}
 
-    public void addLocations(List<Location> locations) {
-        locations.forEach(model::addLocation);
-    }
+	public void addLocations(List<Location> locations) {
+		locations.forEach(model::addLocation);
+	}
 }

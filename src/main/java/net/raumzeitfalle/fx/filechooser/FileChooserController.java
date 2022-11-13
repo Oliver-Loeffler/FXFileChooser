@@ -29,12 +29,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.stage.Modality;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
@@ -163,7 +166,7 @@ final class FileChooserController implements Initializable {
         this.menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
         this.dialog = dialog;
     }
-
+    
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {

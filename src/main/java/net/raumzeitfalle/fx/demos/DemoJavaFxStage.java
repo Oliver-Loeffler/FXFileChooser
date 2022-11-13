@@ -33,6 +33,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
 import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
 import net.raumzeitfalle.fx.filechooser.PathFilter;
 import net.raumzeitfalle.fx.filechooser.Skin;
@@ -81,6 +82,22 @@ public class DemoJavaFxStage extends Application {
             Optional<Path> selection = fcDefault.showOpenDialog(primaryStage);
             logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
+        
+        
+        PathFilter[] filters = new PathFilter[] {all, xml, xlsx, na0, txt, exe, combined};
+        FXFileChooserStage fcDarkNonModal = FXFileChooserStage.create(Skin.DARK, local, filters);
+        fcDarkNonModal.initModality(Modality.NONE);
+
+        Button buttonDarkNonModal = new Button("FXFileChooserStage (Skin.DARK, Modality.NONE)");
+        buttonDarkNonModal.setOnAction(e -> {
+        	if (fcDarkNonModal.isShowing()) {
+        		e.consume();
+        		return;
+        	}
+            Optional<Path> selection = fcDarkNonModal.showOpenDialog(primaryStage);
+            logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
+        });
+        
 
         FileChooser standardFileChooser = new FileChooser();
         Button standardFileChooserButton = new Button("JavaFX standard file chooser");
@@ -90,7 +107,8 @@ public class DemoJavaFxStage extends Application {
         Button standardDirectoryChooserButton = new Button("JavaFX standard directory chooser");
         standardDirectoryChooserButton.setOnAction(event -> standardDirectoryChooser.showOpenDialog(primaryStage));
 
-        VBox vbox = new VBox(button, buttonDefault, standardDirectoryChooserButton, standardFileChooserButton);
+        VBox vbox = new VBox(button, buttonDefault, buttonDarkNonModal, 
+        		             standardDirectoryChooserButton, standardFileChooserButton);
 
         Scene mainScene = new Scene(vbox);
         primaryStage.setScene(mainScene);
