@@ -113,16 +113,26 @@ public class DemoSwing {
 ## Using the JavaFX Dialog version
 
 ```java
-public class FxDialogDemo extends Application  {
+import java.nio.file.Path;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import net.raumzeitfalle.fx.filechooser.FXFileChooserDialog;
+import net.raumzeitfalle.fx.filechooser.Skin;
+
+public class DemoFxDialog extends Application {
     public static void main(String[] args) {
         Application.launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Button button = new Button("Show File Chooser Dialog");
+        Button button = new Button("Show File Chooser");
         FXFileChooserDialog dialog = FXFileChooserDialog.create(Skin.DARK);
-        button.setOnAction(evt-> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+        button.setOnAction(evt -> dialog.showOpenDialog(primaryStage).ifPresent(this::showSelection));
 
         Scene scene = new Scene(button);
         primaryStage.setScene(scene);
