@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import javafx.beans.NamedArg;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +35,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import net.raumzeitfalle.fx.filechooser.DirectoryChooserOption;
 import net.raumzeitfalle.fx.filechooser.FileChooser;
 import net.raumzeitfalle.fx.filechooser.PathSupplier;
 import net.raumzeitfalle.fx.filechooser.Skin;
@@ -42,11 +44,23 @@ public class DirectoryChooser extends AnchorPane {
 
     private final DirectoryChooserController controller;
 
+    /**
+     * Creates a new JavaFX based directory chooser which. This is not the JavaFX platform specific
+     * directory chooser. This directory chooser can be used as a control within a scene or even within
+     * a FXML document. Its skin defaults to dark mode.
+     */
     public DirectoryChooser() {
         this(Skin.DARK);
     }
-    
-    public DirectoryChooser(Skin skin) {
+
+    /**
+     * Creates a new JavaFX based directory chooser which. This is not the JavaFX platform specific
+     * directory chooser. This directory chooser can be used as a control within a scene or even within
+     * a FXML document.
+     * 
+     * @param skin {@link Skin} defines the visual appearance of the directory chooser control
+     */
+    public DirectoryChooser(@NamedArg("skin") Skin skin) {
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
@@ -70,11 +84,11 @@ public class DirectoryChooser extends AnchorPane {
     private VBox handleErrorOnLoad(String fileName, URL resource, Exception e) {
         StringWriter errors = new StringWriter();
         PrintWriter writer = new PrintWriter(errors);
-        writer.println("FXML: "+ String.valueOf(fileName));
+        writer.println("FXML: " + String.valueOf(fileName));
         writer.println("Controller: " + controller.getClass().getName());
         e.printStackTrace(writer);
         TextArea text = new TextArea();
-        text.setText(errors.toString());        
+        text.setText(errors.toString());
         VBox.setVgrow(text, Priority.ALWAYS);
         VBox box = new VBox();
         box.getChildren().add(text);
@@ -92,34 +106,57 @@ public class DirectoryChooser extends AnchorPane {
     public void onCancel(Runnable action) {
         controller.setOnCancel(action);
     }
-    
+
     public void shutdown() {
         controller.shutdown();
     }
-    
+
     public void setEnabled(boolean toggle) {
         setManaged(toggle);
         setVisible(toggle);
     }
-    
+
+    /**
+     * This enabled combined use of {@link FileChooser} and {@link DirectoryChooser} as one control. The
+     * {@link FileChooser} only allows file selection and provides no functions for directory selection.
+     * Hence either the JavaFX platform specific directory chooser must be configured or the
+     * {@link DirectoryChooser} can be used.
+     * 
+     * See {@link DirectoryChooserOption} for details.
+     */
     public static class DirChooserPathSupplier implements PathSupplier {
 
         private final DirectoryChooser dirChooser;
         private final FileChooser fileChooser;
+
+        /**
+         * Connects a new {@link DirectoryChooser} with a given {@link FileChooser}.
+         * 
+         * @param fileChooser {@link FileChooser} to make use of the {@link DirectoryChooser}.
+         */
         public DirChooserPathSupplier(FileChooser fileChooser) {
             this.fileChooser = Objects.requireNonNull(fileChooser);
             this.dirChooser = new DirectoryChooser();
             this.fileChooser.getChildren().add(dirChooser);
             this.dirChooser.setEnabled(false);
         }
-        
+
+        /**
+         * Disables the file chooser view and allows a directory selection by user. After user decides to
+         * accept or reject the selection, the directory chooser view is hidden and the file chooser view is
+         * shown. This is internally managed by updating the visible and managed properties
+         * ({@code setVisible(...)} and {@code setManaged(...)}).
+         * 
+         * @param update {@link Consumer} of {@link Path} defines how to process the path which was selected
+         *               by the user.
+         */
         @Override
         public void getUpdate(Consumer<Path> update) {
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 dirChooser.setEnabled(true);
                 fileChooser.setEnabled(false);
             });
-            
+
             dirChooser.onSelect(() -> {
                 Path selectedDir = dirChooser.selectedDirectoryProperty().get();
                 if (null != selectedDir) {

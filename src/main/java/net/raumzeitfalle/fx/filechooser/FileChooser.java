@@ -72,9 +72,6 @@ public class FileChooser extends StackPane {
      * <li>dark skin is used</li>
      * <li>the default JavaFX directory chooser is used</li>
      * </ul>
-     * 
-     * @param skin {@link Skin} defines the visual appearance of the file chooser control
-     * 
      */
     public FileChooser() {
         this(Skin.DARK, DirectoryChooserOption.JAVAFX_PLATFORM);
