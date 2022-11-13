@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.raumzeitfalle.fx</groupId>
     <artifactId>filechooser</artifactId>
-    <version>0.0.10-jdk11-SNAPSHOT</version>
+    <version>0.0.10-jdk16-SNAPSHOT</version>
     <description>A custom file chooser with live filtering JavaFX and Swing</description>
     <inceptionYear>2017</inceptionYear>
     <organization>
@@ -14,14 +14,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <java.version>1.9</java.version>
-
+        <java.version>11</java.version>
+        <javafx.version>11.0.1</javafx.version>
         <junit.platform.version>1.9.1</junit.platform.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
         <awaitility.version>4.2.0</awaitility.version>
 
-        <testfx.version>4.0.9-alpha</testfx.version>
-        <testfx.monocle.version>jdk-9+181</testfx.monocle.version>
+        <testfx.version>4.0.16-alpha</testfx.version>
+        <testfx.monocle.version>jdk-11+26</testfx.monocle.version>
 
         <maven.jacoco.plugin.version>0.8.8</maven.jacoco.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
@@ -276,7 +276,8 @@
     </build>
 
     <dependencies>
-        <!--
+
+        <!-- OpenJFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -291,7 +292,7 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
-            </dependency>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -302,7 +303,8 @@
             <artifactId>javafx-graphics</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-        //-->
+
+        <!-- Test Infrastructure -->
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
