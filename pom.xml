@@ -131,6 +131,7 @@
                         <exclude>**/demos/</exclude>
                         <exclude>**/filechooser.properties</exclude>
                         <exclude>**/directorychooser.properties</exclude>
+                        <exclude>**/swingfilechooser.properties</exclude>
                         <exclude>**/*.svg</exclude>
                     </excludes>
                 </configuration>
