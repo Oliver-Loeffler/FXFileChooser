@@ -71,6 +71,15 @@ public interface PathFilter {
     }
 
     /**
+     * Creates a new {@link PathFilter} which generally matches with all files and is named {@code *.*}.
+     * This filter is intended to be used as graceful default for cases where no path filters are provided.
+     * @return {@link PathFilter}
+     */
+    static PathFilter acceptAllFiles() {
+        return acceptAllFiles("*.*");
+    }
+
+    /**
      * Creates a new {@link PathFilter} which generally matches with all files.
      * 
      * @param name String value intended to be used as GUI text.

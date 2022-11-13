@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -114,6 +115,11 @@ class FileChooserControllerTest extends FxTestTemplate {
         Scene scene = new Scene(view, 700, 500);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @AfterEach
+    void closeStage() throws Exception {
+        Invoke.andWait(()->primaryStage.close());
     }
 
     @Test
@@ -201,6 +207,120 @@ class FileChooserControllerTest extends FxTestTemplate {
 
     }
 
+    @Test
+    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    void that_one_can_navigate_the_tree_upwards() {
+        dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
+        clickOn("#chooser");
+        sleep(200);
+        
+        assertNotNull(model.currentSearchPath().get());
+        assertEquals(Paths.get("TestData/SomeFiles"), model.currentSearchPath().get());
+        
+        clickOn("#fileNameFilter");
+        write("..");
+        press(KeyCode.ENTER);
+        
+        sleep(200);
+        
+        assertNotNull(model.currentSearchPath().get());
+        assertEquals(Paths.get("TestData").toAbsolutePath(), model.currentSearchPath().get());
+    }
+    
+    @Test
+    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    void that_directory_can_be_changed_by_entering_a_valid_path() {
+        dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
+        clickOn("#chooser");
+        sleep(200);
+        assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
+        
+        clickOn("#fileNameFilter");
+        write("TestData/SomeFiles/");
+        press(KeyCode.ENTER);
+        
+        sleep(200);
+        
+        assertNotNull(model.currentSearchPath().get());
+        assertEquals(Paths.get("TestData/SomeFiles").toAbsolutePath(), model.currentSearchPath().get());
+    }
+    
+    @Test
+    @EnabledOnOs({OS.WINDOWS})
+    void that_directory_can_be_changed_when_entered_path_has_existing_parent_windows() {
+        dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
+        clickOn("#chooser");
+        sleep(200);
+        assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
+        
+        clickOn("#fileNameFilter");
+        write("C:\\ThisFolderShouldNotExist");
+        press(KeyCode.ENTER);
+        
+        sleep(200);
+        
+        assertNotNull(model.currentSearchPath().get());
+        assertEquals(Paths.get("C:\\").toAbsolutePath(), model.currentSearchPath().get());
+    }
+    
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void that_directory_can_be_changed_when_entered_path_has_existing_parent_other() {
+        dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
+        clickOn("#chooser");
+        sleep(200);
+        assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
+        
+        clickOn("#fileNameFilter");
+        write("/usr/someNotExistingDir/");
+        press(KeyCode.ENTER);
+        
+        sleep(200);
+        
+        assertNotNull(model.currentSearchPath().get());
+        assertEquals(Paths.get("/bin/").toAbsolutePath(), model.currentSearchPath().get());
+    }
+    
+    @Test
+    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    void that_directory_and_selection_do_not_change_on_enter_empty_filtertext() {
+        Path searchPath = Paths.get("TestData/SomeFiles/TestFile1.txt");
+        clickOn("#fileNameFilter");
+        write(searchPath.toString());
+        press(KeyCode.ENTER);
+
+        sleep(200);
+
+        ListView<?> list = lookup("#listOfFiles").query();
+        assertEquals(1, list.getItems().size());
+        assertEquals(Paths.get("TestData/SomeFiles/").toAbsolutePath(), model.currentSearchPath().get());
+
+        write("");
+        press(KeyCode.ENTER);
+
+        list = lookup("#listOfFiles").query();
+        assertEquals(1, list.getItems().size());
+        assertEquals(Paths.get("TestData/SomeFiles/").toAbsolutePath(), model.currentSearchPath().get());
+    }
+    
+    @Test
+    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    void that_file_can_selected_by_entering_a_valid_path() {
+        dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
+        clickOn("#chooser");
+        sleep(200);
+        assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
+        
+        clickOn("#fileNameFilter");
+        write("TestData/SomeFiles/TestFile1.txt");
+        press(KeyCode.ENTER);
+        
+        sleep(200);
+        
+        Path selection = model.getSelectedFile();
+        assertEquals(Paths.get("TestData/SomeFiles/TestFile1.txt").toAbsolutePath(), selection);
+    }
+    
     @Test
     @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
     void that_selection_is_accepted_with_doubleclick() {

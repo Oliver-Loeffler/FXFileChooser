@@ -264,7 +264,7 @@ final class FileChooserController implements Initializable {
         }
 
         if (KeyCode.ENTER.equals(keyEvent.getCode())) {
-        	handlePossiblePastedPath();
+            handlePossiblePastedPath();
         }
     }
 
@@ -272,15 +272,15 @@ final class FileChooserController implements Initializable {
         Path pastedPath = this.model.pastedPathProperty().get();
         Path updatedPath = pastedPath;
         if ("..".equals(String.valueOf(pastedPath))) {
-        	Path current = model.currentSearchPath().getValue();
-        	if (null != current) {
-        		Path parent = current.getParent();
-        		if (null != parent) {
-        			updatedPath = parent;
-        		}
-        	}
+            Path current = model.currentSearchPath().getValue();
+            if (null != current) {
+                Path parent = current.getParent();
+                if (null != parent) {
+                    updatedPath = parent;
+                }
+            }
         }
-        
+
         if (null != updatedPath) {
             acceptPathAndSelectFileIfValid(updatedPath);
         } else {
@@ -350,9 +350,9 @@ final class FileChooserController implements Initializable {
     }
 
     private void acceptPathAndSelectFileIfValid(Path pastedPath) {
-    	Path normalized  = pastedPath.normalize()
-    			                     .toAbsolutePath()
-    			                     .normalize();
+        Path normalized = pastedPath.normalize()
+                                    .toAbsolutePath()
+                                    .normalize();
         model.getUpdateService().restartIn(normalized);
         this.fileNameFilter.setText("");
         if (Files.exists(normalized)) {

@@ -33,6 +33,7 @@ import javafx.scene.control.TreeItem;
  * TODO: Tree shall be updated as lazy and late as possible.
  * 
  */
+
 public class DirectoryTreeItem extends TreeItem<String> {
 
     private String fullPath;
@@ -42,9 +43,9 @@ public class DirectoryTreeItem extends TreeItem<String> {
     }
 
     private boolean isDirectory;
-    
+
     private boolean isDrive;
-        
+
     private int size = 0;
 
     public boolean isDirectory() {

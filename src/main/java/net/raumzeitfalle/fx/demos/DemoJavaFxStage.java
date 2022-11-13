@@ -44,18 +44,14 @@ public class DemoJavaFxStage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Logger logger = Logger.getLogger(DemoJavaFxStage.class.getSimpleName());
 
         PathFilter all = PathFilter.acceptAllFiles("all files");
-
         PathFilter exe = PathFilter.forFileExtension("Program", "exe");
         PathFilter xml = PathFilter.forFileExtension("XML", "xml");
         PathFilter txt = PathFilter.forFileExtension("Text", "txt");
         PathFilter xlsx = PathFilter.forFileExtension("Excel 2007", "xlsx");
-
         PathFilter combined = xlsx.combine(txt).combine(xml).combine(exe);
-
         PathFilter na0 = PathFilter.forFileExtension(".na0 (LMS binary files)", "n[a-z]\\d");
 
         Path local = Paths.get("./");
@@ -82,22 +78,20 @@ public class DemoJavaFxStage extends Application {
             Optional<Path> selection = fcDefault.showOpenDialog(primaryStage);
             logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
-        
-        
+
         PathFilter[] filters = new PathFilter[] {all, xml, xlsx, na0, txt, exe, combined};
         FXFileChooserStage fcDarkNonModal = FXFileChooserStage.create(Skin.DARK, local, filters);
         fcDarkNonModal.initModality(Modality.NONE);
 
         Button buttonDarkNonModal = new Button("FXFileChooserStage (Skin.DARK, Modality.NONE)");
         buttonDarkNonModal.setOnAction(e -> {
-        	if (fcDarkNonModal.isShowing()) {
-        		e.consume();
-        		return;
-        	}
+            if (fcDarkNonModal.isShowing()) {
+                e.consume();
+                return;
+            }
             Optional<Path> selection = fcDarkNonModal.showOpenDialog(primaryStage);
             logger.log(Level.INFO, selection.map(String::valueOf).orElse("Nothing selected"));
         });
-        
 
         FileChooser standardFileChooser = new FileChooser();
         Button standardFileChooserButton = new Button("JavaFX standard file chooser");
@@ -107,8 +101,11 @@ public class DemoJavaFxStage extends Application {
         Button standardDirectoryChooserButton = new Button("JavaFX standard directory chooser");
         standardDirectoryChooserButton.setOnAction(event -> standardDirectoryChooser.showOpenDialog(primaryStage));
 
-        VBox vbox = new VBox(button, buttonDefault, buttonDarkNonModal, 
-        		             standardDirectoryChooserButton, standardFileChooserButton);
+        VBox vbox = new VBox(button, 
+                             buttonDefault, 
+                             buttonDarkNonModal, 
+                             standardDirectoryChooserButton, 
+                             standardFileChooserButton);
 
         Scene mainScene = new Scene(vbox);
         primaryStage.setScene(mainScene);

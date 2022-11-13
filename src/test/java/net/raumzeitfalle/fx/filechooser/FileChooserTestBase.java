@@ -33,7 +33,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-abstract class FileChooserStageTestBase extends ApplicationTest {
+abstract class FileChooserTestBase extends ApplicationTest {
 
     protected Stage primaryStage;
 

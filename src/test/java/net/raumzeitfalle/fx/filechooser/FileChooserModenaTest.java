@@ -21,16 +21,14 @@ package net.raumzeitfalle.fx.filechooser;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import javafx.scene.Parent;
-import javafx.scene.input.MouseButton;
 
-class FileChooserStageDarkTest extends FileChooserStageTestBase {
+class FileChooserModenaTest extends FileChooserTestBase {
 
     @TempDir
     public static Path emptyDirectory;
@@ -44,7 +42,7 @@ class FileChooserStageDarkTest extends FileChooserStageTestBase {
 
     @Override
     protected Skin getSkin() {
-        return Skin.DARK;
+        return Skin.MODENA;
     }
 
     @Override
@@ -64,13 +62,11 @@ class FileChooserStageDarkTest extends FileChooserStageTestBase {
      * TODO: User Kleopatra asked for a minimal reproducible example, I think this
      * will be doable.
      */
-
     @Test
     void viewCanBeLoaded() {
         assertDoesNotThrow(() -> lookup("#okButton").query());
-        clickOn("#refreshButton", MouseButton.PRIMARY);
         Parent root = primaryStage.getScene().getRoot();
-        captureImage(root, "ScreenshotDarkTheme.png");
+        captureImage(root, "ScreenshotModenaTheme.png");
     }
 
 }
