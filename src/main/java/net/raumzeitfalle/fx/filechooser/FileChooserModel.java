@@ -189,8 +189,8 @@ final class FileChooserModel {
 
     private Predicate<IndexedPath> createManualListFilter(String criterion) {
         String trimmed = criterion.trim();
-        String corrected = removeInvalidChars(trimmed);
         String withAsterisks = removeInvalidCharsExceptAsterisk(trimmed);
+        String corrected = withAsterisks.replace("*", "");
         int firstAsterisk = withAsterisks.indexOf('*');
         int lastAsterisk = withAsterisks.lastIndexOf('*');
         if (withAsterisks.endsWith("*") && !withAsterisks.startsWith("*")) {
@@ -246,15 +246,6 @@ final class FileChooserModel {
         String corrected = text;
         while(corrected.contains(dbl)) {
             corrected = corrected.replace(dbl, single);
-        }
-        return corrected;
-    }
-
-    private String removeInvalidChars(String criterion) {
-        char[] invalidChars = new char[] {'"', '?', '<', '>', '|', ':', '*'};
-        String corrected = criterion;
-        for (char invalid : invalidChars) {
-            corrected = corrected.replace(String.valueOf(invalid), "");
         }
         return corrected;
     }

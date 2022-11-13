@@ -287,3 +287,13 @@ public class DemoDirectoryChooser extends Application {
     }
 }
 ```
+
+## Configuration Options
+
+In some cases a non-programmatic configuration can be quite helpful. The configuration must be provided in the final packaged JAR as a resource in the default package (JAR root). As with version `0.0.9` following configuration options exist:
+
+| Properties file |  Property option | Default and Description |
+|-|-|-|
+| `directorychooser.properties` | `directory.chooser.icon.size` | Configures the size of directory and drive icons (24px by default) |
+| `filechooser.properties`     | `directory.chooser.icon.size` | Configures the size of icons in file chooser (usually 32px) |
+| `swingfilechooser.properties` | `use.javafx.platform.directory.chooser`` | Configures if the JavaFX platform directory chooser is used or not. Defaults to false |
