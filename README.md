@@ -238,7 +238,7 @@ One can abort folder scanning by double click on the progress indicator. If path
 
 Already explored folders will be marked with a `+` sign and presumably large folders will receive a `XL` tag. In case of large folders (> 1000 items) the directory chooser will ask the user before running indexing.
 
-```
+```java
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
