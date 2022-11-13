@@ -348,7 +348,7 @@
         <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
         <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
         <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
-        <tag>jdk9</tag>
+        <tag>0.0.9</tag>
     </scm>
 
     <licenses>
