@@ -225,7 +225,7 @@ public class DirectoryChooserController implements Initializable {
             alert.setHeaderText("Scanning for subdirs may take a while!");
             alert.setContentText(String.format("This directory holds %s items.",Integer.toString(item.size())));
             Optional<ButtonType> userResponse = alert.showAndWait();
-            if (userResponse.get() == ButtonType.CANCEL) {
+            if (userResponse.isPresent() && userResponse.get() == ButtonType.CANCEL) {
                 return;
             }
         }

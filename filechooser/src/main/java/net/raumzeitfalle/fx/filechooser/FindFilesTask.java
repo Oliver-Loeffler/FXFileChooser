@@ -78,7 +78,7 @@ final class FindFilesTask extends Task<Integer> {
                 // formerly: break;
             }
             if (f % progressIntervall == 0) {
-                updateProgress(f + 1, files.length);
+                updateProgress(f + 1L, files.length);
             }
             if (files[f].isFile()) {
                 buffer.update(files[f].toPath());

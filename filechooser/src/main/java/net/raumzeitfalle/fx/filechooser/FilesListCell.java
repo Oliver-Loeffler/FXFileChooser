@@ -43,8 +43,7 @@ class FilesListCell extends ListCell<IndexedPath> {
     }
 
     private void updateView() {
-        if (getItem() != null && getItem() != null) {
-
+        if (getItem() != null) {
             GridPane gridPane = new GridPane();
             gridPane.getStyleClass().add(FILE_ICON_LABEL);
 
@@ -74,7 +73,6 @@ class FilesListCell extends ListCell<IndexedPath> {
             GridPane.setHgrow(date, Priority.NEVER);
             
             setGraphic(gridPane);
-            
         } else {
             setText(null);
             setGraphic(null);
