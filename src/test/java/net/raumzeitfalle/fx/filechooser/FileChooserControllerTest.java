@@ -115,11 +115,13 @@ class FileChooserControllerTest extends FxTestTemplate {
         Scene scene = new Scene(view, 700, 500);
         stage.setScene(scene);
         stage.show();
+        sleep(300);
     }
 
     @AfterEach
     void closeStage() throws Exception {
         Invoke.andWait(()->primaryStage.close());
+        sleep(60);
     }
 
     @Test
