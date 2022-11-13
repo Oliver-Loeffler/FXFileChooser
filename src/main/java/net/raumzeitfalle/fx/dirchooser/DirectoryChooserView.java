@@ -32,9 +32,8 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 /**
  * Creates a Directory Chooser control.
  * 
- * @deprecated
- * As this class is not compatible with JavaFX Scene Builder, this is going to be removed in later
- * versions of FXFileChhooser.
+ * @deprecated As this class is not compatible with JavaFX Scene Builder, this is going to be
+ *             removed in later versions of FXFileChhooser.
  */
 @Deprecated
 public class DirectoryChooserView extends AnchorPane {
@@ -45,7 +44,7 @@ public class DirectoryChooserView extends AnchorPane {
      * Creates a new {@link DirectoryChooserView} with the given {@link Skin}.
      * 
      * @param skin {@link Skin}, controls the appearance of the control
-     * @throws IOException
+     * @throws IOException in case of FXMLLoader failing to read the required FXML file.
      */
     @Deprecated
     public DirectoryChooserView(Skin skin) throws IOException {
@@ -80,7 +79,7 @@ public class DirectoryChooserView extends AnchorPane {
     public void onCancel(Runnable action) {
         controller.setOnCancel(action);
     }
-    
+
     public void shutdown() {
         controller.shutdown();
     }

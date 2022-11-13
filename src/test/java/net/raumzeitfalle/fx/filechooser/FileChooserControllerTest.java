@@ -90,7 +90,7 @@ class FileChooserControllerTest extends FxTestTemplate {
         controller = new FileChooserController(model, dirChooser, () -> stage.close(), FileChooserViewOption.STAGE, null);
 
         Class<?> thisClass = getClass();
-        String fileName = "FileChooserView.fxml";
+        String fileName = "FileChooser.fxml";
         URL resource = thisClass.getResource(fileName);
         FXMLLoader loader = new FXMLLoader(resource);
         loader.setController(controller);
@@ -99,7 +99,7 @@ class FileChooserControllerTest extends FxTestTemplate {
         try {
             view = loader.load();
         } catch (IOException e) {
-            Label errorLabel = new Label("Could not load FileChooserView.");
+            Label errorLabel = new Label("Could not load FileChooser.");
             errorLabel.setTextFill(Color.WHITE);
             StackPane pane = new StackPane();
             Rectangle rect = new Rectangle();
