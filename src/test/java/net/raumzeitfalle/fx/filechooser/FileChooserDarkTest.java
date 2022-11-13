@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -50,6 +51,11 @@ class FileChooserDarkTest extends FileChooserTestBase {
     @Override
     protected Path getStartDirectory() {
         return emptyDirectory;
+    }
+
+    @AfterEach
+    void closeStage() throws Exception {
+        Invoke.andWait(()->primaryStage.close());
     }
 
     /*

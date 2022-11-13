@@ -14,14 +14,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <java.version>1.8</java.version>
+        <java.version>1.9</java.version>
 
         <junit.platform.version>1.9.1</junit.platform.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
         <awaitility.version>4.2.0</awaitility.version>
 
-        <testfx.version>4.0.8-alpha</testfx.version>
-        <testfx.monocle.version>8u76-b04</testfx.monocle.version> <!-- jdk-9+181 for Java 9 -->
+        <testfx.version>4.0.9-alpha</testfx.version>
+        <testfx.monocle.version>jdk-9+181</testfx.monocle.version>
 
         <maven.jacoco.plugin.version>0.8.8</maven.jacoco.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>

@@ -51,6 +51,7 @@ class FindFilesTaskTest extends FxTestTemplate {
 
     @BeforeEach
     void prepareConsumer() {
+        sleep(300);
         consumerCollection = FXCollections.observableArrayList();
         consumerCollection.add(IndexedPath.valueOf(Paths.get("/notexisting")));
     }

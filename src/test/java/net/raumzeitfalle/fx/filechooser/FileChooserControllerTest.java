@@ -115,13 +115,13 @@ class FileChooserControllerTest extends FxTestTemplate {
         Scene scene = new Scene(view, 700, 500);
         stage.setScene(scene);
         stage.show();
-        sleep(300);
+        sleep(30);
     }
 
     @AfterEach
     void closeStage() throws Exception {
         Invoke.andWait(()->primaryStage.close());
-        sleep(60);
+        sleep(30);
     }
 
     @Test
@@ -370,26 +370,17 @@ class FileChooserControllerTest extends FxTestTemplate {
 
     @Test
     @EnabledOnOs({ OS.WINDOWS, OS.MAC })
-    void that_pathfilters_from_file_type_menu_are_applied() {
-        dirChooser.setDirectory(Paths.get("./TestData/SomeFiles"));
-        clickOn("#chooser");
-
-        ListView<?> list = lookup("#listOfFiles").query();
-
+    void that_pathfilter_for_XML_from_menu_is_applied() {
+        sleep(200);
+        dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
         MenuButton filterMenu = lookup("#fileExtensionFilter").query();
         clickOn(filterMenu);
         clickOn("XML");
-        sleep(200);
-
-        assertEquals(1, list.getItems().size(), "there is 1 file which matches the filter 'xml'");
-
-        clickOn(filterMenu);
-        clickOn("all files");
-        sleep(200);
-
-        assertEquals(11, list.getItems().size(), "for filter 'all files' 11 files are expected.");
+        ListView<?> list = lookup("#listOfFiles").query();
+        assertEquals(3, list.getItems().size(), "there is 3 file which matches the filter 'xml'");
     }
 
+    @Test
     @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
     void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
         Button okay = lookup("#okButton").query();
