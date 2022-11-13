@@ -353,7 +353,7 @@
         <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
         <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
         <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
-        <tag>v0.0.7</tag>
+        <tag>v0.0.8</tag>
     </scm>
 
     <licenses>
