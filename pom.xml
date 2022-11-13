@@ -72,9 +72,6 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <excludes>
-                        <exclude>module-info.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -166,9 +163,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <sourceFileExcludes>module-info.java</sourceFileExcludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

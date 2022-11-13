@@ -18,7 +18,7 @@
  * #L%
  */
 
-module filechooser {
+module net.raumzeitfalle.fxfilechooser {
     requires java.desktop;
     requires java.logging;
     requires javafx.graphics;
