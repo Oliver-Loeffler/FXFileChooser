@@ -48,7 +48,7 @@ enum DirectoryIcons {
     private static int iconSize = 24;
     private static double paneSize = iconSize*1.5;
     
-    static final String PROPERTIES_FILE = "directorychooser.properties";
+    static final String PROPERTIES_FILE = "net/raumzeitfalle/directorychooser.properties";
     static final String PROPERTY_ICON_SIZE = "directory.chooser.icon.size";
     
     static {

@@ -45,7 +45,7 @@ enum FileIcons {
     private static int iconSize = 32;
     private static double paneSize = iconSize*1.5;
     
-    static final String PROPERTIES_FILE = "filechooser.properties";
+    static final String PROPERTIES_FILE = "net/raumzeitfalle/filechooser.properties";
     static final String PROPERTY_ICON_SIZE = "file.chooser.icon.size";
     
     static {

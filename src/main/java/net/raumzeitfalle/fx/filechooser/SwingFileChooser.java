@@ -62,7 +62,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      */
     public static final int APPROVE_OPTION = 0;
 
-    static final String PROPERTIES_FILE = "swingfilechooser.properties";
+    static final String PROPERTIES_FILE = "net/raumzeitfalle/swingfilechooser.properties";
     static final String PROPERTY_USE_JAVAFX_DIRCHOOSER = "use.javafx.platform.directory.chooser";
 
     private static boolean useJavaFXPlatformDirectoryChooser = false;
