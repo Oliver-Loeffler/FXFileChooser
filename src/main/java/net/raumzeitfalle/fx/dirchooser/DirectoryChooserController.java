@@ -444,4 +444,30 @@ public class DirectoryChooserController implements Initializable {
         }
         return new File(value);
     }
+
+    public void hideChooseFilesButton() {
+        setUseChooseFilesButton(false);
+    }
+
+    public void showChooseFilesButton() {
+        setUseChooseFilesButton(true);
+    }
+
+    public void setUseChooseFilesButton(boolean toggle) {
+        this.chooseFiles.setManaged(toggle);
+        this.chooseFiles.setVisible(toggle);
+    }
+    
+    public void hideCancelButton() {
+        setUseCancelButton(false);
+    }
+
+    public void showCancelButton() {
+        setUseCancelButton(true);
+    }
+
+    public void setUseCancelButton(boolean toggle) {
+        this.cancelButton.setManaged(toggle);
+        this.cancelButton.setVisible(toggle);
+    }
 }

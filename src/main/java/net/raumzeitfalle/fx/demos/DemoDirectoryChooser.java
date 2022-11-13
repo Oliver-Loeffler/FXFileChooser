@@ -19,24 +19,36 @@
  */
 package net.raumzeitfalle.fx.demos;
 
+import java.nio.file.Path;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DemoDirectoryChooser extends Application {
-
     public static void main(String[] args) {
         Application.launch();
     }
 
-    private DirectoryChooser view; 
+    private DirectoryChooser dirChooser;
+    
+    private Scene scene;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        view = new DirectoryChooser(Skin.DARK);
-        Scene scene = new Scene(view);
+        dirChooser = new DirectoryChooser(Skin.DARK);
+        dirChooser.useCancelButtonProperty().setValue(true);
+        dirChooser.onSelect(()->{
+            Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+            showMessage("Selected:", selectedDir.normalize().toAbsolutePath().toString());
+        });
+        dirChooser.onCancel(()->{
+            showMessage("Cancelled:", "One can hide the cancel button if not needed.");
+        });
+        scene = new Scene(dirChooser);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
         primaryStage.show();
@@ -44,6 +56,15 @@ public class DemoDirectoryChooser extends Application {
 
     @Override
     public void stop() {
-        view.shutdown();
+        dirChooser.shutdown();
+    }
+
+    private void showMessage(String action, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initOwner(scene.getWindow());
+        alert.setTitle("DirectoryChooser");
+        alert.setHeaderText(action);
+        alert.setContentText(message);
+        alert.show();
     }
 }

@@ -29,6 +29,8 @@ import java.util.function.Consumer;
 import javafx.beans.NamedArg;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
@@ -43,6 +45,10 @@ import net.raumzeitfalle.fx.filechooser.Skin;
 public class DirectoryChooser extends AnchorPane {
 
     private final DirectoryChooserController controller;
+
+    private final BooleanProperty useChooseFileButtonProperty;
+    
+    private final BooleanProperty useCancelButtonProperty;
 
     /**
      * Creates a new JavaFX based directory chooser which. This is not the JavaFX platform specific
@@ -79,6 +85,24 @@ public class DirectoryChooser extends AnchorPane {
         AnchorPane.setTopAnchor(view, 0.0);
         AnchorPane.setBottomAnchor(view, 0.0);
         Skin.applyTo(this, skin);
+
+        this.controller.hideChooseFilesButton();
+        this.useChooseFileButtonProperty = new SimpleBooleanProperty(false);
+        this.useChooseFileButtonProperty.addListener((obs,prev,next)->{
+            if (next == prev) {
+                return;
+            }
+            this.controller.setUseChooseFilesButton(next);
+        });
+        
+        this.controller.hideCancelButton();
+        this.useCancelButtonProperty = new SimpleBooleanProperty(false);
+        this.useCancelButtonProperty.addListener((obs,prev,next)->{
+            if (next == prev) {
+                return;
+            }
+            this.controller.setUseCancelButton(next);
+        });
     }
 
     private VBox handleErrorOnLoad(String fileName, URL resource, Exception e) {
@@ -97,6 +121,14 @@ public class DirectoryChooser extends AnchorPane {
 
     public ReadOnlyObjectProperty<Path> selectedDirectoryProperty() {
         return controller.selectedDirectoryProperty();
+    }
+
+    public BooleanProperty useChooseFileButtonProperty() {
+        return this.useChooseFileButtonProperty;
+    }
+
+    public BooleanProperty useCancelButtonProperty() {
+        return this.useCancelButtonProperty;
     }
 
     public void onSelect(Runnable action) {
@@ -139,6 +171,8 @@ public class DirectoryChooser extends AnchorPane {
             this.dirChooser = new DirectoryChooser();
             this.fileChooser.getChildren().add(dirChooser);
             this.dirChooser.setEnabled(false);
+            this.dirChooser.useChooseFileButtonProperty.setValue(true);
+            this.dirChooser.useCancelButtonProperty.setValue(true);
         }
 
         /**

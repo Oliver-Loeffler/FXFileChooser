@@ -38,7 +38,8 @@ public class DemoFxStage extends Application {
     public void start(Stage primaryStage) throws Exception {
         Button button = new Button("Show File Chooser");
         FXFileChooserStage fc = FXFileChooserStage.create(Skin.DARK);
-        button.setOnAction(evt -> fc.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+        button.setOnAction(evt -> fc.showOpenDialog(primaryStage)
+                                    .ifPresent(this::showSelection));
 
         Scene scene = new Scene(button);
         primaryStage.setScene(scene);

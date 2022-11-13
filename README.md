@@ -152,20 +152,30 @@ public class DemoFxDialog extends Application {
 
 ![Swing version with Filter](pages/OSX_JavaFX_Dialog.png)
 
-
-## A version with a completely customizable stage
+## A customizable version with its own stage
 
 ```java
-public class FxStageDemo extends Application  {
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import net.raumzeitfalle.fx.filechooser.FXFileChooserStage;
+import net.raumzeitfalle.fx.filechooser.Skin;
+
+import java.nio.file.Path;
+
+public class DemoFxStage extends Application {
     public static void main(String[] args) {
         Application.launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Button button = new Button("Show File Chooser Stage");
+        Button button = new Button("Show File Chooser");
         FXFileChooserStage fc = FXFileChooserStage.create(Skin.DARK);
-        button.setOnAction(evt-> fc.showOpenDialog(primaryStage).ifPresent(this::showSelection));
+        button.setOnAction(evt -> fc.showOpenDialog(primaryStage)
+                                    .ifPresent(this::showSelection));
 
         Scene scene = new Scene(button);
         primaryStage.setScene(scene);
@@ -182,3 +192,98 @@ public class FxStageDemo extends Application  {
 }
 ```
 
+
+## Using FileChooser as a control
+
+As with version `0.0.9` the FileChooser can be used as a control within any scene. There is no need to have a separate window anymore. However, functionality is not yet finalized. Feel free to experiment. I'm looking forward to your feedback.
+
+```java
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import net.raumzeitfalle.fx.filechooser.DirectoryChooserOption;
+import net.raumzeitfalle.fx.filechooser.FileChooser;
+import net.raumzeitfalle.fx.filechooser.Skin;
+
+public class DemoFileChooser extends Application {
+
+    public static void main(String[] args) {
+        Application.launch();
+    }
+
+    private FileChooser fileChooser; 
+    
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        fileChooser = new FileChooser(Skin.DARK, DirectoryChooserOption.CUSTOM);
+        Scene scene = new Scene(fileChooser);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Demo");
+        primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        fileChooser.shutdown();
+    }
+}
+```
+
+
+## The new DirectoryChooser control
+
+There is also a new control named directory chooser. This is especially intended to be used on large volumes with many files and many folders. Folder scanning is executed on demand and progress is indicated per folder.
+
+One can abort folder scanning by double click on the progress indicator. If paths have been scanned, one can enter a path into the search field and the directory chooser will attempt to select the directory. The selection needs to be confirmed and accepted manually with click on okay.
+
+Already explored folders will be marked with a `+` sign and presumably large folders will receive a `XL` tag. In case of large folders (> 1000 items) the directory chooser will ask the user before running indexing.
+
+```
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
+import net.raumzeitfalle.fx.filechooser.Skin;
+
+public class DemoDirectoryChooser extends Application {
+    public static void main(String[] args) {
+        Application.launch();
+    }
+
+    private DirectoryChooser dirChooser;
+    
+    private Scene scene;
+    
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        dirChooser = new DirectoryChooser(Skin.DARK);
+        dirChooser.useCancelButtonProperty().setValue(true);
+        dirChooser.onSelect(()->{
+            Path selectedDir = dirChooser.selectedDirectoryProperty().get();
+            showMessage("Selected:", selectedDir.normalize().toAbsolutePath().toString());
+        });
+        dirChooser.onCancel(()->{
+            showMessage("Cancelled:", "One can hide the cancel button if not needed.");
+        });
+        scene = new Scene(dirChooser);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Demo");
+        primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        dirChooser.shutdown();
+    }
+
+    private void showMessage(String action, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initOwner(scene.getWindow());
+        alert.setTitle("DirectoryChooser");
+        alert.setHeaderText(action);
+        alert.setContentText(message);
+        alert.show();
+    }
+}
+```
