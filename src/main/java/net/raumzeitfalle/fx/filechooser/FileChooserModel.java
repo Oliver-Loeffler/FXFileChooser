@@ -168,7 +168,9 @@ final class FileChooserModel {
      */
     public void updateFilterCriterion(String criterion) {
         Predicate<IndexedPath> combined = createManualListFilter(criterion)
-                .and(indexedPath -> this.effectiveFilter.getPredicate().test(indexedPath.toString()));
+                                            .and(indexedPath -> this.effectiveFilter
+                                                                    .getPredicate()
+                                                                    .test(indexedPath.toString()));
         this.filteredPaths.setPredicate(combined);
     }
 
@@ -186,7 +188,35 @@ final class FileChooserModel {
     }
 
     private Predicate<IndexedPath> createManualListFilter(String criterion) {
-        String corrected = removeInvalidChars(criterion);
+        String trimmed = criterion.trim();
+        String corrected = removeInvalidChars(trimmed);
+        String withAsterisks = removeInvalidCharsExceptAsterisk(trimmed);
+        int firstAsterisk = withAsterisks.indexOf('*');
+        int lastAsterisk = withAsterisks.lastIndexOf('*');
+        if (withAsterisks.endsWith("*") && !withAsterisks.startsWith("*")) {
+            // starts with
+            if (corrected.length() > 0) {
+                return p -> null == corrected || corrected.isEmpty()
+                        || p.toString().toLowerCase().startsWith(corrected.toLowerCase());
+            }
+        } else if (withAsterisks.startsWith("*") && !withAsterisks.endsWith("*")) {
+            // ends with
+            if (corrected.length() > 0) {
+                return p -> null == corrected || corrected.isEmpty()
+                        || p.toString().toLowerCase().endsWith(corrected.toLowerCase());
+            }
+        } else if (firstAsterisk > 0 && lastAsterisk > 0 && firstAsterisk == lastAsterisk) {
+            // starts with & end with
+            if (withAsterisks.length() >= 3) {
+                String left = withAsterisks.substring(0, firstAsterisk);
+                String right = withAsterisks.substring(lastAsterisk+1);
+                return p -> null == corrected || corrected.isEmpty()
+                        || (p.toString().toLowerCase().startsWith(left) &&
+                                p.toString().toLowerCase().endsWith(right));
+            }
+        }
+
+        // contains
         return p -> null == corrected || corrected.isEmpty()
                 || p.toString().toLowerCase().contains(corrected.toLowerCase());
     }
@@ -200,6 +230,24 @@ final class FileChooserModel {
             this.effectiveFilter = combined;
         }
         updateFilterCriterion(text);
+    }
+
+    private String removeInvalidCharsExceptAsterisk(String criterion) {
+        char[] invalidChars = new char[] {'"', '?', '<', '>', '|', ':'};
+        String corrected = criterion;
+        for (char invalid : invalidChars) {
+            corrected = corrected.replace(String.valueOf(invalid), "");
+        }
+        return removeDoubles(corrected, "*");
+    }
+
+    private String removeDoubles(String text, String single) {
+        String dbl = single+single;
+        String corrected = text;
+        while(corrected.contains(dbl)) {
+            corrected = corrected.replace(dbl, single);
+        }
+        return corrected;
     }
 
     private String removeInvalidChars(String criterion) {
