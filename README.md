@@ -21,13 +21,13 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.8</version>
+  <version>0.0.9</version>
 </dependency>
 ```
 ### Dependency for Gradle `build.gradle`
 
 ```Groovy
-implementation 'net.raumzeitfalle.fx:filechooser:0.0.8'
+implementation 'net.raumzeitfalle.fx:filechooser:0.0.9'
 ```
 
 
