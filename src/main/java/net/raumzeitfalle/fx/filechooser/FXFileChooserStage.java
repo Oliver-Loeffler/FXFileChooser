@@ -22,6 +22,7 @@ package net.raumzeitfalle.fx.filechooser;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javafx.beans.binding.Bindings;
@@ -91,9 +92,12 @@ public class FXFileChooserStage extends Stage implements HideableView {
     private final FileChooserModel model;
 
     private FXFileChooserStage(FileChooserModel model, Skin skin) {
-        this.model = model;
-        FXDirectoryChooser dirChooser = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this);
-        FileChooser view = new FileChooser(dirChooser, this, model, skin, FileChooserViewOption.STAGE);
+        this(model, skin, DirectoryChooserOption.JAVAFX_PLATFORM);
+    }
+    
+    FXFileChooserStage(FileChooserModel model, Skin skin, DirectoryChooserOption dirChooserOption) {
+        this.model = Objects.requireNonNull(model);
+        FileChooser view = new FileChooser(this.model, skin, dirChooserOption, FileChooserViewOption.STAGE);
         Scene scene = new Scene(view);
         this.setScene(scene);
         StringBinding sb = Bindings.createStringBinding(() -> {
@@ -108,7 +112,6 @@ public class FXFileChooserStage extends Stage implements HideableView {
             }
             return "";
         }, model.currentSearchPath());
-
         this.titleProperty().bind(sb);
         initModality(Modality.APPLICATION_MODAL);
     }

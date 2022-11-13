@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
@@ -111,6 +112,30 @@ public class FileChooser extends StackPane {
         
         Skin.applyTo(this, this.skin);
     }
+    
+    FileChooser(@NamedArg("model") FileChooserModel model,
+                @NamedArg("skin") Skin skin, 
+                @NamedArg("directoryChooserOption") DirectoryChooserOption directoryChooserOption,
+                @NamedArg("viewOption") FileChooserViewOption viewOption) {
+        
+        this.model = Objects.requireNonNull(model);
+        
+        if (skin != null) {
+            this.skin = skin;
+        }
+
+        PathSupplier pathSupplier = null;
+        if (directoryChooserOption != null) {
+            pathSupplier = directoryChooserOption.apply(this);
+        } else {
+            pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
+        }
+
+        controller = new FileChooserController(this.model, pathSupplier, window, viewOption, dialog);
+        loadControl(controller);
+        Skin.applyTo(this, this.skin);
+    }
+    
 
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
@@ -146,8 +171,8 @@ public class FileChooser extends StackPane {
      *                              will be provided by the {@link FileChooserView}.
      * 
      */
-    public FileChooser(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
-            FileChooserViewOption fileChooserViewOption) {
+    FileChooser(PathSupplier pathSupplier, HideableView window, FileChooserModel model, 
+                Skin skin, FileChooserViewOption fileChooserViewOption) {
         this(pathSupplier, window, model, skin, fileChooserViewOption, null);
     }
 
@@ -189,8 +214,9 @@ public class FileChooser extends StackPane {
      *                              dialog where the {@link FileChooserView} is used within must be
      *                              known up front.
      */
-    public FileChooser(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
-            FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
+    FileChooser(PathSupplier pathSupplier, HideableView window, FileChooserModel model, 
+                Skin skin, FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
+
         this.window = window;
         this.model = model;
         this.skin = skin;

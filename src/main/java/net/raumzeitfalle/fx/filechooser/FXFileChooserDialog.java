@@ -48,7 +48,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         model.addOrRemoveFilter(filter);
     }
 
-    public static FXFileChooserDialog create(Skin skin, FileChooserModel model) throws IOException {
+    static FXFileChooserDialog create(Skin skin, FileChooserModel model) throws IOException {
         return new FXFileChooserDialog(skin, model);
     }
 

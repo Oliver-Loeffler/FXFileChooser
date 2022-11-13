@@ -19,12 +19,13 @@
  */
 
 module net.raumzeitfalle.fxfilechooser {
-    requires java.desktop;
     requires java.logging;
-    requires javafx.graphics;
     requires javafx.controls;
     requires javafx.swing;
-    requires javafx.fxml;
+
+    requires transitive java.desktop;
+    requires transitive javafx.graphics;
+    requires transitive javafx.fxml;
 
     exports net.raumzeitfalle.fx.filechooser;
     exports net.raumzeitfalle.fx.filechooser.locations;
