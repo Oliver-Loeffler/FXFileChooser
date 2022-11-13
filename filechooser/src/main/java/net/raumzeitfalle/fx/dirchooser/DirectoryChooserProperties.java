@@ -74,7 +74,7 @@ public enum DirectoryChooserProperties {
                 properties.load(fis); 
             } catch (Exception error) {
                 String message = String.format("Failed to DirectoryChooserProperties from %s (via resource: %s)",
-                                        new Object[] {PROPERTIES_FILE, resource});
+                                        PROPERTIES_FILE, resource);
                 Logger.getLogger(DirectoryChooserProperties.class.getName())
                       .log(Level.WARNING, message, error);
             }

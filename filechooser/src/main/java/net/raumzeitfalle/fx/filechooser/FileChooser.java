@@ -255,7 +255,7 @@ public class FileChooser extends StackPane {
     private VBox handleErrorOnLoad(String fileName, URL resource, Object controller, Exception e) {
         StringWriter errors = new StringWriter();
         PrintWriter writer = new PrintWriter(errors);
-        writer.println("FXML: " + String.valueOf(fileName));
+        writer.println("FXML: " + fileName);
         writer.println("Controller: " + controller.getClass().getName());
         e.printStackTrace(writer);
         TextArea text = new TextArea();

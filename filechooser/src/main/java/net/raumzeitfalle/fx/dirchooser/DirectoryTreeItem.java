@@ -83,14 +83,13 @@ public class DirectoryTreeItem extends TreeItem<String> {
     public void configureIcon() {
         if (isExpanded()) {
             configureExpandedIcon();
-            return;
         } else {
             configureCollapsedIcon();
         }
     }
 
     private void configureCollapsedIcon() {
-        if (isDrive && getChildren().size() > 0) {
+        if (isDrive && !getChildren().isEmpty()) {
             this.setGraphic(DirectoryIcons.DRIVE_PLUS.get());
         } else if (isDrive && size == 0) {
             this.setGraphic(DirectoryIcons.DRIVE_EMPTY.get());
@@ -104,7 +103,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
             this.setGraphic(DirectoryIcons.EMPTY.get());
         } else if (getChildren().size() > 1000) {
             this.setGraphic(DirectoryIcons.CLOSED_XL.get());
-        } else if (getChildren().size() > 0) {
+        } else if (!getChildren().isEmpty()) {
             this.setGraphic(DirectoryIcons.CLOSED_PLUS.get());
         } else {
             this.setGraphic(DirectoryIcons.CLOSED.get());
@@ -131,10 +130,7 @@ public class DirectoryTreeItem extends TreeItem<String> {
         if (fullPath.charAt(1) != ':') {
             return false;
         }
-        if (fullPath.charAt(2) == '\\' || fullPath.charAt(2) == '/') {
-            return true;
-        }
-        return false;
+        return fullPath.charAt(2) == '\\' || fullPath.charAt(2) == '/';
     }
 
     private void handleExpansion(Event e) {

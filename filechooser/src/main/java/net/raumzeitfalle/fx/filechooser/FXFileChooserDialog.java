@@ -54,14 +54,14 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
 
     private final FileChooserModel model;
 
-    private final double minWidth = 700;
+    private static final double minWidth = 700;
 
-    private final double minHeight = 550;
+    private static final double minHeight = 550;
 
     // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well
     // but keep old API alive for JavaFX
     // TODO: Make CSS file externally configurable
-    private FXFileChooserDialog(Skin skin, FileChooserModel fileChooserModel) throws IOException {
+    private FXFileChooserDialog(Skin skin, FileChooserModel fileChooserModel) {
         this.model = fileChooserModel;
         Skin.applyToDialog(this, skin);
 

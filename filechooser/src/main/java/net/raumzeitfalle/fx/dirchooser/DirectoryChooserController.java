@@ -80,7 +80,7 @@ public class DirectoryChooserController implements Initializable {
     @FXML
     private TextField goToTextField;
 
-    private ObjectProperty<Path> selectedDirectoryProperty = new SimpleObjectProperty<Path>(null);
+    private ObjectProperty<Path> selectedDirectoryProperty = new SimpleObjectProperty<>(null);
 
     private DirectoryTreeItem root;
 
@@ -356,8 +356,9 @@ public class DirectoryChooserController implements Initializable {
     private void updateSharesIfNeeded(DirectoryTreeItem share) {
         List<TreeItem<String>> knownShares = networkRoot.getChildren();
         Optional<DirectoryTreeItem> optionalShare = knownShares.stream()
-                .filter(h -> h.getValue().equalsIgnoreCase(share.getFullPath())).map(i -> (DirectoryTreeItem) i)
-                .findAny();
+                .filter(h -> h.getValue()
+                              .equalsIgnoreCase(share.getFullPath()))
+                              .map(DirectoryTreeItem.class::cast).findAny();
         if (!optionalShare.isPresent()) {
             Path path = Paths.get(share.getFullPath());
             File file = path.getRoot().toFile();
@@ -440,7 +441,7 @@ public class DirectoryChooserController implements Initializable {
     private File getPathFromText() {
         String value = goToTextField.getText().replace("\"", "");
         if (value.length() == 2 && value.charAt(1) == ':') {
-            return new File(value+"\\");
+            value = value+"\\";
         }
         return new File(value);
     }

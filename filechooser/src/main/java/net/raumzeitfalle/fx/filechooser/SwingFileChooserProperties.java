@@ -63,7 +63,7 @@ enum SwingFileChooserProperties {
                 properties.load(fis);
             } catch (Exception error) {
                 String message = String.format("Failed to read SwingFileChooserProperties size from %s (via resource: %s)",
-                                        new Object[] {PROPERTIES_FILE, resource});
+                                                PROPERTIES_FILE, resource);
                 Logger.getLogger(SwingFileChooserProperties.class.getName())
                       .log(Level.WARNING, message, error);
             }

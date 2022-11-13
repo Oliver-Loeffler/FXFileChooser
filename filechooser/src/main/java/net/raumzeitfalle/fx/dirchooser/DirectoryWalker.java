@@ -49,13 +49,6 @@ class DirectoryWalker {
         this.rootNode = new DirectoryTreeItem(start);
     }
 
-//    private DirectoryWalker(DirectoryWalker walker, Path subDir) {
-//        this.current = walker.current.resolve(subDir);
-//        this.maxDepth = walker.maxDepth;
-//        this.currentDepth = walker.currentDepth + 1;
-//        this.rootNode = new DirectoryTreeItem(current);
-//    }
-
     DirectoryTreeItem read(ReadOnlyBooleanProperty cancelled) {
         FileFilter ff = new FileFilter() {
             @Override
@@ -75,16 +68,6 @@ class DirectoryWalker {
             size += 1;
         }
         this.rootNode.setSize(size);
-//        try (DirectoryStream<Path> dirs = Files.newDirectoryStream(current, pathFilter)) {
-//            for (Path path : dirs) {
-//                if (cancelled.getValue())
-//                    break;
-//                addNode(path, cancelled);
-//            }
-//        } catch (IOException e) {
-//            Logger.getLogger(DirectoryWalker.class.getName())
-//                  .log(Level.WARNING, "error rading directory content", e);
-//        }
         return this.rootNode;
     }
 
@@ -93,7 +76,6 @@ class DirectoryWalker {
             if (cancelled.get())
                 return;
             DirectoryTreeItem leaf = new DirectoryTreeItem(path);
-//            DirectoryTreeItem leaf = new DirectoryWalker(this, path).read(cancelled);
             rootNode.getChildren().add(leaf);
             /*
              * TODO: Make the directory tree sortable 
@@ -107,18 +89,4 @@ class DirectoryWalker {
                               (a, b) -> a.getValue().compareToIgnoreCase(b.getValue()));
         }
     }
-
-//    private static Filter<Path> getPathFilter() {
-//        return DirectoryWalker::isDirectory;
-//    }
-
-//    private static boolean isDirectory(Path path) {
-//        /*
-//         * On Windows, testing for junctions requires testing for existence of the file
-//         * system entry. Here path.toFile().exists() does not work, whereas
-//         * Files.exists(path) works fine.
-//         */
-//        return path.toFile().isDirectory() && Files.exists(path);
-//    }
-
 }
