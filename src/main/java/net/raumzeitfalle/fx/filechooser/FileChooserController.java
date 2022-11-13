@@ -29,15 +29,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.stage.Modality;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
@@ -267,14 +264,25 @@ final class FileChooserController implements Initializable {
         }
 
         if (KeyCode.ENTER.equals(keyEvent.getCode())) {
-            handlePossiblePastedPath();
+        	handlePossiblePastedPath();
         }
     }
 
     private void handlePossiblePastedPath() {
         Path pastedPath = this.model.pastedPathProperty().get();
-        if (null != pastedPath) {
-            acceptPathAndSelectFileIfValid(pastedPath);
+        Path updatedPath = pastedPath;
+        if ("..".equals(String.valueOf(pastedPath))) {
+        	Path current = model.currentSearchPath().getValue();
+        	if (null != current) {
+        		Path parent = current.getParent();
+        		if (null != parent) {
+        			updatedPath = parent;
+        		}
+        	}
+        }
+        
+        if (null != updatedPath) {
+            acceptPathAndSelectFileIfValid(updatedPath);
         } else {
             tryManualInputPathSelection();
         }
@@ -342,11 +350,14 @@ final class FileChooserController implements Initializable {
     }
 
     private void acceptPathAndSelectFileIfValid(Path pastedPath) {
-        model.getUpdateService().restartIn(pastedPath);
+    	Path normalized  = pastedPath.normalize()
+    			                     .toAbsolutePath()
+    			                     .normalize();
+        model.getUpdateService().restartIn(normalized);
         this.fileNameFilter.setText("");
-        if (Files.exists(pastedPath)) {
-            if (Files.isRegularFile(pastedPath)) {
-                selectEnteredFileAndRequestOkayFocus(pastedPath);
+        if (Files.exists(normalized)) {
+            if (Files.isRegularFile(normalized)) {
+                selectEnteredFileAndRequestOkayFocus(normalized);
             }
         }
     }
