@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.HBox?>
@@ -12,31 +10,16 @@
 
 <VBox fx:id="directoryChooser" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox maxHeight="60.0" prefHeight="30.0" prefWidth="600.0">
+      <HBox maxHeight="45.0" prefHeight="45.0" prefWidth="600.0">
          <children>
-            <Button fx:id="chooseFiles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="156.0" text="Choose Files ..." />
-            <MenuButton fx:id="locationsMenu" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Locations">
-               <items>
-                  <MenuItem fx:id="usersHome" mnemonicParsing="false" text="Users Home" />
-               </items>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
+            <Button fx:id="chooseFiles" maxHeight="45.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Choose Files ...">
                <graphic>
                   <SVGPath content="m 21.885212,9.315891 -2.514723,4.526484 A 2.2221185,2.333224 0 0 1 17.45101,15 H 3.5633684 C 2.9202084,15 2.5194793,14.267443 2.8435418,13.684109 L 5.3582643,9.157625 A 2.2222227,2.3333334 0 0 1 7.2777785,8.0000001 H 21.16542 c 0.64316,0 1.043889,0.732557 0.719792,1.3158909 z M 7.2777785,6.8333329 H 18.66667 V 5.0833328 c 0,-0.9665101 -0.746181,-1.75 -1.666667,-1.75 H 11.444446 L 9.2222235,1 H 3.6666668 C 2.7461809,1 2.0000001,1.783489 2.0000001,2.75 V 12.887094 L 4.3985076,8.5697704 C 4.9935418,7.4986977 6.096841,6.8333329 7.2777785,6.8333329 Z" styleClass="tool-bar-icon" />
                </graphic>
-            </MenuButton>
-            <Button fx:id="refreshButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Refresh" HBox.hgrow="ALWAYS">
-               <graphic>
-                  <SVGPath content="M 11.238064,4.536129 C 10.35567,3.7099033 9.2105485,3.256992 7.9957099,3.2580645 5.8093955,3.2599808 3.9219356,4.7590564 3.4008023,6.838508 3.3628623,6.989883 3.2280038,7.0967742 3.0719431,7.0967742 H 1.4545201 C 1.242883,7.0967742 1.0821089,6.9046411 1.121258,6.6966451 1.7319798,3.4535 4.5793992,1 8,1 9.8755485,1 11.578778,1.7377097 12.835504,2.9386896 L 13.843589,1.9306049 C 14.270335,1.5038589 15,1.8061008 15,2.409625 v 3.7839234 c 0,0.374133 -0.303286,0.6774193 -0.67742,0.6774193 h -3.783922 c -0.6035246,0 -0.9057671,-0.7296653 -0.479021,-1.1564394 z M 1.6774193,9.129032 h 3.7839231 c 0.6035242,0 0.9057667,0.729666 0.4790205,1.15644 l -1.1784273,1.178427 c 0.8823947,0.826254 2.0276008,1.279165 3.2424674,1.278065 2.185186,-0.002 4.073408,-1.500033 4.594795,-3.580416 0.03793,-0.151375 0.172798,-0.2582657 0.328859,-0.2582657 h 1.617451 c 0.211637,0 0.372412,0.1921327 0.333263,0.4001287 C 14.26802,12.5465 11.420601,15 8,15 6.1244515,15 4.421222,14.26229 3.1644963,13.061311 l -1.008085,1.008084 C 1.7296653,14.496141 1,14.193899 1,13.590375 V 9.806452 C 1,9.432319 1.3032863,9.129032 1.6774193,9.129032 Z" styleClass="tool-bar-icon" />
-               </graphic>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
             </Button>
+            <TextField fx:id="goToTextField" maxHeight="1.7976931348623157E308" promptText="(go to path)" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
          </children>
       </HBox>
-      <TextField fx:id="goToTextField" minHeight="36.0" promptText="(go to path)" />
       <TreeView fx:id="directoryTree" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
       <TextField fx:id="selectedDirectory" editable="false" minHeight="36.0" promptText="(shows the selected directory)" VBox.vgrow="NEVER" />
       <HBox prefHeight="36.0" prefWidth="200.0" VBox.vgrow="NEVER">
