@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.raumzeitfalle.fx</groupId>
     <artifactId>filechooser</artifactId>
-    <version>0.0.10-jdk16-SNAPSHOT</version>
+    <version>0.0.10-jdk17-SNAPSHOT</version>
     <description>A custom file chooser with live filtering JavaFX and Swing</description>
     <inceptionYear>2017</inceptionYear>
     <organization>
@@ -15,7 +15,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <java.version>11</java.version>
-        <javafx.version>11.0.1</javafx.version>
+        <javafx.version>16</javafx.version>
         <junit.platform.version>1.9.1</junit.platform.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
         <awaitility.version>4.2.0</awaitility.version>
