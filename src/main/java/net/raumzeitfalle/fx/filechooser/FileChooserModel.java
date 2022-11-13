@@ -249,7 +249,7 @@ final class FileChooserModel {
 
     public void addOrRemoveFilter(PathFilter newFilter) {
         boolean wasRemoved = this.observablePathFilter
-                .removeIf(pf -> pf.getName().equalsIgnoreCase(newFilter.getName()));
+                                 .removeIf(pf -> pf.getName().equalsIgnoreCase(newFilter.getName()));
         if (!wasRemoved) {
             this.observablePathFilter.add(newFilter);
         }
