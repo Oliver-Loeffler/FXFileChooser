@@ -24,13 +24,17 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
 
+import javafx.beans.NamedArg;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 
 /**
  * A configurable file chooser for browsing directories with thousands of files. Some platform file
@@ -48,15 +52,15 @@ import javafx.scene.layout.VBox;
  * (which will also run in a separate task) and apply filtering at same time. Sorting and filtering
  * operations are available even during directory indexing.
  */
-public class FileChooser extends AnchorPane {
+public class FileChooser extends StackPane {
 
     private HideableView window = () -> this.getScene().getWindow();
     private FileChooserModel model = FileChooserModel.startingInUsersHome(PathFilter.acceptAllFiles("all files"));
-    private PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), () -> this.getScene().getWindow());
     private FileChooserViewOption viewOption = FileChooserViewOption.STAGE;
     private Skin skin = Skin.MODENA;
     private Dialog<Path> dialog = null;
-
+    private AnchorPane fileChooserView;
+    
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
      * live filtering searching by typing text into a file search bar. Creates a new file chooser with
@@ -68,10 +72,46 @@ public class FileChooser extends AnchorPane {
      * <li>the default JavaFX directory chooser is used</li>
      * </ul>
      * 
+     * @param skin {@link Skin} defines the visual appearance of the file chooser control
+     * 
      */
     public FileChooser() {
+        this(Skin.DARK, DirectoryChooserOption.JAVAFX_PLATFORM);
+    }
+    
+    /**
+     * Creates a file chooser view. This view only shows contents of a single directory where it allows
+     * live filtering searching by typing text into a file search bar. Creates a new file chooser with
+     * following default configuration:
+     * <ul>
+     * <li>the view assumes that it is operated from a JavaFX stage</li>
+     * <li>the model starts in user home directory accepting all files</li>
+     * <li>dark skin is used</li>
+     * <li>the default JavaFX directory chooser is used</li>
+     * </ul>
+     * 
+     * @param skin {@link Skin} defines the visual appearance of the file chooser control
+     * @param directoryChooserOption {@link DirectoryChooserOption} defines which directory chooser will be used.
+     * 
+     */
+    public FileChooser(@NamedArg("skin") Skin skin, 
+                       @NamedArg("directoryChooserOption") DirectoryChooserOption directoryChooserOption) {
+
+        if (skin != null) {
+            this.skin = skin;
+        }
+        
+        PathSupplier pathSupplier = null;
+        if (directoryChooserOption != null) {
+            pathSupplier = directoryChooserOption.apply(this);
+        } else {
+            pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
+        }
+        
         FileChooserController controller = new FileChooserController(model, pathSupplier, window, viewOption, dialog);
         loadControl(controller);
+        
+        Skin.applyTo(this, this.skin);
     }
 
     /**
@@ -153,14 +193,17 @@ public class FileChooser extends AnchorPane {
      */
     public FileChooser(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
             FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
-        this.pathSupplier = pathSupplier;
         this.window = window;
         this.model = model;
         this.skin = skin;
         this.viewOption = fileChooserViewOption;
-        FileChooserController controller = new FileChooserController(this.model, this.pathSupplier, this.window, this.viewOption,
-                this.dialog);
+        FileChooserController controller = new FileChooserController(this.model,
+                                                                     pathSupplier,
+                                                                     this.window,
+                                                                     this.viewOption,
+                                                                     this.dialog);
         loadControl(controller);
+        Skin.applyTo(this, this.skin);
     }
 
     private void loadControl(FileChooserController controller) {
@@ -175,12 +218,14 @@ public class FileChooser extends AnchorPane {
         } catch (Exception e) {
             view = handleErrorOnLoad(fileName, resource, controller, e);
         }
-        this.getChildren().add(view);
+
+        this.fileChooserView = new AnchorPane();
+        this.fileChooserView.getChildren().add(view);
         AnchorPane.setLeftAnchor(view, 0.0);
         AnchorPane.setRightAnchor(view, 0.0);
         AnchorPane.setTopAnchor(view, 0.0);
         AnchorPane.setBottomAnchor(view, 0.0);
-        Skin.applyTo(this, skin);
+        this.getChildren().add(fileChooserView);
     }
 
     private VBox handleErrorOnLoad(String fileName, URL resource, Object controller, Exception e) {
@@ -195,5 +240,22 @@ public class FileChooser extends AnchorPane {
         VBox box = new VBox();
         box.getChildren().add(text);
         return box;
+    }
+    
+    public ObjectProperty<Path> currentSearchPath() {
+        return this.model.currentSearchPath();
+    }
+    
+    public Window getWindow() {
+        return getScene().getWindow();
+    }
+    
+    public void setEnabled(boolean toggle) {
+        this.fileChooserView.setManaged(toggle);
+        this.fileChooserView.setVisible(toggle);
+    }
+
+    public void shutdown() {
+           
     }
 }
