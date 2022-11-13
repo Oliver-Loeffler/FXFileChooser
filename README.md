@@ -77,6 +77,8 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## Using the FileChooser with Swing
 
 ```java
+import java.awt.FlowLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -89,11 +91,12 @@ public class DemoSwing {
 
         JFrame frame = new JFrame("Window");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout(FlowLayout.LEFT));
         JButton showDialogButton = new JButton("show SwingFileChooser");
         frame.getContentPane().add(showDialogButton);
 
+        // SwingFileChooser.setUseJavaFxDirectoryChooser(true);
         SwingFileChooser fileChooser = SwingFileChooser.create(Skin.DARK);
-
         showDialogButton.addActionListener(l -> {
             int option = fileChooser.showOpenDialog(frame);
             if (option == SwingFileChooser.APPROVE_OPTION) {

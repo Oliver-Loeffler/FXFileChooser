@@ -23,16 +23,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -50,6 +45,10 @@ import net.raumzeitfalle.fx.filechooser.locations.Location;
  */
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
+    public static void setUseJavaFxDirectoryChooser(boolean toggle) {
+        SwingFileChooserProperties.setUseJavaFXDirectoryChooser(toggle);
+    }
+
     private static final long serialVersionUID = -5879082370711306802L;
 
     /**
@@ -61,27 +60,6 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      * Return value if approve (yes, ok) is chosen.
      */
     public static final int APPROVE_OPTION = 0;
-
-    static final String PROPERTIES_FILE = "swingfilechooser.properties";
-    static final String PROPERTY_USE_JAVAFX_DIRCHOOSER = "use.javafx.platform.directory.chooser";
-
-    private static boolean useJavaFXPlatformDirectoryChooser = false;
-
-    static {
-        URL resource = SwingFileChooser.class.getClassLoader().getResource(PROPERTIES_FILE);
-        if (resource != null) {
-            try (FileInputStream fis = new FileInputStream(new File(resource.toURI()))) {
-                Properties props = new Properties();
-                props.load(fis);
-                String value = props.getProperty(PROPERTY_USE_JAVAFX_DIRCHOOSER, "false");
-                useJavaFXPlatformDirectoryChooser = Boolean.parseBoolean(value);
-            } catch (Exception error) {
-                String message = String.format("Failed to read icon size from %s (via resource: %s)",
-                        new Object[] {PROPERTIES_FILE, resource});
-                Logger.getLogger(SwingFileChooser.class.getName()).log(Level.WARNING, message, error);
-            }
-        }
-    }
 
     /**
      * Creates a new {@link FileChooser} within a Swing {@link JDialog} window. File browsing will start
@@ -180,10 +158,12 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
 
     private static PathSupplier configureDirectoryChooser(Skin skin, Path startHere, SwingFileChooser fc) {
         PathSupplier pathSupplier = null;
-        if (useJavaFXPlatformDirectoryChooser) {
+        if (SwingFileChooserProperties.usesJavaFXDirectoryChooser()) {
             pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
         } else {
             DirectoryChooser dirChooser = new DirectoryChooser(skin);
+            dirChooser.useChooseFileButtonProperty().setValue(true);
+            dirChooser.useCancelButtonProperty().setValue(true);
             Scene dirChooserScene = new Scene(dirChooser);
             pathSupplier = new PathSupplier() {
                 @Override
