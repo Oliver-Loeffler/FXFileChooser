@@ -77,8 +77,15 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 ## Using the FileChooser with Swing
 
 ```java
-public class SwingDemo {
-    public static void main(String ... args) {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import net.raumzeitfalle.fx.filechooser.Skin;
+import net.raumzeitfalle.fx.filechooser.SwingFileChooser;
+
+public class DemoSwing {
+    public static void main(String... args) {
 
         JFrame frame = new JFrame("Window");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
