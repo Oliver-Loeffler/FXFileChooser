@@ -27,6 +27,7 @@ module net.raumzeitfalle.fxfilechooser {
     requires javafx.fxml;
 
     exports net.raumzeitfalle.fx.filechooser;
+    exports net.raumzeitfalle.fx.filechooser.locations;
     exports net.raumzeitfalle.fx.dirchooser;
 
     opens net.raumzeitfalle.fx.filechooser to javafx.fxml;
