@@ -33,8 +33,4 @@ module net.raumzeitfalle.fxfilechooser {
 
     opens net.raumzeitfalle.fx.filechooser to javafx.fxml;
     opens net.raumzeitfalle.fx.dirchooser to javafx.fxml;
-    
-    // demos
-    opens net.raumzeitfalle.fx.filechooser.demos to javafx.fxml, javafx.graphics;
-    opens net.raumzeitfalle.fx.dirchooser.demos to javafx.fxml, javafx.graphics;
 }

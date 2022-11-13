@@ -55,7 +55,8 @@ class NamedLocationTest {
 
     @Test
     void creation_at_file() {
-        Location atFile = Locations.at(Paths.get("./README.md"));
+        // important, this location must point to an existing file!
+        Location atFile = Locations.at(Paths.get("./pom.xml"));
         assertTrue(atFile instanceof NamedLocation);
         assertEquals(".", atFile.getName());
         assertEquals(Paths.get("."), atFile.getPath());

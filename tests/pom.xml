@@ -18,7 +18,7 @@
         <dependency>
             <groupId>net.raumzeitfalle.fx</groupId>
             <artifactId>filechooser</artifactId>
-            <version>${project.version}</version>
+            <version>0.0.10-jdk17-SNAPSHOT</version>
         </dependency>
         <!-- Test Infrastructure -->
         <dependency>
@@ -67,6 +67,10 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
             </plugin>
         </plugins>
     </build>
