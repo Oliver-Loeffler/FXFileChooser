@@ -101,6 +101,21 @@ public class DirectoryChooserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         registerShutdownHook();
+        prepareTree();
+        configureSelectedDirBinding();
+        okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
+        okButton.setOnAction(e -> okayAction());
+        cancelButton.setOnAction(e -> cancelAction());
+        configureGotoAction();
+        configureOkayAction();
+        configureEscapeActions();
+        configureTreeNavigationKeys();
+        configureClickHandling();
+        configureSelectionHandling();
+        initDirTree();
+    }
+
+    private void prepareTree() {
         String hostName = getHostName();
         root = new DirectoryTreeItem("root");
         localRoot = new DirectoryTreeItem(hostName);
@@ -113,77 +128,11 @@ public class DirectoryChooserController implements Initializable {
 
         directoryTree.setRoot(root);
         directoryTree.showRootProperty().set(false);
-
         localRoot.setExpanded(true);
         networkRoot.setExpanded(false);
+    }
 
-        StringBinding sb = Bindings.createStringBinding(() -> {
-            Path selection = selectedDirectoryProperty.get();
-            return (selection == null) ? "" : selection.toAbsolutePath().toString();
-        }, selectedDirectoryProperty);
-        selectedDirectory.textProperty().bind(sb);
-        selectedDirectoryProperty.set(null);
-        okButton.disableProperty().bind(selectedDirectoryProperty.isNull());
-        okButton.setOnAction(e -> okayAction());
-        cancelButton.setOnAction(e -> cancelAction());
-        goToTextField.setOnAction(this::handleGotoAction);
-        this.goToTextField.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                handleGotoAction(null);
-                keyEvent.consume();
-            }
-        });
-        
-        chooseFiles.setOnAction(e->{
-            if (okButton.isDisable()) {
-                cancelAction();
-            } else {
-                okayAction();
-            }
-        });
-
-        this.okButton.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                cancelAction();
-                keyEvent.consume();
-            }
-        });
-
-        this.cancelButton.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                cancelAction();
-                keyEvent.consume();
-            }
-        });
-
-        this.selectedDirectory.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                cancelAction();
-                keyEvent.consume();
-            }
-        });
-
-        this.directoryTree.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.RIGHT) {
-                keyEvent.consume();
-                readSubDirsForSelectedItem();
-                expandSelectedItem();
-            } else if (keyEvent.getCode() == KeyCode.ENTER) {
-                okayAction();
-                keyEvent.consume();
-            } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                cancelAction();
-                keyEvent.consume();
-            }
-        });
-
-        this.directoryTree.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 2) {
-                mouseEvent.consume();
-                readSubDirsForSelectedItem();
-            }
-        });
-
+    private void configureSelectionHandling() {
         this.directoryTree.getSelectionModel().selectedItemProperty().addListener((observable, oldItem, newItem) -> {
             if (null == newItem)
                 selectedDirectoryProperty.set(null);
@@ -205,9 +154,83 @@ public class DirectoryChooserController implements Initializable {
                 goToTextField.textProperty().setValue(item.getFullPath());
             }
         });
+    }
 
-        initDirTree();
+    private void configureClickHandling() {
+        this.directoryTree.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {
+                mouseEvent.consume();
+                readSubDirsForSelectedItem();
+            }
+        });
+    }
 
+    private void configureTreeNavigationKeys() {
+        this.directoryTree.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.RIGHT) {
+                keyEvent.consume();
+                readSubDirsForSelectedItem();
+                expandSelectedItem();
+            } else if (keyEvent.getCode() == KeyCode.ENTER) {
+                okayAction();
+                keyEvent.consume();
+            } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                cancelAction();
+                keyEvent.consume();
+            }
+        });
+    }
+
+    private void configureEscapeActions() {
+        this.okButton.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                cancelAction();
+                keyEvent.consume();
+            }
+        });
+
+        this.cancelButton.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                cancelAction();
+                keyEvent.consume();
+            }
+        });
+
+        this.selectedDirectory.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                cancelAction();
+                keyEvent.consume();
+            }
+        });
+    }
+
+    private void configureOkayAction() {
+        chooseFiles.setOnAction(e->{
+            if (okButton.isDisable()) {
+                cancelAction();
+            } else {
+                okayAction();
+            }
+        });
+    }
+
+    private void configureGotoAction() {
+        this.goToTextField.setOnAction(this::handleGotoAction);
+        this.goToTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                handleGotoAction(null);
+                keyEvent.consume();
+            }
+        });
+    }
+
+    private void configureSelectedDirBinding() {
+        StringBinding sb = Bindings.createStringBinding(() -> {
+            Path selection = selectedDirectoryProperty.get();
+            return (selection == null) ? "" : selection.toAbsolutePath().toString();
+        }, selectedDirectoryProperty);
+        selectedDirectory.textProperty().bind(sb);
+        selectedDirectoryProperty.set(null);
     }
 
     private void expandSelectedItem() {
@@ -424,7 +447,7 @@ public class DirectoryChooserController implements Initializable {
             if (full.equals(other)) {
                 child.setExpanded(true);
                 if (depth < path.getNameCount()) {
-                    return expandAll(path, depth += 1, child);
+                    return expandAll(path, depth + 1, child);
                 }
                 return child;
             }

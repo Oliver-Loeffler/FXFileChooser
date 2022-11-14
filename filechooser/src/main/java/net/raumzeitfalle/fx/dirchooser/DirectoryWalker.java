@@ -36,8 +36,6 @@ class DirectoryWalker {
 
     private DirectoryTreeItem rootNode;
 
-//    private static Filter<Path> pathFilter = getPathFilter();
-
     public DirectoryWalker(Path start) {
         this(start, 0);
     }
@@ -52,8 +50,7 @@ class DirectoryWalker {
     DirectoryTreeItem read(ReadOnlyBooleanProperty cancelled) {
         FileFilter ff = pathname-> {
             if (null == pathname) { return false; }
-            if (pathname.isDirectory()) { return true; }
-            return false;
+            return pathname.isDirectory();
         };
 
         int size = 0;

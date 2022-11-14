@@ -44,6 +44,8 @@ import net.raumzeitfalle.fx.filechooser.locations.Location;
  */
 public class SwingFileChooser extends JFXPanel implements HideableView {
 
+    private static final String CHOOSE_FILE_DIALOG_TITLE = "Choose file:";
+
     public static void setUseJavaFxDirectoryChooser(boolean toggle) {
         SwingFileChooserProperties.setUseJavaFXDirectoryChooser(toggle);
     }
@@ -70,7 +72,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      * @return A configured {@link SwingFileChooser}.
      */
     public static SwingFileChooser create(Skin skin, PathFilter... filter) {
-        return create(skin, "Choose file:", ".", filter);
+        return create(skin, CHOOSE_FILE_DIALOG_TITLE, ".", filter);
     }
 
     /**
@@ -127,7 +129,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
      */
     public static SwingFileChooser create(Skin skin, String title, String dirChooserTitle, String pathToBrowse, PathFilter... filter) {
 
-        String fcTitle = (title == null) ? "Choose file:" : title;
+        String fcTitle = (title == null) ? CHOOSE_FILE_DIALOG_TITLE : title;
         String dcTitle = (dirChooserTitle == null) ? fcTitle : dirChooserTitle;
         Skin skinToUse = (skin == null) ? Skin.DARK : skin;
         String location = (pathToBrowse == null) ? "." : pathToBrowse;
@@ -209,7 +211,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
     private String dirChooserTitle;
 
     private SwingFileChooser(String title, String dirChooserTitle) {
-        this.title = (null != title) ? title : "Choose file:";
+        this.title = (null != title) ? title : CHOOSE_FILE_DIALOG_TITLE;
         this.dirChooserTitle = (null != dirChooserTitle) ? dirChooserTitle : "Choose directory:";
     }
 

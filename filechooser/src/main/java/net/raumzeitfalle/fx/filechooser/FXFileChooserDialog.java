@@ -53,9 +53,9 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
 
     private final FileChooserModel model;
 
-    private static final double minWidth = 700;
+    private static final double MIN_WIDTH = 700;
 
-    private static final double minHeight = 550;
+    private static final double MIN_HEIGHT = 550;
 
     // TODO: Enable File Chooser to use new (2nd scene) directory chooser as well
     // but keep old API alive for JavaFX
@@ -107,8 +107,8 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
     private void setMinWinSize() {
         Window window = getDialogPane().getScene().getWindow();
         Stage stage = (Stage) window;
-        stage.setMinHeight(minHeight);
-        stage.setMinWidth(minWidth);
+        stage.setMinHeight(MIN_HEIGHT);
+        stage.setMinWidth(MIN_WIDTH);
     }
 
     public Optional<Path> showOpenDialog(Window ownerWindow) {
