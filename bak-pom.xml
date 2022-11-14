@@ -21,7 +21,7 @@
         <awaitility.version>4.2.0</awaitility.version>
 
         <testfx.version>4.0.16-alpha</testfx.version>
-        <testfx.monocle.version>jdk-11+26</testfx.monocle.version>
+        <testfx.monocle.version> jdk-12.0.1+2</testfx.monocle.version>
 
         <maven.jacoco.plugin.version>0.8.8</maven.jacoco.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
