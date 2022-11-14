@@ -22,8 +22,12 @@ package net.raumzeitfalle.fx.filechooser;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 
@@ -59,11 +63,28 @@ class Invoke {
             Thread.currentThread().interrupt();
         }
     }
+    
+    static void andWaitWithoutException(Runnable r, long millis) {
+        try {
+            andWait(r, millis);
+        } catch (InterruptedException | ExecutionException e) {
+            Thread.currentThread().interrupt();
+        } catch (TimeoutException t) {
+            Logger.getLogger(Invoke.class.getName())
+                  .log(Level.SEVERE, "Timeout!", t);
+        }
+    }
 
     static void andWait(Runnable r) throws InterruptedException, ExecutionException {
         FutureTask<?> task = new FutureTask<>(r, null);
         Platform.runLater(task);
         task.get();
+    }
+    
+    static void andWait(Runnable r, long timeout) throws InterruptedException, ExecutionException, TimeoutException {
+        FutureTask<?> task = new FutureTask<>(r, null);
+        Platform.runLater(task);
+        task.get(timeout, TimeUnit.MILLISECONDS);
     }
 
 }

@@ -140,7 +140,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
                           .log(Level.INFO, "Waiting for service to finish....");
                 }
             }
-        });
+        }, 2000);
     }
 
 }
