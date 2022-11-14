@@ -327,5 +327,23 @@
                 <sonar.exclusions>net/raumzeitfalle/fx/*</sonar.exclusions>
             </properties>
         </profile>
+        <profile>
+            <id>no-deploy</id>
+            <!--
+            According to https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin
+            skipNexusStagingDeployMojo may not be set to true in the last reactor module. Because we don't
+            want to deploy our last module, nor a dummy module, we simply omit the relevant modules when
+            a deploy is in progress.
+            -->
+            <activation>
+                <property>
+                    <name>!deploy</name>
+                </property>
+            </activation>
+            <modules>
+                <module>tests</module>
+                <module>demos</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
