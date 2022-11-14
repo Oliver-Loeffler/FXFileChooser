@@ -8,7 +8,9 @@
 
 name: Verify on Linux Ubuntu           
 
-on: push
+on:
+  check_run:
+    types: requested
 
 jobs:
   build:
