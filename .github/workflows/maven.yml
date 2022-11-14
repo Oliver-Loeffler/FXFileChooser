@@ -28,5 +28,5 @@ jobs:
         distribution: 'zulu'
         cache: maven
     - name: Verify
-      run: mvn verify --Dgpg.skip=True
+      run: mvn verify -Dgpg.skip=true
     
