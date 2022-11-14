@@ -21,6 +21,8 @@ package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -123,6 +125,22 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
 
     protected Thread getShutdownThread() {
         return this.shutdownThread;
+    }
+    
+    /**
+     * Polls the service running state and waits until service changes its state.
+     * This is inly intended to be used for debugging.
+     */
+    public void waitUntilFinished() {
+        Invoke.andWaitWithoutException(()->{
+            long start = System.currentTimeMillis();
+            while (isRunning()) {
+                if (start % 1000 == 0) {
+                    Logger.getLogger(getClass().getName())
+                          .log(Level.INFO, "Waiting for service to finish....");
+                }
+            }
+        });
     }
 
 }

@@ -20,6 +20,8 @@
 package net.raumzeitfalle.fx.filechooser;
 
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -33,4 +35,26 @@ interface UpdateService {
     void cancelUpdate();
     ReadOnlyBooleanProperty runningProperty();
     ReadOnlyDoubleProperty progressProperty();
+
+    /**
+     * Waits by default 1000ms.
+     * Only to be used for testing or debugging.
+     */
+    default void waitUntilFinished() {
+        waitUntilFinished(1000);
+    }
+
+    private void waitUntilFinished(long millis) {
+        if (this instanceof FileUpdateService service) {
+            service.waitUntilFinished();
+        } else {
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                Logger.getLogger(UpdateService.class.getName())
+                      .log(Level.WARNING, "Unexpected interruption during wait...", e);
+            }
+        }
+    }
 }

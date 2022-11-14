@@ -367,10 +367,13 @@ final class FileChooserController implements Initializable {
                                     .toAbsolutePath()
                                     .normalize();
         model.getUpdateService().restartIn(normalized);
-        this.fileNameFilter.setText("");
         if (Files.exists(normalized) 
                 && Files.isRegularFile(normalized)) {
-            selectEnteredFileAndRequestOkayFocus(normalized);
+            Platform.runLater(()->{
+                selectEnteredFileAndRequestOkayFocus(normalized);
+            });
+        } else {
+            this.fileNameFilter.setText("");
         }
     }
 
