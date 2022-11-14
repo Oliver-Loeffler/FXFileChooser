@@ -21,13 +21,13 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.9</version>
+  <version>0.0.11</version>
 </dependency>
 ```
 ### Dependency for Gradle `build.gradle`
 
 ```Groovy
-implementation 'net.raumzeitfalle.fx:filechooser:0.0.9'
+implementation 'net.raumzeitfalle.fx:filechooser:0.0.11'
 ```
 
 Besides version `0.0.9` which is primarily intended for Java 8, there is version `0.0.10` which exists for a variety of Java/OpenJFX combinations.
@@ -47,7 +47,7 @@ Those are not fully tested so please feel free to provide some feedback.
 All packages are available on https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser.
 Java 17 will be baseline for development from now on. However, backport of working features to Java 11 is thinkable.
 
-JDK11 (LTS)
+Java-11 (LTS) with OpenJFX11:
 ```xml
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
@@ -56,7 +56,7 @@ JDK11 (LTS)
 </dependency>
 ```
 
-JDK17 with OpenJFX17:
+Java-17 (LTS) with OpenJFX17:
 ```xml
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
