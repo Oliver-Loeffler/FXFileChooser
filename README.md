@@ -42,7 +42,7 @@ Those are not fully tested so please feel free to provide some feedback.
 | 17     | 17.0.2           | `0.0.10-jdk17` |
 | 17     | 18.0.2           | `0.0.10-jfx18` |
 | 17     | 19               | `0.0.10-jfx19` |
-| 17     | 17.0.2           | `0.0.11        |
+| 17     | 17.0.2           | `0.0.11`       |
 
 All packages are available on https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser.
 Java 17 will be baseline for development from now on. However, backport of working features to Java 11 is thinkable.
