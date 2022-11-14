@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0           http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <properties>
         <revision>0.0.10-jdk17-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +32,7 @@
     <groupId>net.raumzeitfalle.fx</groupId>
     <artifactId>fxfilechooser</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>0.0.10-jdk17-SNAPSHOT</version>
 
     <inceptionYear>2017</inceptionYear>
     <organization>
@@ -48,7 +45,7 @@
         <module>tests</module>
         <module>demos</module>
     </modules>
-    
+
     <dependencies>
         <!-- OpenJFX dependencies -->
         <dependency>
@@ -284,7 +281,7 @@
         <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
         <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
         <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
-        <tag>0.0.9</tag>
+        <tag>0.0.10-jdk17</tag>
     </scm>
 
     <licenses>
@@ -301,10 +298,10 @@
             <id>oloeffler</id>
         </developer>
     </developers>
-    
+
     <name>FXFileChooser</name>
     <url>http://fx.raumzeitfalle.net</url>
-    
+
     <profiles>
         <profile>
             <id>sonar</id>
