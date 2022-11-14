@@ -61,7 +61,7 @@ class FindFilesTaskTest extends FxTestTemplate {
         classUnderTest = new FindFilesTask(searchLocation, consumerCollection);
 
         Awaitility.await()
-                  .atMost(Duration.ofSeconds(30))
+                  .atMost(Duration.ofSeconds(60))
                   .until(classUnderTest::call, allFilesHaveBeenProcessed());
 
         Set<String> fileNames = consumerCollection.stream()
