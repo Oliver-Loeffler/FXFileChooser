@@ -31,7 +31,7 @@
     <groupId>net.raumzeitfalle.fx</groupId>
     <artifactId>fxfilechooser</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.10-jfx19-SNAPSHOT</version>
+    <version>0.0.10-jfx19</version>
 
     <inceptionYear>2017</inceptionYear>
     <organization>
@@ -291,7 +291,7 @@
         <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
         <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
         <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
-        <tag>0.0.10-jdk17</tag>
+        <tag>0.0.10-jfx19</tag>
     </scm>
 
     <licenses>
