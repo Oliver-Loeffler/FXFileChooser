@@ -8,11 +8,7 @@
 
 name: Java CI with Maven
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: push
 
 jobs:
   build:
@@ -28,5 +24,5 @@ jobs:
         distribution: 'zulu'
         cache: maven
     - name: Verify
-      run: mvn verify -Dgpg.skip=True --no-transfer-progress
+      run: mvn verify -P github
     
