@@ -8,7 +8,9 @@
 
 name: Verify on Windows
 
-on: push
+on:
+  check_run:
+    types: requested
 
 jobs:
   build:
