@@ -23,18 +23,18 @@ import java.util.function.Function;
 
 import net.raumzeitfalle.fx.dirchooser.DirectoryChooser;
 
-public enum DirectoryChooserOption implements Function<FileChooser, PathSupplier> {
+public enum DirectoryChooserOption implements Function<FileChooser, PathUpdateHandler> {
     JAVAFX_PLATFORM {       
         @Override
-        public PathSupplier apply(FileChooser fileChooser) {
+        public PathUpdateHandler apply(FileChooser fileChooser) {
             return FXDirectoryChooser.createIn(fileChooser.currentSearchPath(),
                                                ()->fileChooser.getWindow());
         }
     },
     CUSTOM{       
         @Override
-        public PathSupplier apply(FileChooser fileChooser) {
-           return new DirectoryChooser.DirChooserPathSupplier(fileChooser);
+        public PathUpdateHandler apply(FileChooser fileChooser) {
+           return new DirectoryChooser.DirChooserPathUpdateHandler(fileChooser);
         }
     };
 }

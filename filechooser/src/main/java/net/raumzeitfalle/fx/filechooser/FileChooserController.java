@@ -128,7 +128,7 @@ final class FileChooserController implements Initializable {
 
     private final BooleanProperty showOkayCancelButtons;
 
-    private final PathSupplier pathSupplier;
+    private final PathUpdateHandler pathSupplier;
 
     private final LocationMenuItemFactory menuItemFactory;
 
@@ -137,52 +137,45 @@ final class FileChooserController implements Initializable {
     private final Dialog<Path> dialog;
 
     /**
-     * Creates a new {@link FileChooserController} which provides all logic and
-     * functionality for the {@link FXFileChooserStage}, {@link FXFileChooserDialog}
-     * and {@link SwingFileChooser} components.
+     * Creates a new {@link FileChooserController} which provides all logic and functionality for the
+     * {@link FXFileChooserStage}, {@link FXFileChooserDialog} and {@link SwingFileChooser} components.
      *
      * @param fileChooserModel      The data model.
-     * @param pathSupplier          Provides a path on demand, e.g. can be File
-     *                              Chooser or Directory Chooser component. This
-     *                              component is called when clicked on Choose
+     * @param pathUpdateHandler     Provides a path on demand, e.g. can be File Chooser or Directory
+     *                              Chooser component. This component is called when clicked on Choose
      *                              Directory button.
-     * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the
-     *                              view will have its own OKAY/CANCEL buttons or if
-     *                              OKAY/CANCEL buttons are provided e.g. by the
-     *                              parent container (e.g. Dialog).
+     * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the view will have its
+     *                              own OKAY/CANCEL buttons or if OKAY/CANCEL buttons are provided e.g.
+     *                              by the parent container (e.g. Dialog).
      */
     public FileChooserController(final FileChooserModel fileChooserModel, 
-                                 final PathSupplier pathSupplier,
+                                 final PathUpdateHandler pathUpdateHandler,
                                  FileChooserViewOption fileChooserViewOption, 
                                  final Dialog<Path> dialog) {
         
-        this(fileChooserModel, pathSupplier, null, fileChooserViewOption, dialog);
+        this(fileChooserModel, pathUpdateHandler, null, fileChooserViewOption, dialog);
     }
     
     /**
-     * Creates a new {@link FileChooserController} which provides all logic and
-     * functionality for the {@link FXFileChooserStage}, {@link FXFileChooserDialog}
-     * and {@link SwingFileChooser} components.
+     * Creates a new {@link FileChooserController} which provides all logic and functionality for the
+     * {@link FXFileChooserStage}, {@link FXFileChooserDialog} and {@link SwingFileChooser} components.
      *
      * @param fileChooserModel      The data model.
-     * @param pathSupplier          Provides a path on demand, e.g. can be File
-     *                              Chooser or Directory Chooser component. This
-     *                              component is called when clicked on Choose
+     * @param pathUpdateHandler     Provides a path on demand, e.g. can be File Chooser or Directory
+     *                              Chooser component. This component is called when clicked on Choose
      *                              Directory button.
      * @param window                The parent window which shall be closable.
-     * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the
-     *                              view will have its own OKAY/CANCEL buttons or if
-     *                              OKAY/CANCEL buttons are provided e.g. by the
-     *                              parent container (e.g. Dialog).
+     * @param fileChooserViewOption The {@link FileChooserViewOption} decides if the view will have its
+     *                              own OKAY/CANCEL buttons or if OKAY/CANCEL buttons are provided e.g.
+     *                              by the parent container (e.g. Dialog).
      */
-    public FileChooserController(final FileChooserModel fileChooserModel, final PathSupplier pathSupplier,
+    public FileChooserController(final FileChooserModel fileChooserModel, final PathUpdateHandler pathUpdateHandler,
             final HideableView window, FileChooserViewOption fileChooserViewOption, final Dialog<Path> dialog) {
         this.model = fileChooserModel;
         this.stage = window;
         this.fileChooserViewOption = fileChooserViewOption;
-        this.showOkayCancelButtons = new SimpleBooleanProperty(
-                FileChooserViewOption.STAGE.equals(fileChooserViewOption));
-        this.pathSupplier = pathSupplier;
+        this.showOkayCancelButtons = new SimpleBooleanProperty(FileChooserViewOption.STAGE.equals(fileChooserViewOption));
+        this.pathSupplier = pathUpdateHandler;
         this.menuItemFactory = new LocationMenuItemFactory(model::updateFilesIn);
         this.dialog = dialog;
     }
@@ -190,9 +183,7 @@ final class FileChooserController implements Initializable {
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         this.listOfFiles.setItems(this.model.getFilteredPaths());
-
         this.fileNameFilter.textProperty().addListener(l -> handleFileNameFilterChanges());
 
         StringBinding binding = Bindings.createStringBinding(
@@ -246,8 +237,6 @@ final class FileChooserController implements Initializable {
          * intervals only OR use indicator for small sets and bar for large data sets
          */
         progressBar.progressProperty().bind(model.getUpdateService().progressProperty());
-
-        // counterPane.visibleProperty().bind(updateIsRunning);
         counterPane.setVisible(true);
         stopButton.visibleProperty().bind(updateIsRunning);
 
@@ -378,10 +367,9 @@ final class FileChooserController implements Initializable {
                                     .normalize();
         model.getUpdateService().restartIn(normalized);
         this.fileNameFilter.setText("");
-        if (Files.exists(normalized)) {
-            if (Files.isRegularFile(normalized)) {
-                selectEnteredFileAndRequestOkayFocus(normalized);
-            }
+        if (Files.exists(normalized) 
+                && Files.isRegularFile(normalized)) {
+            selectEnteredFileAndRequestOkayFocus(normalized);
         }
     }
 

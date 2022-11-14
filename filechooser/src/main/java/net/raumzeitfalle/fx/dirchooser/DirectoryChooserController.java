@@ -61,7 +61,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 
 public class DirectoryChooserController implements Initializable {
-
+    
     @FXML
     private TextField selectedDirectory;
 
@@ -272,7 +272,6 @@ public class DirectoryChooserController implements Initializable {
             protected Void call() throws Exception {
                 Iterable<Path> rootDirectories = FileSystems.getDefault().getRootDirectories();
                 for (Path path : rootDirectories) {
-                    // DirectoryTreeItem dirItem = new DirectoryWalker(path).read();
                     DirectoryTreeItem dirItem = new DirectoryTreeItem(path);
                     localRoot.getChildren().add(dirItem);
                     /*
@@ -380,7 +379,9 @@ public class DirectoryChooserController implements Initializable {
     }
 
     private void expandTreeFor(Path path) {
-        System.out.println("expanding for: " + path);
+        Logger.getLogger(getClass().getName())
+              .log(Level.FINER, "Expanding for {0}", path);
+
         collapseAll();
         Platform.runLater(() -> {
             localRoot.setExpanded(false);
@@ -441,7 +442,7 @@ public class DirectoryChooserController implements Initializable {
     private File getPathFromText() {
         String value = goToTextField.getText().replace("\"", "");
         if (value.length() == 2 && value.charAt(1) == ':') {
-            value = value+"\\";
+            value += "\\";
         }
         return new File(value);
     }

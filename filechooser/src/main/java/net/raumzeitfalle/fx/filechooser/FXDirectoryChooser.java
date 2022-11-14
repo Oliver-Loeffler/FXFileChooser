@@ -36,7 +36,7 @@ import javafx.stage.Window;
  * TODO: Functionality will become internal-API.
  * TODO: Remove the old style FX Directory Chooser.
  */
-public class FXDirectoryChooser implements PathSupplier {
+public class FXDirectoryChooser implements PathUpdateHandler {
 
     public static FXDirectoryChooser createIn(ObjectProperty<Path> startLocation, Supplier<Window> ownerProvider) {
         Objects.requireNonNull(startLocation, "startLocation must not be null");

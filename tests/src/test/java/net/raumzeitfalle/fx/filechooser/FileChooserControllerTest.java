@@ -427,7 +427,7 @@ class FileChooserControllerTest extends FxTestTemplate {
         }
     }
 
-    private static class TestDirChooser implements PathSupplier {
+    private static class TestDirChooser implements PathUpdateHandler {
 
         private Path directory = null;
 

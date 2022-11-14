@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -146,7 +145,7 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         }
         // do all JavaFX work
         Platform.runLater(() -> {
-            PathSupplier pathSupplier = configureDirectoryChooser(skin, startHere, fc);
+            PathUpdateHandler pathSupplier = configureDirectoryChooser(skin, startHere, fc);
             FileChooser view = new FileChooser(pathSupplier, fc, fc.model, skinToUse, FileChooserViewOption.STAGE);
                                
             Scene fileChooserScene = new Scene(view);
@@ -156,18 +155,16 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
         return fc;
     }
 
-    private static PathSupplier configureDirectoryChooser(Skin skin, Path startHere, SwingFileChooser fc) {
-        PathSupplier pathSupplier = null;
+    private static PathUpdateHandler configureDirectoryChooser(Skin skin, Path startHere, SwingFileChooser fc) {
+        PathUpdateHandler onPathUpdate = null;
         if (SwingFileChooserProperties.usesJavaFXDirectoryChooser()) {
-            pathSupplier = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
+            onPathUpdate = FXDirectoryChooser.createIn(startHere, () -> fc.getScene().getWindow());
         } else {
             DirectoryChooser dirChooser = new DirectoryChooser(skin);
             dirChooser.useChooseFileButtonProperty().setValue(true);
             dirChooser.useCancelButtonProperty().setValue(true);
             Scene dirChooserScene = new Scene(dirChooser);
-            pathSupplier = new PathSupplier() {
-                @Override
-                public void getUpdate(Consumer<Path> update) {
+            onPathUpdate = update->{
                     Scene previousScene = fc.getScene();
                     String previousTitle = fc.title;
                     fc.setTitle(fc.dirChooserTitle);
@@ -187,10 +184,9 @@ public class SwingFileChooser extends JFXPanel implements HideableView {
                         fc.setTitle(previousTitle);
                         fc.setScene(previousScene);
                     });
-                }
-            };
+                };
         }
-        return pathSupplier;
+        return onPathUpdate;
     }
 
     private static Path startPath(String pathToBrowse) {

@@ -23,6 +23,6 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface PathSupplier {
+public interface PathUpdateHandler {
     void getUpdate(Consumer<Path> update);
 }

@@ -34,7 +34,7 @@ import javafx.scene.layout.AnchorPane;
  * @deprecated As this class is not compatible with JavaFX Scene Builder, this is going to be
  *             removed in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
  */
-@Deprecated
+@Deprecated(since = "0.0.3", forRemoval = true)
 final class FileChooserView extends AnchorPane {
 
     /**
@@ -44,7 +44,7 @@ final class FileChooserView extends AnchorPane {
      * @deprecated As this class is not compatible with JavaFX Scene Builder, it is going to be removed
      *             in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
      * 
-     * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
+     * @param pathSupplier          {@link PathUpdateHandler} In case the user wants to change the directory,
      *                              this supplier is called to provide the directory where the user
      *                              wants to lookup files. Here one can implement a customized approach
      *                              for directory selection.
@@ -73,8 +73,8 @@ final class FileChooserView extends AnchorPane {
      * @throws IOException The control is defined as FXML file and in any case of error during FXML
      *                     reading an exception will be thrown.
      */
-    @Deprecated
-    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
+    @Deprecated(since = "0.0.3", forRemoval = true)
+    public FileChooserView(PathUpdateHandler pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
             FileChooserViewOption fileChooserViewOption) throws IOException {
         this(pathSupplier, window, model, skin, fileChooserViewOption, null);
     }
@@ -86,7 +86,7 @@ final class FileChooserView extends AnchorPane {
      * @deprecated As this class is not compatible with JavaFX Scene Builder, it is going to be removed
      *             in later versions of FXFileChhooser. Please use {@link FileChooser} instead.
      * 
-     * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
+     * @param pathSupplier          {@link PathUpdateHandler} In case the user wants to change the directory,
      *                              this supplier is called to provide the directory where the user
      *                              wants to lookup files. Here one can implement a customized approach
      *                              for directory selection.
@@ -120,8 +120,8 @@ final class FileChooserView extends AnchorPane {
      * @throws IOException The control is defined as FXML file and in any case of error during FXML
      *                     reading an exception will be thrown.
      */
-    @Deprecated
-    public FileChooserView(PathSupplier pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
+    @Deprecated(since = "0.0.3", forRemoval = true)
+    public FileChooserView(PathUpdateHandler pathSupplier, final HideableView window, FileChooserModel model, Skin skin,
             FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) throws IOException {
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";

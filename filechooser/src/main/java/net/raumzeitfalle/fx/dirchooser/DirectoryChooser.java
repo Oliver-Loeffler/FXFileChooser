@@ -39,7 +39,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.raumzeitfalle.fx.filechooser.DirectoryChooserOption;
 import net.raumzeitfalle.fx.filechooser.FileChooser;
-import net.raumzeitfalle.fx.filechooser.PathSupplier;
+import net.raumzeitfalle.fx.filechooser.PathUpdateHandler;
 import net.raumzeitfalle.fx.filechooser.Skin;
 
 public class DirectoryChooser extends AnchorPane {
@@ -77,7 +77,7 @@ public class DirectoryChooser extends AnchorPane {
         try {
             view = loader.load();
         } catch (Exception e) {
-            view = handleErrorOnLoad(fileName, resource, e);
+            view = handleErrorOnLoad(fileName, e);
         }
         this.getChildren().add(view);
         AnchorPane.setLeftAnchor(view, 0.0);
@@ -105,7 +105,7 @@ public class DirectoryChooser extends AnchorPane {
         });
     }
 
-    private VBox handleErrorOnLoad(String fileName, URL resource, Exception e) {
+    private VBox handleErrorOnLoad(String fileName, Exception e) {
         StringWriter errors = new StringWriter();
         PrintWriter writer = new PrintWriter(errors);
         writer.println("FXML: " + fileName);
@@ -156,7 +156,7 @@ public class DirectoryChooser extends AnchorPane {
      * 
      * See {@link DirectoryChooserOption} for details.
      */
-    public static class DirChooserPathSupplier implements PathSupplier {
+    public static class DirChooserPathUpdateHandler implements PathUpdateHandler {
 
         private final DirectoryChooser dirChooser;
         private final FileChooser fileChooser;
@@ -166,7 +166,7 @@ public class DirectoryChooser extends AnchorPane {
          * 
          * @param fileChooser {@link FileChooser} to make use of the {@link DirectoryChooser}.
          */
-        public DirChooserPathSupplier(FileChooser fileChooser) {
+        public DirChooserPathUpdateHandler(FileChooser fileChooser) {
             this.fileChooser = Objects.requireNonNull(fileChooser);
             this.dirChooser = new DirectoryChooser();
             this.fileChooser.getChildren().add(dirChooser);

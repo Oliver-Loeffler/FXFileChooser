@@ -19,7 +19,6 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ import net.raumzeitfalle.fx.filechooser.locations.Location;
 
 public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
 
-    public static FXFileChooserDialog create(Skin skin, PathFilter... filter) throws IOException {
+    public static FXFileChooserDialog create(Skin skin, PathFilter... filter) {
         FileChooserModel model = FileChooserModel.startingInUsersHome(filter);
         return new FXFileChooserDialog(skin, model);
     }
@@ -48,7 +47,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         model.addOrRemoveFilter(filter);
     }
 
-    static FXFileChooserDialog create(Skin skin, FileChooserModel model) throws IOException {
+    static FXFileChooserDialog create(Skin skin, FileChooserModel model) {
         return new FXFileChooserDialog(skin, model);
     }
 
@@ -80,7 +79,7 @@ public class FXFileChooserDialog extends Dialog<Path> implements HideableView {
         initModality(Modality.APPLICATION_MODAL);
 
         Supplier<Window> ownerProvider = () -> getDialogPane().getScene().getWindow();
-        PathSupplier pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
+        PathUpdateHandler pathSupplier = FXDirectoryChooser.createIn(model.currentSearchPath(), ownerProvider);
         FileChooser view = new FileChooser(pathSupplier, null, model, skin, FileChooserViewOption.DIALOG, this);
         getDialogPane().setContent(view);
         ButtonType okay = ButtonType.OK;

@@ -205,15 +205,16 @@ final class FileChooserModel {
                 return p -> null == corrected || corrected.isEmpty()
                         || p.toString().toLowerCase().endsWith(corrected.toLowerCase());
             }
-        } else if (firstAsterisk > 0 && lastAsterisk > 0 && firstAsterisk == lastAsterisk) {
+        } else if (firstAsterisk > 0 
+                   && lastAsterisk > 0 
+                   && firstAsterisk == lastAsterisk
+                   && withAsterisks.length() >= 3) {
             // starts with & end with
-            if (withAsterisks.length() >= 3) {
-                String left = withAsterisks.substring(0, firstAsterisk);
-                String right = withAsterisks.substring(lastAsterisk+1);
-                return p -> null == corrected || corrected.isEmpty()
-                        || (p.toString().toLowerCase().startsWith(left) &&
-                                p.toString().toLowerCase().endsWith(right));
-            }
+            String left = withAsterisks.substring(0, firstAsterisk);
+            String right = withAsterisks.substring(lastAsterisk+1);
+            return p -> null == corrected || corrected.isEmpty()
+                    || (p.toString().toLowerCase().startsWith(left) &&
+                            p.toString().toLowerCase().endsWith(right));
         }
 
         // contains

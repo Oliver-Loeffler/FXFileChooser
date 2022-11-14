@@ -35,7 +35,7 @@ import net.raumzeitfalle.fx.filechooser.Skin;
  * @deprecated As this class is not compatible with JavaFX Scene Builder, this is going to be
  *             removed in later versions of FXFileChhooser.
  */
-@Deprecated
+@Deprecated(since = "0.0.3", forRemoval = true)
 public class DirectoryChooserView extends AnchorPane {
 
     private final DirectoryChooserController controller;
@@ -46,7 +46,7 @@ public class DirectoryChooserView extends AnchorPane {
      * @param skin {@link Skin}, controls the appearance of the control
      * @throws IOException in case of FXMLLoader failing to read the required FXML file.
      */
-    @Deprecated
+    @Deprecated(since = "0.0.3", forRemoval = true)
     public DirectoryChooserView(Skin skin) throws IOException {
 
         Class<?> thisClass = getClass();

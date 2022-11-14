@@ -32,6 +32,8 @@ import javafx.concurrent.Task;
 
 final class FindFilesTask extends Task<Integer> {
 
+    private static final Logger LOGGER = Logger.getLogger(FindFilesTask.class.getName()); 
+
     private final ObservableList<IndexedPath> pathsToUpdate;
 
     private final Path directory;
@@ -75,7 +77,6 @@ final class FindFilesTask extends Task<Integer> {
                 duration.set((System.currentTimeMillis() - start) / 1E3);
                 buffer.flush();
                 return f;
-                // formerly: break;
             }
             if (f % progressIntervall == 0) {
                 updateProgress(f + 1L, files.length);
@@ -100,15 +101,14 @@ final class FindFilesTask extends Task<Integer> {
     @Override
     protected void succeeded() {
         super.succeeded();
-        Logger.getLogger(FindFilesTask.class.getName()).log(Level.INFO,
-                "with {0} files out of {1} entries after {2} sec",
+        LOGGER.log(Level.INFO, "with {0} files out of {1} entries after {2} sec",
                 new Object[] {pathsToUpdate.size(), getValue(), duration.get()});
     }
 
     @Override
     protected void cancelled() {
         super.cancelled();
-        Logger.getLogger(FindFilesTask.class.getName()).log(Level.INFO, "with {0} files after {1} seconds!",
+        LOGGER.log(Level.INFO, "with {0} files after {1} seconds!",
                 new Object[] {pathsToUpdate.size(), duration.get()});
     }
 
@@ -116,7 +116,7 @@ final class FindFilesTask extends Task<Integer> {
     protected void failed() {
         super.failed();
         String message = String.format("after indexing %s files with an error.", pathsToUpdate.size());
-        Logger.getLogger(FindFilesTask.class.getName()).log(Level.WARNING, message, getException());
+        LOGGER.log(Level.WARNING, message, getException());
     }
 
     protected int getProgressInterval(int length) {

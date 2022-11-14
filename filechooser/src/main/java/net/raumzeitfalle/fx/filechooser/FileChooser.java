@@ -99,16 +99,9 @@ public class FileChooser extends StackPane {
             this.skin = skin;
         }
         
-        PathSupplier pathSupplier = null;
-        if (directoryChooserOption != null) {
-            pathSupplier = directoryChooserOption.apply(this);
-        } else {
-            pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
-        }
-
-        controller = new FileChooserController(model, pathSupplier, viewOption, dialog);
+        PathUpdateHandler updateHandler = getPathUpdateHandler(directoryChooserOption);
+        controller = new FileChooserController(model, updateHandler, viewOption, dialog);
         loadControl(controller);
-        
         Skin.applyTo(this, this.skin);
     }
 
@@ -125,16 +118,20 @@ public class FileChooser extends StackPane {
             this.skin = skin;
         }
 
-        PathSupplier pathSupplier = null;
-        if (directoryChooserOption != null) {
-            pathSupplier = directoryChooserOption.apply(this);
-        } else {
-            pathSupplier = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
-        }
-
-        controller = new FileChooserController(this.model, pathSupplier, window, viewOption, dialog);
+        PathUpdateHandler updateHandler = getPathUpdateHandler(directoryChooserOption);
+        controller = new FileChooserController(this.model, updateHandler, window, viewOption, dialog);
         loadControl(controller);
         Skin.applyTo(this, this.skin);
+    }
+
+    private PathUpdateHandler getPathUpdateHandler(DirectoryChooserOption directoryChooserOption) {
+        PathUpdateHandler updateHandler = null;
+        if (directoryChooserOption != null) {
+            updateHandler = directoryChooserOption.apply(this);
+        } else {
+            updateHandler = DirectoryChooserOption.JAVAFX_PLATFORM.apply(this);
+        }
+        return updateHandler;
     }
     
 
@@ -145,10 +142,10 @@ public class FileChooser extends StackPane {
      * In case of error during FXML loading, the view is replaced by a {@link TextArea} showing the
      * cause and stack trace of the error.
      * 
-     * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
-     *                              this supplier is called to provide the directory where the user
-     *                              wants to lookup files. Here one can implement a customized approach
-     *                              for directory selection.
+     * @param handlePath            {@link PathUpdateHandler} In case the user wants to change the
+     *                              directory, this supplier is called to provide the directory where
+     *                              the user wants to lookup files. Here one can implement a customized
+     *                              approach for directory selection.
      * 
      * @param window                {@link HideableView} Reference to the parent window of the
      *                              {@link FileChooserView}. This can be a JavaFX stage, a Swing JFrame
@@ -172,9 +169,9 @@ public class FileChooser extends StackPane {
      *                              will be provided by the {@link FileChooserView}.
      * 
      */
-    FileChooser(PathSupplier pathSupplier, HideableView window, FileChooserModel model, 
+    FileChooser(PathUpdateHandler handlePath, HideableView window, FileChooserModel model, 
                 Skin skin, FileChooserViewOption fileChooserViewOption) {
-        this(pathSupplier, window, model, skin, fileChooserViewOption, null);
+        this(handlePath, window, model, skin, fileChooserViewOption, null);
     }
 
     /**
@@ -184,10 +181,10 @@ public class FileChooser extends StackPane {
      * In case of error during FXML loading, the view is replaced by a {@link TextArea} showing the
      * cause and stack trace of the error.
      * 
-     * @param pathSupplier          {@link PathSupplier} In case the user wants to change the directory,
-     *                              this supplier is called to provide the directory where the user
-     *                              wants to lookup files. Here one can implement a customized approach
-     *                              for directory selection.
+     * @param handlePath            {@link PathUpdateHandler} In case the user wants to change the
+     *                              directory, this supplier is called to provide the directory where
+     *                              the user wants to lookup files. Here one can implement a customized
+     *                              approach for directory selection.
      * 
      * @param window                {@link HideableView} Reference to the parent window of the
      *                              {@link FileChooserView}. This can be a JavaFX stage, a Swing JFrame
@@ -215,14 +212,14 @@ public class FileChooser extends StackPane {
      *                              dialog where the {@link FileChooserView} is used within must be
      *                              known up front.
      */
-    FileChooser(PathSupplier pathSupplier, HideableView window, FileChooserModel model, 
+    FileChooser(PathUpdateHandler handlePath, HideableView window, FileChooserModel model, 
                 Skin skin, FileChooserViewOption fileChooserViewOption, Dialog<Path> dialog) {
 
         this.model = model;
         this.skin = skin;
         this.viewOption = fileChooserViewOption;
         controller = new FileChooserController(this.model,
-                                                    pathSupplier,
+                                                    handlePath,
                                                     window,
                                                     this.viewOption,
                                                     this.dialog);
@@ -240,7 +237,7 @@ public class FileChooser extends StackPane {
         try {
             view = loader.load();
         } catch (Exception e) {
-            view = handleErrorOnLoad(fileName, resource, controller, e);
+            view = handleErrorOnLoad(fileName, controller, e);
         }
 
         this.fileChooserView = new AnchorPane();
@@ -252,7 +249,7 @@ public class FileChooser extends StackPane {
         this.getChildren().add(fileChooserView);
     }
 
-    private VBox handleErrorOnLoad(String fileName, URL resource, Object controller, Exception e) {
+    private VBox handleErrorOnLoad(String fileName, Object controller, Exception e) {
         StringWriter errors = new StringWriter();
         PrintWriter writer = new PrintWriter(errors);
         writer.println("FXML: " + fileName);

@@ -52,8 +52,7 @@ class FilesListCell extends ListCell<IndexedPath> {
             
             gridPane.addColumn(0, icon);
             GridPane.setHgrow(icon, Priority.SOMETIMES);
-            
-            
+
             Label fileName = new Label(String.valueOf(getItem()));
             fileName.getStyleClass().add(FILE_ICON_LABEL);
             fileName.setId("fileListCell-fileName");
@@ -62,7 +61,6 @@ class FilesListCell extends ListCell<IndexedPath> {
             GridPane.setHgrow(fileName, Priority.ALWAYS);
             
             Label date = new Label("");
-            
             FileTime time = getItem().getTimestamp();
             LocalDateTime timestamp = LocalDateTime.from(time.toInstant().atZone(ZoneId.systemDefault()));
             date.setText(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN).format(timestamp));

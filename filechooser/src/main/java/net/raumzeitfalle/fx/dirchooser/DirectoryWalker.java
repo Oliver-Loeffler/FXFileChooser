@@ -50,18 +50,12 @@ class DirectoryWalker {
     }
 
     DirectoryTreeItem read(ReadOnlyBooleanProperty cancelled) {
-        FileFilter ff = new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (null == pathname) {
-                    return false;
-                }
-                if (pathname.isDirectory()) {
-                    return true;
-                }
-                return false;
-            }
+        FileFilter ff = pathname-> {
+            if (null == pathname) { return false; }
+            if (pathname.isDirectory()) { return true; }
+            return false;
         };
+
         int size = 0;
         for (File f : current.toFile().listFiles(ff)) {
             addNode(f.toPath(), cancelled);
