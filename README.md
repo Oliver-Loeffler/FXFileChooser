@@ -15,7 +15,7 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 
 ## Adding FXFileChooser to your Maven or Gradle project
 
-### Dependency for Maven `POM.xml` for JDK8
+### Dependency for Maven `POM.xml` for JDK17+
 
 ```xml
 <dependency>
