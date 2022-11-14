@@ -4,7 +4,6 @@
 
 Build status:
 ![Verify Windows](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml/badge.svg)
-![Verify MacOS](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-macos.yml/badge.svg)
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
@@ -358,3 +357,9 @@ In some cases a non-programmatic configuration can be quite helpful. The configu
 | `directorychooser.properties` | `directory.chooser.icon.size` | Configures the size of directory and drive icons (24px by default) |
 | `filechooser.properties`     | `directory.chooser.icon.size` | Configures the size of icons in file chooser (usually 32px) |
 | `swingfilechooser.properties` | `use.javafx.platform.directory.chooser` | Configures if the JavaFX platform directory chooser is used or not. Defaults to false |
+
+## Support
+
+If you like this work and if it is kind of useful four your purpose, I'd be happy if you could [by me a coffee](buymeacoffee.com/?via=raumzeitfalle), thanks!
+I also appreciate comments and feedback on how it works OR how it unfortunately not works so well.
+
