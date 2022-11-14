@@ -35,8 +35,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -64,7 +62,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.raumzeitfalle.fx.filechooser.locations.Locations;
 
@@ -129,70 +126,70 @@ class FileChooserControllerTest extends FxTestTemplate {
         sleep(30);
     }
 
-//    @Test
-//    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
-//    void clickOnCancelClosesWindow() {
-//        clickOn("#cancelButton", MouseButton.PRIMARY);
-//
-//        assertFalse(primaryStage.isShowing());
-//    }
-//
-//    @Test
-//    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
-//    void that_dialog_is_initialized_properly() {
-//        ListView<?> list = lookup("#listOfFiles").query();
-//        Button okay = lookup("#okButton").query();
-//        Button cancel = lookup("#cancelButton").query();
-//
-//        sleep(400);
-//
-//        assertTrue(okay.isDisabled());
-//        assertFalse(cancel.isDisabled());
-//        assertFalse(list.getItems().isEmpty());
-//
-//        assertNull(model.getSelectedFile());
-//    }
-//
-//    @Test
-//    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
-//    void that_parent_of_filepath_is_used_for_dirchange_in_textbox_while_filename_is_used_for_filter() {
-//        clickOn("#fileNameFilter");
-//        write("TestData/SomeFiles/TestFile1.txt");
-//        hitKey(KeyCode.ENTER);
-//        ListView<?> list = lookup("#listOfFiles").query();
-//
-//        Path expectedDirectory = Paths.get("TestData/SomeFiles/").toAbsolutePath();
-//        Path currentDirectory = model.currentSearchPath().get();
-//        TextInputControl text = lookup("#fileNameFilter").queryTextInputControl();
-//
-//        assertAll(
-//            () -> assertEquals(1, list.getItems().size(), "There should only be one file listed"),
-//            () -> assertEquals("TestFile1.txt", text.getText(), "Filename filter text"),
-//            () -> assertEquals("TestFile1.txt", list.getItems().get(0).toString(), "Expected File"),
-//            () -> assertEquals(expectedDirectory, currentDirectory, "New working directory")
-//        );
-//    }
-//
-//    @Test
-//    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
-//    void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
-//        clickOn("#fileNameFilter");
-//        write("TestData/SomeFiles/");
-//        hitKey(KeyCode.ENTER);
-//
-//        ListView<?> list = lookup("#listOfFiles").query();
-//
-//        Path expectedDirectory = Paths.get("TestData/SomeFiles/").toAbsolutePath();
-//        Path currentDirectory = model.currentSearchPath().get();
-//        // there is 1 subdir
-//        int trueFileCountd = expectedDirectory.toFile().list().length -1 ;
-//
-//        assertAll(
-//            ()->assertEquals(expectedDirectory, currentDirectory, "New working directory"),
-//            ()->assertEquals(11, list.getItems().size(), "Expeted size"),
-//            ()->assertEquals(trueFileCountd, list.getItems().size(), "Actual directory size")
-//        );
-//    }
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+    void clickOnCancelClosesWindow() {
+        clickOn("#cancelButton", MouseButton.PRIMARY);
+
+        assertFalse(primaryStage.isShowing());
+    }
+
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+    void that_dialog_is_initialized_properly() {
+        ListView<?> list = lookup("#listOfFiles").query();
+        Button okay = lookup("#okButton").query();
+        Button cancel = lookup("#cancelButton").query();
+
+        sleep(400);
+
+        assertTrue(okay.isDisabled());
+        assertFalse(cancel.isDisabled());
+        assertFalse(list.getItems().isEmpty());
+
+        assertNull(model.getSelectedFile());
+    }
+
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+    void that_parent_of_filepath_is_used_for_dirchange_in_textbox_while_filename_is_used_for_filter() {
+        clickOn("#fileNameFilter");
+        write("TestData/SomeFiles/TestFile1.txt");
+        hitKey(KeyCode.ENTER);
+        ListView<?> list = lookup("#listOfFiles").query();
+
+        Path expectedDirectory = Paths.get("TestData/SomeFiles/").toAbsolutePath();
+        Path currentDirectory = model.currentSearchPath().get();
+        TextInputControl text = lookup("#fileNameFilter").queryTextInputControl();
+
+        assertAll(
+            () -> assertEquals(1, list.getItems().size(), "There should only be one file listed"),
+            () -> assertEquals("TestFile1.txt", text.getText(), "Filename filter text"),
+            () -> assertEquals("TestFile1.txt", list.getItems().get(0).toString(), "Expected File"),
+            () -> assertEquals(expectedDirectory, currentDirectory, "New working directory")
+        );
+    }
+
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+    void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
+        clickOn("#fileNameFilter");
+        write("TestData/SomeFiles/");
+        hitKey(KeyCode.ENTER);
+
+        ListView<?> list = lookup("#listOfFiles").query();
+
+        Path expectedDirectory = Paths.get("TestData/SomeFiles/").toAbsolutePath();
+        Path currentDirectory = model.currentSearchPath().get();
+        // there is 1 subdir
+        int trueFileCountd = expectedDirectory.toFile().list().length -1 ;
+
+        assertAll(
+            ()->assertEquals(expectedDirectory, currentDirectory, "New working directory"),
+            ()->assertEquals(11, list.getItems().size(), "Expeted size"),
+            ()->assertEquals(trueFileCountd, list.getItems().size(), "Actual directory size")
+        );
+    }
 
     @Test
     @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
