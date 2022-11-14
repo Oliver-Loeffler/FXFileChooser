@@ -40,9 +40,12 @@ Those are not fully tested so please feel free to provide some feedback.
 | 11     | 11.0.1           | `0.0.10-jdk11` |
 | 11     | 16               | `0.0.10-jdk16` |
 | 17     | 17.0.2           | `0.0.10-jdk17` |
+| 17     | 18.0.2           | `0.0.10-jfx18` |
+| 17     | 19               | `0.0.10-jfx19` |
+| 17     | 17.0.2           | `0.0.11        |
 
-As of now only `0.0.9` is listed at search.maven.org, `0.0.10` will follow soon. Its already downloadable.
-https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser
+All packages are available on https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser.
+Java 17 will be baseline for development from now on. However, backport of working features to Java 11 is thinkable.
 
 JDK11 (LTS)
 ```xml
@@ -58,7 +61,7 @@ JDK17 with OpenJFX17:
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.10-jdk17</version>
+  <version>0.0.11</version>
 </dependency>
 ```
 
