@@ -65,6 +65,26 @@ Java-17 (LTS) with OpenJFX17:
 </dependency>
 ```
 
+## How to build it
+
+This project requires Java-17 or later and utilizes JavaFX 17 or later.
+The build is setup using Maven. As publishing to http://search.maven.org requires signing, the Maven build is configured to sign the artifacts durin verify phase. This may cause problems when the GPG signing is no properly setup. Hence Maven profile exists, which skips the signing step.
+
+Following steps are needed to get the code and run the tests:
+
+```shell
+git clone https://github.com/Oliver-Loeffler/FXFileChooser.git
+cd FXFileChooser
+
+# Run all tests
+mvn verify -P github
+
+# Install the artifact locally (tests ran already during verify)
+mvn install -P github -DskipTests=true
+```
+
+The deployment is controlled using `maven-release-plugin`.
+
 ## How it works
 
 FXFileChooser provides access to a DirectoryChooser and a ListView populated with files in the selected directory. The process starts in the users home directory. The ListView is populated by a background service running an update task upon request. 
