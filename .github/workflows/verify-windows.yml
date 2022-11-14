@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Verify on Windows
 
 on: push
 
@@ -24,5 +24,5 @@ jobs:
         distribution: 'zulu'
         cache: maven
     - name: Verify
-      run: mvn verify -P github
+      run: mvn -B verify -P github
     
