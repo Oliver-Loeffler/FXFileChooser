@@ -212,8 +212,8 @@ final class FileChooserModel {
             String left = withAsterisks.substring(0, firstAsterisk);
             String right = withAsterisks.substring(lastAsterisk+1);
             return p -> null == corrected || corrected.isEmpty()
-                    || (p.toString().toLowerCase().startsWith(left) &&
-                            p.toString().toLowerCase().endsWith(right));
+                    || (p.toString().toLowerCase().startsWith(left.toLowerCase()) &&
+                            p.toString().toLowerCase().endsWith(right.toLowerCase()));
         }
 
         // contains
