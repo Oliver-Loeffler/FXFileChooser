@@ -28,6 +28,6 @@ jobs:
         distribution: 'zulu'
         cache: maven
     - name: Verify
-      run: mvn verify --file pom.xml
+      run: mvn verify --file pom.xml -Dgpg.skip --no-transfer-progress
     - name: Package
-      run: mvn -B package --file pom.xml -DskipTests=true
+      run: mvn -B package --file pom.xml -DskipTests=true -Dgpg.skip --no-transfer-progress
