@@ -359,6 +359,6 @@ In some cases a non-programmatic configuration can be quite helpful. The configu
 
 ## Support
 
-If you like this work and if it is kind of useful four your purpose, I'd be happy if you could [by me a coffee](buymeacoffee.com/?via=raumzeitfalle), thanks!
+If you like this work and if it is kind of useful four your purpose, I'd be happy if you could [by me a coffee](https://buymeacoffee.com/?via=raumzeitfalle), thanks!
 I also appreciate comments and feedback on how it works OR how it unfortunately not works so well.
 
