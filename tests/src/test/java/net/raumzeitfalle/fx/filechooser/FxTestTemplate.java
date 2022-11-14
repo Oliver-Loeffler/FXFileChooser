@@ -21,10 +21,10 @@ package net.raumzeitfalle.fx.filechooser;
 
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 abstract class FxTestTemplate extends ApplicationTest {
-
     protected Stage primaryStage = null;
 
     @Override
@@ -32,4 +32,7 @@ abstract class FxTestTemplate extends ApplicationTest {
         /* please override when needed */
     }
 
+    public void hitKey(KeyCode keyCode) {
+        press(keyCode).release(keyCode);
+    }
 }

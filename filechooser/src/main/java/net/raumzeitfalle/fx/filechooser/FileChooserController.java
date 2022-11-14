@@ -184,6 +184,8 @@ final class FileChooserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.listOfFiles.setItems(this.model.getFilteredPaths());
+        this.fileNameFilter.setOnAction(event->handlePossiblePastedPath());
+        this.fileNameFilter.setOnKeyPressed(this::handleKeysForFileNameFilterField);
         this.fileNameFilter.textProperty().addListener(l -> handleFileNameFilterChanges());
 
         StringBinding binding = Bindings.createStringBinding(
@@ -208,7 +210,6 @@ final class FileChooserController implements Initializable {
         this.showAllFilesFilter.setVisible(false);
 
         this.model.initializeFilter(fileNameFilter.getText());
-        this.fileNameFilter.setOnKeyPressed(this::handleKeysForFileNameFilterField);
 
         // initialize PathFilter menu and permit to dynamically
         // add or remove PathFilter menu items

@@ -72,8 +72,8 @@ class FileChooserControllerTest extends FxTestTemplate {
     private TestDirChooser dirChooser;
 
     protected PathFilter[] getPathFilter() {
-        return new PathFilter[] { PathFilter.create("XML", p -> p.toString().toLowerCase().endsWith(".xml")),
-                PathFilter.acceptAllFiles("all files") };
+        return new PathFilter[] {PathFilter.create("XML", p -> p.toString().toLowerCase().endsWith(".xml")),
+                PathFilter.acceptAllFiles("all files")};
     }
 
     protected Skin getSkin() {
@@ -120,12 +120,12 @@ class FileChooserControllerTest extends FxTestTemplate {
 
     @AfterEach
     void closeStage() throws Exception {
-        Invoke.andWait(()->primaryStage.close());
+        Invoke.andWait(() -> primaryStage.close());
         sleep(30);
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void clickOnCancelClosesWindow() {
         clickOn("#cancelButton", MouseButton.PRIMARY);
 
@@ -133,7 +133,7 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_dialog_is_initialized_properly() {
         ListView<?> list = lookup("#listOfFiles").query();
         Button okay = lookup("#okButton").query();
@@ -149,11 +149,11 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_parent_of_filepath_is_used_for_dirchange_in_textbox_while_filename_is_used_for_filter() {
         clickOn("#fileNameFilter");
         write(Paths.get("TestData/SomeFiles/TestFile1.txt").toString());
-        press(KeyCode.ENTER);
+        hitKey(KeyCode.ENTER);
 
         sleep(200);
 
@@ -164,11 +164,11 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_parent_of_filepath_is_used_for_dirchange_in_textbox() {
         clickOn("#fileNameFilter");
         write(Paths.get("TestData/SomeFiles/").toString());
-        press(KeyCode.ENTER);
+        hitKey(KeyCode.ENTER);
 
         sleep(200);
 
@@ -178,7 +178,7 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_list_is_updated_after_clicking_refresh(@TempDir Path directory) throws IOException {
         ListView<?> list = lookup("#listOfFiles").query();
         ObservableList<?> items = list.getItems();
@@ -210,43 +210,44 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_one_can_navigate_the_tree_upwards() {
         dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
         clickOn("#chooser");
         sleep(200);
-        
+
         assertNotNull(model.currentSearchPath().get());
         assertEquals(Paths.get("TestData/SomeFiles"), model.currentSearchPath().get());
-        
+
         clickOn("#fileNameFilter");
         write("..");
-        press(KeyCode.ENTER);
-        
+        hitKey(KeyCode.ENTER);
+
         sleep(200);
-        
+
         assertNotNull(model.currentSearchPath().get());
         assertEquals(Paths.get("TestData").toAbsolutePath(), model.currentSearchPath().get());
     }
-    
+
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_directory_can_be_changed_by_entering_a_valid_path() {
         dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
         clickOn("#chooser");
-        sleep(200);
+        sleep(2000);
         assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
-        
+
         clickOn("#fileNameFilter");
         write("TestData/SomeFiles/");
-        press(KeyCode.ENTER);
-        
-        sleep(200);
-        
+        sleep(2000);
+        hitKey(KeyCode.ENTER);
+
+        sleep(2000);
+
         assertNotNull(model.currentSearchPath().get());
         assertEquals(Paths.get("TestData/SomeFiles").toAbsolutePath(), model.currentSearchPath().get());
     }
-    
+
     @Test
     @EnabledOnOs({OS.WINDOWS})
     void that_directory_can_be_changed_when_entered_path_has_existing_parent_windows() {
@@ -254,17 +255,17 @@ class FileChooserControllerTest extends FxTestTemplate {
         clickOn("#chooser");
         sleep(200);
         assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
-        
+
         clickOn("#fileNameFilter");
         write("C:\\ThisFolderShouldNotExist");
-        press(KeyCode.ENTER);
-        
+        hitKey(KeyCode.ENTER);
+
         sleep(200);
-        
+
         assertNotNull(model.currentSearchPath().get());
         assertEquals(Paths.get("C:\\").toAbsolutePath(), model.currentSearchPath().get());
     }
-    
+
     @Test
     @EnabledOnOs({OS.LINUX, OS.MAC})
     void that_directory_can_be_changed_when_entered_path_has_existing_parent_other() {
@@ -272,59 +273,66 @@ class FileChooserControllerTest extends FxTestTemplate {
         clickOn("#chooser");
         sleep(200);
         assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
-        
+
         clickOn("#fileNameFilter");
-        write("/usr/someNotExistingDir/");
-        press(KeyCode.ENTER);
-        
+        write("/etc/someNotExistingDir/");
+        hitKey(KeyCode.ENTER);
+
         sleep(200);
-        
+
         assertNotNull(model.currentSearchPath().get());
-        assertEquals(Paths.get("/bin/").toAbsolutePath(), model.currentSearchPath().get());
+        assertEquals(Paths.get("/etc/").toAbsolutePath(), model.currentSearchPath().get());
     }
-    
-    @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
-    void that_directory_and_selection_do_not_change_on_enter_empty_filtertext() {
-        Path searchPath = Paths.get("TestData/SomeFiles/TestFile1.txt");
-        clickOn("#fileNameFilter");
-        write(searchPath.toString());
-        press(KeyCode.ENTER);
 
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
+    void that_directory_and_selection_do_not_change_when_empty_text_is_entered() {
+        var start = Paths.get("TestData/SomeFiles").toAbsolutePath();
+        dirChooser.setDirectory(start);
+
+        clickOn("#chooser");
         sleep(200);
-
-        ListView<?> list = lookup("#listOfFiles").query();
-        assertEquals(1, list.getItems().size());
-        assertEquals(Paths.get("TestData/SomeFiles/").toAbsolutePath(), model.currentSearchPath().get());
-
-        write("");
+        clickOn("#fileNameFilter");
+        write("TestData/SomeFiles/TestFile1.txt", 1);
         press(KeyCode.ENTER);
+        hitKey(KeyCode.ENTER);
 
-        list = lookup("#listOfFiles").query();
-        assertEquals(1, list.getItems().size());
-        assertEquals(Paths.get("TestData/SomeFiles/").toAbsolutePath(), model.currentSearchPath().get());
+        Path expected = start.toAbsolutePath();
+        Path currentDir = model.currentSearchPath().get();
+        assertEquals(expected, currentDir);
+
+        clickOn("#fileNameFilter");
+        press(KeyCode.COMMAND, KeyCode.A);
+        release(KeyCode.COMMAND, KeyCode.A);
+        press(KeyCode.BACK_SPACE);
+
+        hitKey(KeyCode.ENTER);
+
+        Path selection = model.getSelectedFile().toAbsolutePath();
+        Path expectedSelection = start.resolve("TestFile1.txt").toAbsolutePath();
+        assertEquals(expectedSelection, selection);
     }
-    
+
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_file_can_selected_by_entering_a_valid_path() {
         dirChooser.setDirectory(Paths.get(".").toAbsolutePath());
         clickOn("#chooser");
         sleep(200);
         assertEquals(Paths.get(".").toAbsolutePath(), model.currentSearchPath().get());
-        
+
         clickOn("#fileNameFilter");
         write("TestData/SomeFiles/TestFile1.txt");
-        press(KeyCode.ENTER);
-        
+        hitKey(KeyCode.ENTER);
+
         sleep(200);
-        
+
         Path selection = model.getSelectedFile();
         assertEquals(Paths.get("TestData/SomeFiles/TestFile1.txt").toAbsolutePath(), selection);
     }
-    
+
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_selection_is_accepted_with_doubleclick() {
         dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
         clickOn("#chooser");
@@ -343,7 +351,7 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_list_content_is_reduced_by_entering_filtertext() {
         dirChooser.setDirectory(Paths.get("TestData/SomeFiles"));
         clickOn("#chooser");
@@ -369,11 +377,11 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.MAC})
     void that_pathfilter_for_XML_from_menu_is_applied() {
         sleep(200);
         write("./TestData/SomeFiles/");
-        press(KeyCode.ENTER);
+        hitKey(KeyCode.ENTER);
         MenuButton filterMenu = lookup("#fileExtensionFilter").query();
         clickOn(filterMenu);
         clickOn("XML");
@@ -382,7 +390,7 @@ class FileChooserControllerTest extends FxTestTemplate {
     }
 
     @Test
-    @EnabledOnOs({ OS.WINDOWS, OS.LINUX, OS.MAC })
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX, OS.MAC})
     void that_selection_is_accepted_with_okay_after_dirchange_in_textbox() {
         Button okay = lookup("#okButton").query();
         assertTrue(okay.isDisabled());
@@ -396,7 +404,7 @@ class FileChooserControllerTest extends FxTestTemplate {
         assertTrue(list.getItems().isEmpty());
 
         clickOn("#fileNameFilter");
-        press(KeyCode.ENTER);
+        hitKey(KeyCode.ENTER);
         sleep(200);
 
         assertEquals(11, list.getItems().size());

@@ -101,7 +101,6 @@ final class FileChooserModel {
         this.fileUpdateService.startUpdate();
         this.selectedFileName.bind(createStringBindingTo(fileSelection));
         this.initializeFilter("");
-
     }
 
     private StringBinding createStringBindingTo(ObservableValue<?> observable) {
