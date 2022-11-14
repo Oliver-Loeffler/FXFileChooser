@@ -15,7 +15,7 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 
 ## Adding FXFileChooser to your Maven or Gradle project
 
-### Dependency for Maven `POM.xml`
+### Dependency for Maven `POM.xml` for JDK8
 
 ```xml
 <dependency>
@@ -30,6 +30,37 @@ and attributes to FontAwesome Free 5.01 (Font Awesome Free License and CC BY 4.0
 implementation 'net.raumzeitfalle.fx:filechooser:0.0.9'
 ```
 
+Besides version `0.0.9` which is primarily intended for Java 8, there is version `0.0.10` which exists for a variety of Java/OpenJFX combinations.
+Those are not fully tested so please feel free to provide some feedback.
+
+| Java | JavaFX | artifact version |
+|-|-|-|
+| 8     | 8                   | `0.0.9` |
+| 9     | 9                   | `0.0.10-jdk9` |
+| 11     | 11.0.1          | `0.0.10-jdk11` |
+| 11     | 16               | `0.0.10-jdk16` |
+| 17     | 17               | `0.0.10-jdk17` |
+
+As of now only `0.0.9` is listed at search.maven.org, `0.0.10` will follow soon. Its already downloadable.
+https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser
+
+JDK11 (LTS)
+```xml
+<dependency>
+  <groupId>net.raumzeitfalle.fx</groupId>
+  <artifactId>filechooser</artifactId>
+  <version>0.0.10-jdk11</version>
+</dependency>
+```
+
+JDK17 with OpenJFX17:
+```xml
+<dependency>
+  <groupId>net.raumzeitfalle.fx</groupId>
+  <artifactId>filechooser</artifactId>
+  <version>0.0.10-jdk17</version>
+</dependency>
+```
 
 ## How it works
 
