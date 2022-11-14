@@ -4,7 +4,6 @@
 
 [![Verify on Windows](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml/badge.svg)](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml)
 [![Verify on MacOS 12](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-macos.yml/badge.svg)](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-macos.yml)
-[![Verify on Linux Ubuntu](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-linux.yml/badge.svg)](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-linux.yml)
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
