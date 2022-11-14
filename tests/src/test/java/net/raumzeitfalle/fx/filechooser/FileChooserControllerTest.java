@@ -435,7 +435,6 @@ class FileChooserControllerTest extends FxTestTemplate {
             directory = startLocation.get();
         }
 
-        @Override
         public void getUpdate(Consumer<Path> update) {
             update.accept(directory);
         }

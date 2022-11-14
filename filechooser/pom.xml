@@ -134,7 +134,4 @@
             </plugin>
         </plugins>
     </build>
-    <scm>
-        <tag>0.0.10-jdk17</tag>
-    </scm>
 </project>
