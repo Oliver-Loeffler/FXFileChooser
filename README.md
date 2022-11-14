@@ -1,6 +1,10 @@
 # FXFileChooser
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.10-jdk17/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.10-jdk17)  [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.raumzeitfalle.fx%3Afilechooser&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.raumzeitfalle.fx%3Afilechooser) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser) ![Verify Windows](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml/badge.svg) ![Verify MacOS](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-macos.yml/badge.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.10-jdk17/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.10-jdk17)  [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=net.raumzeitfalle.fx%3Afilechooser&metric=alert_status)](https://sonarcloud.io/dashboard?id=net.raumzeitfalle.fx%3Afilechooser) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser)
+
+Build status:
+![Verify Windows](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml/badge.svg)
+![Verify MacOS](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-macos.yml/badge.svg)
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
