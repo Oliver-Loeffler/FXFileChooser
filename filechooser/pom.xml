@@ -4,11 +4,22 @@
     <parent>
         <groupId>net.raumzeitfalle.fx</groupId>
         <artifactId>fxfilechooser</artifactId>
-        <version>0.0.11-SNAPSHOT</version>
+        <version>0.0.10-jdk17-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>filechooser</artifactId>
     <packaging>jar</packaging>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <resources>
