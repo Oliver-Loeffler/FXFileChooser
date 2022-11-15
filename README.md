@@ -35,7 +35,7 @@ implementation 'net.raumzeitfalle.fx:filechooser:0.0.11'
 
 When using FXFileChooser in a modular Java project, then add following statement to your module-info:
 
-```
+```java
 module your.module {
     requires net.raumzeitfalle.fxfilechooser;
 }
