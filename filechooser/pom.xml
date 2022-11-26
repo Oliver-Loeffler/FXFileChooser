@@ -4,11 +4,29 @@
     <parent>
         <groupId>net.raumzeitfalle.fx</groupId>
         <artifactId>fxfilechooser</artifactId>
-        <version>0.0.11</version>
+        <version>0.0.11.1</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>filechooser</artifactId>
     <packaging>jar</packaging>
+
+    <inceptionYear>2017</inceptionYear>
+    <organization>
+        <name>Oliver Loeffler, Raumzeitfalle.net</name>
+        <url>http://www.raumzeitfalle.net</url>
+    </organization>
+   
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <resources>
@@ -122,4 +140,37 @@
             </plugin>
         </plugins>
     </build>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/Oliver-Loeffler/FXFileChooser/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
+        <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
+        <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
+        <tag>0.0.11</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Oliver Loeffler</name>
+            <url>https://github.com/oliver-loeffler</url>
+            <id>oloeffler</id>
+        </developer>
+    </developers>
+
+    <name>FXFileChooser</name>
+    <description>Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.</description>
+    <url>http://fx.raumzeitfalle.net</url>
+
 </project>
