@@ -31,13 +31,45 @@
     <groupId>net.raumzeitfalle.fx</groupId>
     <artifactId>fxfilechooser</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.11.1</version>
+    <version>0.0.11</version>
 
     <inceptionYear>2017</inceptionYear>
     <organization>
         <name>Oliver Loeffler, Raumzeitfalle.net</name>
         <url>http://www.raumzeitfalle.net</url>
     </organization>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/Oliver-Loeffler/FXFileChooser/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/Oliver-Loeffler/FXFileChooser</url>
+        <connection>scm:git:git@github.com/oliver-loeffler/fxfilechooser.git</connection>
+        <developerConnection>scm:git:git@github.com:oliver-loeffler/fxfilechooser.git</developerConnection>
+        <tag>0.0.11</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Oliver Loeffler</name>
+            <url>https://github.com/oliver-loeffler</url>
+            <id>oloeffler</id>
+        </developer>
+    </developers>
+
+    <name>FXFileChooser</name>
+    <description>Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.</description>
+    <url>http://fx.raumzeitfalle.net</url>
 
     <modules>
         <module>filechooser</module>
@@ -57,7 +89,7 @@
     </distributionManagement>
 
     <dependencies>
-        <!-- OpenJFX dependencies -->
+	<!-- OpenJFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -278,6 +310,14 @@
                     <goals>deploy</goals>
                     <tagNameFormat>@{project.version}</tagNameFormat>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
