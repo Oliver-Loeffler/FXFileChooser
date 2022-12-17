@@ -8,9 +8,7 @@
 
 name: Verify on Linux Ubuntu           
 
-on:
-  check_run:
-    types: requested
+on: workflow_dispatch
 
 jobs:
   build:
