@@ -1,6 +1,7 @@
 .classpath
 .DS_Store
 Screenshot*.png
+.flattened-pom.xml
 .idea/
 .mvn/wrapper/maven-wrapper.jar
 .project
@@ -9,3 +10,4 @@ Screenshot*.png
 filechooser.iml
 target/
 build/
+bin/
