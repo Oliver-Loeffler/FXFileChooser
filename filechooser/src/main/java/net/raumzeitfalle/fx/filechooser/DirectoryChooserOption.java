@@ -28,10 +28,10 @@ public enum DirectoryChooserOption implements Function<FileChooser, PathUpdateHa
         @Override
         public PathUpdateHandler apply(FileChooser fileChooser) {
             return FXDirectoryChooser.createIn(fileChooser.currentSearchPath(),
-                                               ()->fileChooser.getWindow());
+                                               () -> fileChooser.getWindow());
         }
     },
-    CUSTOM{       
+    CUSTOM {
         @Override
         public PathUpdateHandler apply(FileChooser fileChooser) {
            return new DirectoryChooser.DirChooserPathUpdateHandler(fileChooser);

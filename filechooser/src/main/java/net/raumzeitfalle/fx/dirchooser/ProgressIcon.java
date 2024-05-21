@@ -39,7 +39,7 @@ class ProgressIcon extends AnchorPane {
         progressBar.setProgress(-1);
         progressBar.setMaxSize(iconSize, iconSize);
         progressBar.setPrefSize(iconSize, iconSize);
-        progressBar.setOnMouseClicked(clickEvent->{
+        progressBar.setOnMouseClicked(clickEvent -> {
             if (clickEvent.getClickCount() == 2) {
                 cancelHandler.handle(null);
             }

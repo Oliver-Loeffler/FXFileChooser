@@ -73,7 +73,7 @@ enum FileIcons {
        StackPane pane = new StackPane();
        ImageView image = create(file);
        pane.getChildren().add(image);
-       pane.setMinWidth(FileChooserProperties.getIconSize()*1.5);
+       pane.setMinWidth(FileChooserProperties.getIconSize() * 1.5);
        pane.getStyleClass().add("file-icon-pane");
        return pane;
     }

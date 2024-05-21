@@ -205,7 +205,7 @@ public class DirectoryChooserController implements Initializable {
     }
 
     private void configureOkayAction() {
-        chooseFiles.setOnAction(e->{
+        chooseFiles.setOnAction(e -> {
             if (okButton.isDisable()) {
                 cancelAction();
             } else {
@@ -246,7 +246,7 @@ public class DirectoryChooserController implements Initializable {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Huge directory");
             alert.setHeaderText("Scanning for subdirs may take a while!");
-            alert.setContentText(String.format("This directory holds %s items.",Integer.toString(item.size())));
+            alert.setContentText(String.format("This directory holds %s items.", Integer.toString(item.size())));
             Optional<ButtonType> userResponse = alert.showAndWait();
             if (userResponse.isPresent() && userResponse.get() == ButtonType.CANCEL) {
                 return;
@@ -365,7 +365,7 @@ public class DirectoryChooserController implements Initializable {
     private void scrollToItem(DirectoryTreeItem share) {
         int index = directoryTree.getRow(share);
         directoryTree.scrollTo(index);
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             int i = directoryTree.getRow(share);
             directoryTree.scrollTo(i);
         });
@@ -412,7 +412,7 @@ public class DirectoryChooserController implements Initializable {
             root.setExpanded(false);
             DirectoryTreeItem item = expandAll(path, 0, localRoot);
             if (item != null) {               
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     selectButNotExpand(item);
                     scrollToItem(item);
                 });

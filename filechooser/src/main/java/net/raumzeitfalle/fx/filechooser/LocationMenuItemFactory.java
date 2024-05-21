@@ -26,7 +26,7 @@ import java.util.function.Function;
 import javafx.scene.control.MenuItem;
 import net.raumzeitfalle.fx.filechooser.locations.Location;
 
-class LocationMenuItemFactory implements Function<Location,LocationMenuItem> {
+class LocationMenuItemFactory implements Function<Location, LocationMenuItem> {
 
     private final Consumer<Location> pathConsumer;
 

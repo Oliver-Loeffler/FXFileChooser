@@ -60,8 +60,8 @@ class DirectoryTreeUpdateTask extends Task<Void> {
     @Override
     protected void running() {
         super.running();
-        ProgressIcon progressIcon = new ProgressIcon(32, evt->cancel(true));
-        Platform.runLater(()->item.setGraphic(progressIcon));
+        ProgressIcon progressIcon = new ProgressIcon(32, evt -> cancel(true));
+        Platform.runLater(() -> item.setGraphic(progressIcon));
     }
 
     @Override
@@ -70,20 +70,20 @@ class DirectoryTreeUpdateTask extends Task<Void> {
         super.cancelled();
         cancelled.setValue(true);
         removable.accept(path);
-        Platform.runLater(()->item.setGraphic(itemGraphic));
+        Platform.runLater(() -> item.setGraphic(itemGraphic));
     }
 
     @Override
     protected void failed() {
         super.failed();
         removable.accept(path);
-        Platform.runLater(()->item.setGraphic(itemGraphic));
+        Platform.runLater(() -> item.setGraphic(itemGraphic));
     }
 
     @Override
     protected void succeeded() {
         super.succeeded();
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             item.setGraphic(itemGraphic);
             if (!item.getChildren().isEmpty() && item.isDirectory()) {
                 item.setExpanded(true);

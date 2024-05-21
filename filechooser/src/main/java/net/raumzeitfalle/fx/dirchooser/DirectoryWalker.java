@@ -48,7 +48,7 @@ class DirectoryWalker {
     }
 
     DirectoryTreeItem read(ReadOnlyBooleanProperty cancelled) {
-        FileFilter ff = pathname-> {
+        FileFilter ff = pathname -> {
             if (null == pathname) { return false; }
             return pathname.isDirectory();
         };

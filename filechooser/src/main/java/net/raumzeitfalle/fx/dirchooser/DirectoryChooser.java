@@ -88,7 +88,7 @@ public class DirectoryChooser extends AnchorPane {
 
         this.controller.hideChooseFilesButton();
         this.useChooseFileButtonProperty = new SimpleBooleanProperty(false);
-        this.useChooseFileButtonProperty.addListener((obs,prev,next)->{
+        this.useChooseFileButtonProperty.addListener((obs, prev, next) -> {
             if (Boolean.compare(next, prev) == 0) {
                 return;
             }
@@ -97,7 +97,7 @@ public class DirectoryChooser extends AnchorPane {
         
         this.controller.hideCancelButton();
         this.useCancelButtonProperty = new SimpleBooleanProperty(false);
-        this.useCancelButtonProperty.addListener((obs,prev,next)->{
+        this.useCancelButtonProperty.addListener((obs, prev, next) -> {
             if (Boolean.compare(next, prev) == 0) {
                 return;
             }

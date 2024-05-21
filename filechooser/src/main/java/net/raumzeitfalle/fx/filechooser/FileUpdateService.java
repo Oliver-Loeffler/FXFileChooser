@@ -132,7 +132,7 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
      * This is inly intended to be used for debugging.
      */
     public void waitUntilFinished() {
-        Invoke.andWaitWithoutException(()->{
+        Invoke.andWaitWithoutException(() -> {
             long start = System.currentTimeMillis();
             while (isRunning()) {
                 if (start % 1000 == 0) {

@@ -210,10 +210,10 @@ final class FileChooserModel {
                    && withAsterisks.length() >= 3) {
             // starts with & end with
             String left = withAsterisks.substring(0, firstAsterisk);
-            String right = withAsterisks.substring(lastAsterisk+1);
+            String right = withAsterisks.substring(lastAsterisk + 1);
             return p -> null == corrected || corrected.isEmpty()
-                    || (p.toString().toLowerCase().startsWith(left.toLowerCase()) &&
-                            p.toString().toLowerCase().endsWith(right.toLowerCase()));
+                    || (p.toString().toLowerCase().startsWith(left.toLowerCase())
+                        &&  p.toString().toLowerCase().endsWith(right.toLowerCase()));
         }
 
         // contains
@@ -242,9 +242,9 @@ final class FileChooserModel {
     }
 
     private String removeDoubles(String text, String single) {
-        String dbl = single+single;
+        String dbl = single + single;
         String corrected = text;
-        while(corrected.contains(dbl)) {
+        while (corrected.contains(dbl)) {
             corrected = corrected.replace(dbl, single);
         }
         return corrected;

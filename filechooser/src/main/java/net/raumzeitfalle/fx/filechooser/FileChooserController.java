@@ -184,7 +184,7 @@ final class FileChooserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.listOfFiles.setItems(this.model.getFilteredPaths());
-        this.fileNameFilter.setOnAction(event->handlePossiblePastedPath());
+        this.fileNameFilter.setOnAction(event -> handlePossiblePastedPath());
         this.fileNameFilter.setOnKeyPressed(this::handleKeysForFileNameFilterField);
         this.fileNameFilter.textProperty().addListener(l -> handleFileNameFilterChanges());
 
@@ -369,7 +369,7 @@ final class FileChooserController implements Initializable {
         model.getUpdateService().restartIn(normalized);
         if (Files.exists(normalized) 
                 && Files.isRegularFile(normalized)) {
-            Platform.runLater(()->{
+            Platform.runLater(() -> {
                 selectEnteredFileAndRequestOkayFocus(normalized);
             });
         } else {
