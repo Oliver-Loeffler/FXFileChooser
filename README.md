@@ -303,7 +303,7 @@ public class DemoFileChooser extends Application {
 
 There is also a new control named directory chooser. This is especially intended to be used on large volumes with many files and many folders. Folder scanning is executed on demand and progress is indicated per folder.
 
-One can abort folder scanning by double click on the progress indicator. If paths have been scanned, one can enter a path into the search field and the directory chooser will attempt to select the directory. The selection needs to be confirmed and accepted manually with click on okay.
+One can abort folder scanning by double-click on the progress indicator. If paths have been scanned, one can enter a path into the search field and the directory chooser will attempt to select the directory. The selection needs to be confirmed and accepted manually with click on okay.
 
 Already explored folders will be marked with a `+` sign and presumably large folders will receive a `XL` tag. In case of large folders (> 1000 items) the directory chooser will ask the user before running indexing.
 
@@ -332,9 +332,10 @@ public class DemoDirectoryChooser extends Application {
             Path selectedDir = dirChooser.selectedDirectoryProperty().get();
             showMessage("Selected:", selectedDir.normalize().toAbsolutePath().toString());
         });
-        dirChooser.onCancel(()->{
-            showMessage("Cancelled:", "One can hide the cancel button if not needed.");
-        });
+        dirChooser.onCancel(
+                () -> showMessage("Cancelled:", "One can hide the cancel button if not needed.")
+        );
+
         scene = new Scene(dirChooser);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");
