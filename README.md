@@ -7,7 +7,7 @@
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
-As the standard JavaFX file chooser uses system dialogs, so it is hard to test and it is not easy to modifiy (e. g. new Skin). In some cases the system controls even show poor performance opening folders with many files (depends on operating system and JRE version).
+As the standard JavaFX file chooser uses system dialogs, so it is hard to test and hard to modify (e.g. new Skin). In some cases the system controls even show poor performance opening folders with many files (depends on operating system and JRE version).
 
 On Microsoft Windows platforms running with Java 8, I've encountered cases where it was impossible to use the Java Swing JFileChooser, simply due to the high number of files in a directory. Using the JavaFX FileChooser was also not an option as I required a simplistic way to filter the files by name.
 
