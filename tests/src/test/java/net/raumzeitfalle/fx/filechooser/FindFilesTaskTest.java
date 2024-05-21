@@ -97,8 +97,7 @@ class FindFilesTaskTest extends FxTestTemplate {
     @Test
     void that_null_for_listOfPaths_causes_exception() {
         Path path = Paths.get("./");
-        Throwable t = assertThrows(NullPointerException.class,
-                ()->new FindFilesTask(path, null));
+        Throwable t = assertThrows(NullPointerException.class, () -> new FindFilesTask(path, null));
         assertEquals("listOfPaths must not be null", t.getMessage());
     }
 
@@ -150,6 +149,6 @@ class FindFilesTaskTest extends FxTestTemplate {
     }
 
     private Predicate<Integer> allFilesHaveBeenProcessed() {
-        return v->v>=0;
+        return v -> v >= 0;
     }
 }

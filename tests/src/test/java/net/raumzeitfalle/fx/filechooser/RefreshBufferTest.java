@@ -40,7 +40,7 @@ class RefreshBufferTest {
         "50001,   200",
         "100000,  200",
         "100001,  500",
-        "600001, 1000",})
+        "600001, 1000", })
     void cacheSize(Integer items, Integer expectedBufferSize) {
         int bufferSize = RefreshBuffer.determineBufferSize(items);
         assertEquals(bufferSize, expectedBufferSize);

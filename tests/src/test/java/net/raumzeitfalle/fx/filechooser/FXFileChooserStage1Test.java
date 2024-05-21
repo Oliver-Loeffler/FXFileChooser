@@ -52,7 +52,7 @@ public class FXFileChooserStage1Test extends ApplicationTest {
     
     @AfterEach
     void closeStage() throws Exception {
-        Invoke.andWait(()->stageUnderTest.close());
+        Invoke.andWait(() -> stageUnderTest.close());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class FXFileChooserStage1Test extends ApplicationTest {
         captureImage(root, "ScreenshotFXFileChooserStageDark.png");
         
         FileChooserModel model = stageUnderTest.getModel();
-        assertEquals(1 , model.getPathFilter().size());
+        assertEquals(1, model.getPathFilter().size());
         assertEquals("*.*", model.getPathFilter().get(0).getName());
         assertNotNull(model.getPathFilter().get(0).getPredicate());
         assertEquals(Paths.get("."), model.currentSearchPath().get());

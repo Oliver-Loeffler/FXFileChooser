@@ -43,7 +43,7 @@ class LocationsTest {
         Location location = Locations.at(path);
 
         assertAll(() -> assertEquals("TestData/SomeFiles", location.getName().replace("\\", "/"), "name"),
-                () -> assertTrue(location.exists(),"exist"),
+                () -> assertTrue(location.exists(), "exist"),
                 () -> assertEquals(path.getParent(), location.getPath(), "path"));
     }
 

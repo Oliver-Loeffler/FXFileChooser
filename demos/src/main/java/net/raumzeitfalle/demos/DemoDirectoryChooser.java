@@ -41,13 +41,13 @@ public class DemoDirectoryChooser extends Application {
     public void start(Stage primaryStage) throws Exception {
         dirChooser = new DirectoryChooser(Skin.DARK);
         dirChooser.useCancelButtonProperty().setValue(true);
-        dirChooser.onSelect(()->{
+        dirChooser.onSelect(() -> {
             Path selectedDir = dirChooser.selectedDirectoryProperty().get();
             showMessage("Selected:", selectedDir.normalize().toAbsolutePath().toString());
         });
-        dirChooser.onCancel(()->{
-            showMessage("Cancelled:", "One can hide the cancel button if not needed.");
-        });
+        dirChooser.onCancel(() ->
+            showMessage("Cancelled:", "One can hide the cancel button if not needed.")
+        );
         scene = new Scene(dirChooser);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Demo");

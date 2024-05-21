@@ -182,12 +182,12 @@ class FileChooserControllerTest extends FxTestTemplate {
         Path expectedDirectory = Paths.get("TestData/SomeFiles/").toAbsolutePath();
         Path currentDirectory = model.currentSearchPath().get();
         // there is 1 subdir
-        int trueFileCountd = expectedDirectory.toFile().list().length -1 ;
+        int trueFileCountd = expectedDirectory.toFile().list().length - 1;
 
         assertAll(
-            ()->assertEquals(expectedDirectory, currentDirectory, "New working directory"),
-            ()->assertEquals(11, list.getItems().size(), "Expeted size"),
-            ()->assertEquals(trueFileCountd, list.getItems().size(), "Actual directory size")
+            () -> assertEquals(expectedDirectory, currentDirectory, "New working directory"),
+            () -> assertEquals(11, list.getItems().size(), "Expeted size"),
+            () -> assertEquals(trueFileCountd, list.getItems().size(), "Actual directory size")
         );
     }
 
@@ -215,8 +215,8 @@ class FileChooserControllerTest extends FxTestTemplate {
         Path currentDirectory = model.currentSearchPath().get().toAbsolutePath();
 
         assertAll(
-            ()->assertEquals(1, items.size()),
-            ()->assertEquals(expectedDirectory, currentDirectory));
+            () -> assertEquals(1, items.size()),
+            () -> assertEquals(expectedDirectory, currentDirectory));
     }
 
     /*

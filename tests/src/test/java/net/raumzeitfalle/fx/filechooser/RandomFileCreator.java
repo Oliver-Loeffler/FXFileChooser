@@ -60,11 +60,11 @@ public final class RandomFileCreator {
     }
 
     private String[] getSeparators() {
-        return new String[] { ".", "-", "" };
+        return new String[] {".", "-", ""};
     }
 
     private String[] getExtensions() {
-        return new String[] { "kms", "lms", "job", "sf3", ",sf4", "md5", "crc", "xls", "xlsx", "xlsm", "docx", "doc",
+        return new String[] {"kms", "lms", "job", "sf3", ",sf4", "md5", "crc", "xls", "xlsx", "xlsm", "docx", "doc",
                 "docm", "html", "htm", "css", "sass", "txt", "na0", "na1", "na2", "na3", "nb1", "jpeg", "jpg", "bmp",
                 "tiff", "jasc", "mdp", "pdf", "java", "cpp", "h", "exe", "com", "md", "adoc", "xml", "py", "xhtml",
                 "groovy", "gradle", "properties", "config", "cfg", "prefs", "url", "rdp", "rest", "fxml", "settings",
@@ -76,7 +76,7 @@ public final class RandomFileCreator {
     }
 
     private String[] getSillables() {
-        return new String[] { "metro", "device", "layer", "customer", "special", "auto", "line", "Space", "clear",
+        return new String[] {"metro", "device", "layer", "customer", "special", "auto", "line", "Space", "clear",
                 "dark", "yellow", "green", "orange", "duv", "iline", "ltem", "bim", "report", "statistics",
                 "documentation", "architecture", "diagrams", "shares", "earning", "returns", "complaints", "worksheet",
                 "workbook", "table", "workdocument", "calculation", "summary", "index", "letter", "templates", "toc",

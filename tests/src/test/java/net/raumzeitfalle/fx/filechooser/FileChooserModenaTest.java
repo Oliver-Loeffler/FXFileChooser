@@ -53,7 +53,7 @@ class FileChooserModenaTest extends FileChooserTestBase {
 
     @AfterEach
     void closeStage() throws Exception {
-        Invoke.andWait(()->primaryStage.close());
+        Invoke.andWait(() -> primaryStage.close());
     }
 
     /*
