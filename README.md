@@ -45,15 +45,16 @@ Besides version `0.0.9` which is primarily intended for Java 8, there is version
 Those are not fully tested so please feel free to provide some feedback.
 
 | Java | JavaFX | artifact version |
-|-|-|-|
-| 8      | 8                | `0.0.9`        |
-| 9      | 9                | `0.0.10-jdk9`  |
-| 11     | 11.0.1           | `0.0.10-jdk11` |
-| 11     | 16               | `0.0.10-jdk16` |
-| 17     | 17.0.2           | `0.0.10-jdk17` |
-| 17     | 18.0.2           | `0.0.10-jfx18` |
-| 17     | 19               | `0.0.10-jfx19` |
-| 17     | 19               | `0.0.11`       |
+|-|--------|------------------|
+| 8      | 8      | `0.0.9`          |
+| 9      | 9      | `0.0.10-jdk9`    |
+| 11     | 11.0.1 | `0.0.10-jdk11`   |
+| 11     | 16     | `0.0.10-jdk16`   |
+| 17     | 17.0.2 | `0.0.10-jdk17`   |
+| 17     | 18.0.2 | `0.0.10-jfx18`   |
+| 17     | 19     | `0.0.10-jfx19`   |
+| 17     | 19     | `0.0.11`         |
+| 17     | 20     | `0.0.12`         |
 
 All packages are available on https://search.maven.org/artifact/net.raumzeitfalle.fx/filechooser.
 Java 17 will be baseline for development from now on. However, backport of working features to Java 11 is thinkable.
@@ -72,7 +73,7 @@ Java-17 (LTS) with OpenJFX17:
 <dependency>
   <groupId>net.raumzeitfalle.fx</groupId>
   <artifactId>filechooser</artifactId>
-  <version>0.0.11</version>
+  <version>0.0.12</version>
 </dependency>
 ```
 
@@ -108,15 +109,15 @@ It turned out that with slow network connections the experience is great when us
  1. Provide some kind of directory content pre fetching for large network shares. 
  2. Indicate update progress and update ListView with one operation (one single update works fine, in case of using pre fetching that would be okay). Otherwise one would see an empty List and would have to wait.
  3. In the above case, ensure that files which are selected but do not exist are removed from view on selection or hover OR dont accept the OK action in case the file does no longer exist and trigger update then.  
- 3. Update the view in one step (one single update works fine, in case of using pre fetching that would be okay). But then also update only what has changed. Never clear the list, only remove items which do no longer exist and add items which are not in the view.
- 4. Keep the selection (if file still exists after update)
+ 4. Update the view in one step (one single update works fine, in case of using pre fetching that would be okay). But then also update only what has changed. Never clear the list, only remove items which do no longer exist and add items which are not in the view.
+ 5. Keep the selection (if file still exists after update)
 
 
 ## Available versions
 
  * FileChooser placed in a customized JavaFX stage
  * One placed in a JavaFX dialog
- * One placed in a JFXPanel so it can be used in Java Swing applications.
+ * One placed in a JFXPanel, so it can be used in Java Swing applications.
 
 
 ## Features & Ideas
