@@ -140,6 +140,15 @@ It turned out that with slow network connections the experience is great when us
 
 Tests are missing and currently I'm playing with TestFX - but it's not yet working as I like it.
 
+## Structure
+
+### FXML Nodes and FXML IDs
+
+![FXML Nodes and IDs](pages/filechooser/FXML_and_ids.png)
+
+### CSS Classes
+
+tbd.
 
 ## Using the FileChooser with Swing
 
