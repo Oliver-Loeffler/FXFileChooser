@@ -144,7 +144,7 @@ Tests are missing and currently I'm playing with TestFX - but it's not yet worki
 
 ### FXML Nodes and FXML IDs
 
-![FXML Nodes and IDs](pages/filechooser/FXML_and_ids.png)
+![FXML Nodes and IDs](pages/filechooser/FXML_and_ids.webp)
 
 ### CSS Classes
 
