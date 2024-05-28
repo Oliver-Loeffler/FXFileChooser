@@ -40,7 +40,7 @@
 
 .progress-bar .bar {
     -fx-accent: #ffa700;
-    -fc-background-color: #ffa700;
+    -fx-background-color: #ffa700;
     -fx-background-insets: 1, 0, 1, 0;
     -fx-background-radius: 0, 0, 0, 0;
 }
