@@ -32,6 +32,8 @@ import javafx.concurrent.Task;
 
 final class FileUpdateService extends javafx.concurrent.Service<Integer> implements UpdateService {
 
+    private static final Logger LOGGER = Logger.getLogger(FileUpdateService.class.getName()); 
+    
     private ObjectProperty<Path> rootFolder = new SimpleObjectProperty<>();
 
     private ObservableList<IndexedPath> pathsToUpdate;
@@ -103,13 +105,19 @@ final class FileUpdateService extends javafx.concurrent.Service<Integer> impleme
 
     private void attemptRefreshUsingParent(Path directory) {
         Path parent = directory.getParent();
-        if (null != parent)
+        if (null != parent) {
             refreshWhenExists(parent);
+        } else {
+            LOGGER.log(Level.WARNING, "Not existing location: {0}", directory);
+        }
     }
 
     protected void refreshWhenExists(Path location) {
-        if (location.toFile().exists())
+        if (location.toFile().exists()) {
             setLocationAndRefresh(location);
+        } else {
+            LOGGER.log(Level.WARNING, "Not existing location: {0}", location);
+        }
     }
 
     private void setLocationAndRefresh(Path location) {

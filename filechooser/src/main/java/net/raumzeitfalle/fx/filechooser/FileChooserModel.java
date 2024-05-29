@@ -120,6 +120,14 @@ final class FileChooserModel {
     public ObjectProperty<Path> currentSearchPath() {
         return this.fileUpdateService.searchPathProperty();
     }
+    
+    public Path getCurrentSearchPath() {
+        Path current = this.fileUpdateService.searchPathProperty().get(); 
+        if (null == current) {
+            return null;
+        }
+        return current.toAbsolutePath().normalize();
+    }
 
     public ObservableList<IndexedPath> getFilteredPaths() {
         return filteredPaths;

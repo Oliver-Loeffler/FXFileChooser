@@ -2,7 +2,7 @@
  * #%L
  * FXFileChooser
  * %%
- * Copyright (C) 2017 - 2022 Oliver Loeffler, Raumzeitfalle.net
+ * Copyright (C) 2017 - 2024 Oliver Loeffler, Raumzeitfalle.net
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,21 @@ package net.raumzeitfalle.fx.filechooser;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import javafx.beans.DefaultProperty;
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
@@ -53,14 +63,60 @@ import javafx.stage.Window;
  * (which will also run in a separate task) and apply filtering at same time. Sorting and filtering
  * operations are available even during directory indexing.
  */
+@DefaultProperty("path")
 public class FileChooser extends StackPane {
 
+    private static final Logger LOGGER = Logger.getLogger(FileChooser.class.getName()); 
+
     private FileChooserModel model = FileChooserModel.startingInUsersHome(PathFilter.acceptAllFiles("all files"));
+    
     private FileChooserViewOption viewOption = FileChooserViewOption.STAGE;
+    
     private Skin skin = Skin.MODENA;
+    
     private Dialog<Path> dialog = null;
+    
     private AnchorPane fileChooserView;
+    
     private final FileChooserController controller;
+    
+    private String pathName = null;
+    
+    private final StringProperty pathNameProperty = new SimpleStringProperty(this.pathName);
+    
+    public StringProperty pathNameProperty() {
+        return this.pathNameProperty;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String newPathName) {
+        this.pathName = newPathName;
+        if (this.pathNameProperty != null) {
+            this.pathNameProperty.set(newPathName);
+        }
+    }
+    
+    private String skinName = null;
+    
+    private final StringProperty skinNameProperty = new SimpleStringProperty(this.skinName);
+    
+    public StringProperty skinNameProperty() {
+        return this.skinNameProperty;
+    }
+
+    public String getskinName() {
+        return skinName;
+    }
+
+    public void setskinName(String newskinName) {
+        this.skinName = newskinName;
+        if (this.skinNameProperty != null) {
+            this.skinNameProperty.set(newskinName);
+        }
+    }
     
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
@@ -98,10 +154,9 @@ public class FileChooser extends StackPane {
         if (skin != null) {
             this.skin = skin;
         }
-        
         PathUpdateHandler updateHandler = getPathUpdateHandler(directoryChooserOption);
         controller = new FileChooserController(model, updateHandler, viewOption, dialog);
-        loadControl(controller);
+        loadController(controller);
         Skin.applyTo(this, this.skin);
     }
 
@@ -120,7 +175,7 @@ public class FileChooser extends StackPane {
 
         PathUpdateHandler updateHandler = getPathUpdateHandler(directoryChooserOption);
         controller = new FileChooserController(this.model, updateHandler, window, viewOption, dialog);
-        loadControl(controller);
+        loadController(controller);
         Skin.applyTo(this, this.skin);
     }
 
@@ -223,11 +278,43 @@ public class FileChooser extends StackPane {
                                                     window,
                                                     this.viewOption,
                                                     this.dialog);
-        loadControl(controller);
+        loadController(controller);
         Skin.applyTo(this, this.skin);
     }
+    
+    private void updatePath() {
+        if (this.pathName != null) {
+            Path updated = this.getPathFromString();
+            if (updated == null) {
+                return;
+            }
+            
+            if (Files.notExists(updated)) {
+                LOGGER.log(Level.WARNING, "Not existing path defined in FXML property \"pathName\": {0}.", this.pathName);
+                return;
+            }
 
-    private void loadControl(FileChooserController controller) {
+            Path existing = model.getCurrentSearchPath();
+            if (!updated.equals(existing)) {
+                model.getUpdateService().restartIn(updated);
+            }
+        }
+    }
+
+    private Path getPathFromString() {
+        if (null == this.pathName) {
+            return null;
+        }
+        
+        try {
+            return Path.of(this.pathName).toAbsolutePath().normalize();
+        } catch (InvalidPathException ipe) {
+            LOGGER.log(Level.WARNING, "The value for FXML property \"pathName\" is not a valid file system path ({0}).", this.pathName);
+            return null;
+        }
+    }
+    
+    private void loadController(FileChooserController controller) {
         Class<?> thisClass = getClass();
         String fileName = thisClass.getSimpleName() + ".fxml";
         URL resource = thisClass.getResource(fileName);
@@ -239,7 +326,9 @@ public class FileChooser extends StackPane {
         } catch (Exception e) {
             view = handleErrorOnLoad(fileName, controller, e);
         }
-
+        
+        this.pathNameProperty.addListener(l -> updatePath());
+        this.skinNameProperty.addListener(l -> updateSkin());
         this.fileChooserView = new AnchorPane();
         this.fileChooserView.getChildren().add(view);
         AnchorPane.setLeftAnchor(view, 0.0);
@@ -247,6 +336,24 @@ public class FileChooser extends StackPane {
         AnchorPane.setTopAnchor(view, 0.0);
         AnchorPane.setBottomAnchor(view, 0.0);
         this.getChildren().add(fileChooserView);
+    }
+
+    private void updateSkin() {
+        if (this.skinName != null) {
+            Set<String> x = Arrays.stream(Skin.values()).map(Skin::name).collect(Collectors.toSet());
+            if (!x.contains(this.skinName)) {
+                String values = Arrays.stream(Skin.values()).map(Skin::name).collect(Collectors.joining(", "));
+                LOGGER.log(Level.WARNING, "Invalid Skin [{0}] detected. Valid values for skins are: {1}",
+                        new Object[] { this.skinName, values });
+            } else {
+                Skin newSkin = Skin.valueOf(this.skinName);
+                if (newSkin != this.skin) {
+                    Skin.removeFrom(this, this.skin);
+                    this.skin = newSkin;
+                    Skin.applyTo(this, newSkin);
+                }
+            }
+        }
     }
 
     private VBox handleErrorOnLoad(String fileName, Object controller, Exception e) {

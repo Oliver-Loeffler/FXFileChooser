@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import net.raumzeitfalle.fx.filechooser.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <AnchorPane minHeight="400.0" minWidth="800.0" style="-fx-background-color: #000000;">
+         <children>
+            <FileChooser fx:id="fileChooser" 
+                         pathName="C:\\" 
+                         skinName="MODENA" 
+                         AnchorPane.bottomAnchor="50.0" 
+                         AnchorPane.leftAnchor="50.0" 
+                         AnchorPane.rightAnchor="50.0" 
+                         AnchorPane.topAnchor="50.0" />
+         </children>
+      </AnchorPane>
+   </center>
+   <bottom>
+      <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button fx:id="actionButton" mnemonicParsing="false" text="Action!" />
+        </buttons>
+      </ButtonBar>
+   </bottom>
+</BorderPane>

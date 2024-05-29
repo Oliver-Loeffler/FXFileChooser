@@ -1,16 +1,12 @@
 package net.raumzeitfalle.demos.fxml;
 
+import java.net.URL;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.net.URL;
 
 public class DemoApplication extends Application {
 
@@ -34,6 +30,5 @@ public class DemoApplication extends Application {
         stage.setTitle("Demo Application");
         stage.show();
 
-        ImageView view = null;
     }
 }

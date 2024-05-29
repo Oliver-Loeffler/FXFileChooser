@@ -36,6 +36,14 @@ public enum Skin {
             parent.applyCss();
         }
     }
+    
+    public static <T extends Parent> void removeFrom(T parent, Skin skin) {
+        String css = skin.getCssLocation(parent);
+        if (null != css) {
+            parent.getStylesheets().remove(css);
+            parent.applyCss();
+        }
+    }
 
     public static <T extends Dialog<?>> void applyToDialog(T dialog, Skin skin) {
         String css = skin.getCssLocation(dialog);
