@@ -11,7 +11,8 @@
             <!-- pathName="C:\\" -->
             <!-- directoryChooserOption="CUSTOM" -->
             <FileChooser fx:id="fileChooser" 
-                         skin="DARK"
+                         skin="MODENA"
+                         directoryChooserOption="CUSTOM"
                          AnchorPane.bottomAnchor="50.0" 
                          AnchorPane.leftAnchor="50.0" 
                          AnchorPane.rightAnchor="50.0" 

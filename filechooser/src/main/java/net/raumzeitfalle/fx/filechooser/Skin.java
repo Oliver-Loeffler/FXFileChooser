@@ -26,10 +26,15 @@ import javafx.scene.control.Dialog;
 
 public enum Skin {
 
+    NONE,
     MODENA,
     DARK;
 
     public static <T extends Parent> void applyTo(T parent, Skin skin) {
+        if (NONE.equals(skin)) {
+            return;
+        }
+
         String css = skin.getCssLocation(parent);
         if (null != css) {
             parent.getStylesheets().add(css);
@@ -38,6 +43,10 @@ public enum Skin {
     }
     
     public static <T extends Parent> void removeFrom(T parent, Skin skin) {
+        if (NONE.equals(skin)) {
+            return;
+        }
+
         String css = skin.getCssLocation(parent);
         if (null != css) {
             parent.getStylesheets().remove(css);

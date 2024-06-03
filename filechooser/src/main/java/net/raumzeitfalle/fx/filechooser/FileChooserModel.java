@@ -264,7 +264,13 @@ final class FileChooserModel {
 
     public void updateFilesIn(File directory) {
         if (null != directory) {
-            fileUpdateService.restartIn(directory.toPath());
+            this.updateFilesIn(directory.toPath());
+        }
+    }
+
+    public void updateFilesIn(Path directory) {
+        if (null != directory) {
+            fileUpdateService.restartIn(directory);
         }
     }
 

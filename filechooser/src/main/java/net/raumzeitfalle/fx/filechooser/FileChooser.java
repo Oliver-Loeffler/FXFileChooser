@@ -19,26 +19,18 @@
  */
 package net.raumzeitfalle.fx.filechooser;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
+import javafx.application.Platform;
 import javafx.beans.DefaultProperty;
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.css.*;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -46,6 +38,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A configurable file chooser for browsing directories with thousands of files. Some platform file
@@ -63,7 +65,7 @@ import javafx.stage.Window;
  * (which will also run in a separate task) and apply filtering at same time. Sorting and filtering
  * operations are available even during directory indexing.
  */
-@DefaultProperty("path")
+@DefaultProperty("pathNameProperty")
 public class FileChooser extends StackPane {
 
     private static final Logger LOGGER = Logger.getLogger(FileChooser.class.getName()); 
@@ -98,26 +100,49 @@ public class FileChooser extends StackPane {
             this.pathNameProperty.set(newPathName);
         }
     }
-    
-    private String skinName = null;
-    
-    private final StringProperty skinNameProperty = new SimpleStringProperty(this.skinName);
-    
-    public StringProperty skinNameProperty() {
-        return this.skinNameProperty;
+
+    private StyleableObjectProperty<Skin> skinName;
+
+    public final Skin getSkinName() {
+        return skinName == null ? Skin.MODENA : skinName.get();
     }
 
-    public String getskinName() {
-        return skinName;
-    }
+    public final void setSkinName(Skin newSkin) {
 
-    public void setskinName(String newskinName) {
-        this.skinName = newskinName;
-        if (this.skinNameProperty != null) {
-            this.skinNameProperty.set(newskinName);
+        Skin oldSkin = this.skin;
+        if (null == skinName) {
+            this.skin = newSkin;
+        } else {
+            skinNameProperty().setValue(newSkin);
         }
+
+        Skin.removeFrom(this, oldSkin);
+        Skin.applyTo(this, newSkin);
+
     }
-    
+
+    public final StyleableObjectProperty<Skin> skinNameProperty() {
+        if (skinName == null) {
+            skinName = new StyleableObjectProperty<>() {
+                @Override
+                public Object getBean() {
+                    return this;
+                }
+
+                @Override
+                public String getName() {
+                    return "skinName";
+                }
+
+                @Override
+                public CssMetaData<? extends Styleable, Skin> getCssMetaData() {
+                    throw new UnsupportedOperationException("Requires impl!");
+                }
+            };
+        }
+        return this.skinName;
+    }
+
     /**
      * Creates a file chooser view. This view only shows contents of a single directory where it allows
      * live filtering searching by typing text into a file search bar. Creates a new file chooser with
@@ -131,6 +156,23 @@ public class FileChooser extends StackPane {
      */
     public FileChooser() {
         this(Skin.DARK, DirectoryChooserOption.JAVAFX_PLATFORM);
+    }
+    
+    /**
+     * Creates a file chooser view. This view only shows contents of a single directory where it allows
+     * live filtering searching by typing text into a file search bar. Creates a new file chooser with
+     * following default configuration:
+     * <ul>
+     * <li>the view assumes that it is operated from a JavaFX stage</li>
+     * <li>the model starts in user home directory accepting all files</li>
+     * <li>dark skin is used</li>
+     * <li>the default JavaFX directory chooser is used</li>
+     * </ul>
+     * 
+     * @param skin {@link Skin} defines the visual appearance of the file chooser control
+     */
+    public FileChooser(@NamedArg("skin") Skin skin) {
+        this(skin, DirectoryChooserOption.JAVAFX_PLATFORM);
     }
     
     /**
@@ -160,11 +202,25 @@ public class FileChooser extends StackPane {
         Skin.applyTo(this, this.skin);
     }
 
-    FileChooser(@NamedArg("model") FileChooserModel model,
-                @NamedArg("skin") Skin skin, 
-                @NamedArg("directoryChooserOption") DirectoryChooserOption directoryChooserOption,
-                @NamedArg("viewOption") FileChooserViewOption viewOption,
-                @NamedArg("hideableWindow") HideableView hideableWindow) {
+    public FileChooser(@NamedArg("skin") Skin skin,
+                       @NamedArg("directoryChooserOption") DirectoryChooserOption directoryChooserOption,
+                       @NamedArg("initialPath") Path initialPath) {
+
+        if (skin != null) {
+            this.skin = skin;
+        }
+        PathUpdateHandler updateHandler = getPathUpdateHandler(directoryChooserOption);
+        controller = new FileChooserController(model, updateHandler, viewOption, dialog);
+        model.updateFilesIn(initialPath.toFile());
+        loadController(controller);
+        Skin.applyTo(this, this.skin);
+    }
+
+    FileChooser(FileChooserModel model,
+                Skin skin,
+                DirectoryChooserOption directoryChooserOption,
+                FileChooserViewOption viewOption,
+                HideableView hideableWindow) {
 
         HideableView window = Objects.requireNonNull(hideableWindow);
         this.model = Objects.requireNonNull(model);
@@ -203,8 +259,8 @@ public class FileChooser extends StackPane {
      *                              approach for directory selection.
      * 
      * @param window                {@link HideableView} Reference to the parent window of the
-     *                              {@link FileChooserView}. This can be a JavaFX stage, a Swing JFrame
-     *                              or a Dialog. When the {@link FileChooserView} is operated as a
+     *                              {@link FileChooser}. This can be a JavaFX stage, a Swing JFrame
+     *                              or a Dialog. When the {@link FileChooser} is operated as a
      *                              dialog window but placed inside a Stage (or Swing JFrame), then when
      *                              user decides to continue with okay or cancel, this window will be
      *                              closed.
@@ -218,10 +274,10 @@ public class FileChooser extends StackPane {
      * @param skin                  {@link Skin} Defines the appearance of this view.
      * 
      * @param fileChooserViewOption {@link FileChooserViewOption} Use this switch to adjust
-     *                              {@link FileChooserView} behavior to operation inside a JavaFX dialog
+     *                              {@link FileChooser} behavior to operation inside a JavaFX dialog
      *                              (which brings its own OKAY and CANCEL buttons) or to operation
      *                              inside a JavaFX stage / Swing JFrame where OKAY and CANCEL buttons
-     *                              will be provided by the {@link FileChooserView}.
+     *                              will be provided by the {@link FileChooser}.
      * 
      */
     FileChooser(PathUpdateHandler handlePath, HideableView window, FileChooserModel model, 
@@ -242,8 +298,8 @@ public class FileChooser extends StackPane {
      *                              approach for directory selection.
      * 
      * @param window                {@link HideableView} Reference to the parent window of the
-     *                              {@link FileChooserView}. This can be a JavaFX stage, a Swing JFrame
-     *                              or a Dialog. When the {@link FileChooserView} is operated as a
+     *                              {@link FileChooser}. This can be a JavaFX stage, a Swing JFrame
+     *                              or a Dialog. When the {@link FileChooser} is operated as a
      *                              dialog window but placed inside a Stage (or Swing JFrame), then when
      *                              user decides to continue with okay or cancel, this window will be
      *                              closed.
@@ -257,14 +313,14 @@ public class FileChooser extends StackPane {
      * @param skin                  {@link Skin} Defines the appearance of this view.
      * 
      * @param fileChooserViewOption {@link FileChooserViewOption} Use this switch to adjust
-     *                              {@link FileChooserView} behavior to operation inside a JavaFX dialog
+     *                              {@link FileChooser} behavior to operation inside a JavaFX dialog
      *                              (which brings its own OKAY and CANCEL buttons) or to operation
      *                              inside a JavaFX stage / Swing JFrame where OKAY and CANCEL buttons
-     *                              will be provided by the {@link FileChooserView}.
+     *                              will be provided by the {@link FileChooser}.
      * 
      * @param dialog                {@link Dialog} When operated inside a JavaFX dialog, the controller
      *                              class will provide the user selection to the dialog. Hence the
-     *                              dialog where the {@link FileChooserView} is used within must be
+     *                              dialog where the {@link FileChooser} is used within must be
      *                              known up front.
      */
     FileChooser(PathUpdateHandler handlePath, HideableView window, FileChooserModel model, 
@@ -328,7 +384,6 @@ public class FileChooser extends StackPane {
         }
         
         this.pathNameProperty.addListener(l -> updatePath());
-        this.skinNameProperty.addListener(l -> updateSkin());
         this.fileChooserView = new AnchorPane();
         this.fileChooserView.getChildren().add(view);
         AnchorPane.setLeftAnchor(view, 0.0);
@@ -336,24 +391,6 @@ public class FileChooser extends StackPane {
         AnchorPane.setTopAnchor(view, 0.0);
         AnchorPane.setBottomAnchor(view, 0.0);
         this.getChildren().add(fileChooserView);
-    }
-
-    private void updateSkin() {
-        if (this.skinName != null) {
-            Set<String> x = Arrays.stream(Skin.values()).map(Skin::name).collect(Collectors.toSet());
-            if (!x.contains(this.skinName)) {
-                String values = Arrays.stream(Skin.values()).map(Skin::name).collect(Collectors.joining(", "));
-                LOGGER.log(Level.WARNING, "Invalid Skin [{0}] detected. Valid values for skins are: {1}",
-                        new Object[] { this.skinName, values });
-            } else {
-                Skin newSkin = Skin.valueOf(this.skinName);
-                if (newSkin != this.skin) {
-                    Skin.removeFrom(this, this.skin);
-                    this.skin = newSkin;
-                    Skin.applyTo(this, newSkin);
-                }
-            }
-        }
     }
 
     private VBox handleErrorOnLoad(String fileName, Object controller, Exception e) {
