@@ -1,10 +1,16 @@
+#  [FXFileChooser](https://codeberg.org/Oliver-Loeffler/FXFileChooser) just moved to [Codeberg.org](https://Codeberg.org)
+
+This repository has been moved to [Codeberg.org](https://codeberg.org/Oliver-Loeffler/FXFileChooser).
+There won't be any active development here anymors. So in case of questions / issues. Please visit codeberg.org.
+
+Why?
+[Community Maintenance Matters](https://blog.codeberg.org/community-maintenance-matters.html)
+
+---
+
 # FXFileChooser
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.11/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.11) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.raumzeitfalle.fx/filechooser)
-
-[![Verify on Windows](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml/badge.svg)](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-windows.yml)
-
-[![Verify on Linux](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-linux.yml/badge.svg)](https://github.com/Oliver-Loeffler/FXFileChooser/actions/workflows/verify-linux.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![javadoc](https://javadoc.io/badge2/net.raumzeitfalle.fx/filechooser/0.0.11/javadoc.svg)](https://javadoc.io/doc/net.raumzeitfalle.fx/filechooser/0.0.11) [![codecov](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser/branch/master/graph/badge.svg)](https://codecov.io/gh/Oliver-Loeffler/FXFileChooser) ![Maven Central Version](https://img.shields.io/maven-central/v/net.raumzeitfalle.fx/filechooser)
 
 Custom JavaFX file chooser which allows quick manual filtering, which allows to add Path predicates as filter and which is testable using TestFX.
 
